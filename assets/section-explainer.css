@@ -1,0 +1,200 @@
+/* ==========================================================================
+   Compression explainer (signature section)
+   Default = everything visible. motion.js adds .is-scrubbed on wide screens,
+   which makes the track tall and pins the stage while the bands draw.
+   ========================================================================== */
+
+.explainer {
+  position: relative;
+  overflow: clip;
+  --ribbon-opacity: 0.16;
+}
+.explainer .ribbons svg {
+  opacity: var(--ribbon-opacity);
+}
+.explainer__track {
+  position: relative;
+  z-index: 1;
+}
+.explainer__stage {
+  padding-block: var(--section-y);
+}
+.explainer__grid {
+  display: grid;
+  gap: 40px;
+  align-items: center;
+}
+.explainer__title {
+  max-width: 11ch;
+}
+.explainer__lede p:last-child {
+  margin-bottom: 0;
+}
+
+.explainer__figure {
+  margin: 0;
+  justify-self: center;
+  width: min(100%, 500px);
+}
+.explainer__leg {
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+.explainer__leg-shape {
+  stroke: rgba(255, 255, 255, 0.4);
+  stroke-width: 2;
+}
+.explainer__band {
+  fill: none;
+  stroke-linecap: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+}
+.explainer__band--1 {
+  stroke: var(--royal);
+  stroke-width: 34;
+}
+.explainer__band--2 {
+  stroke: var(--sky);
+  stroke-width: 28;
+}
+.explainer__band--3 {
+  stroke: var(--ice);
+  stroke-width: 22;
+}
+.explainer__label line {
+  stroke: rgba(255, 255, 255, 0.5);
+  stroke-width: 1.5;
+}
+.explainer__label-kicker {
+  fill: rgba(255, 255, 255, 0.72);
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.explainer__label-value {
+  font-family: var(--font-display);
+  font-size: 24px;
+  text-transform: uppercase;
+}
+.explainer__label--1 .explainer__label-value {
+  fill: #7fb6f2;
+}
+.explainer__label--2 .explainer__label-value {
+  fill: var(--sky);
+}
+.explainer__label--3 .explainer__label-value {
+  fill: var(--ice);
+}
+
+.explainer__steps {
+  display: grid;
+  gap: 28px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.explainer__step {
+  display: grid;
+  grid-template-columns: 34px 1fr;
+  gap: 16px;
+  align-items: start;
+}
+.explainer__marker {
+  width: 34px;
+  height: 10px;
+  margin-top: 9px;
+  border-radius: 10px;
+}
+.explainer__step--1 .explainer__marker {
+  background: var(--royal);
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.2);
+}
+.explainer__step--2 .explainer__marker {
+  background: var(--sky);
+  height: 8px;
+}
+.explainer__step--3 .explainer__marker {
+  background: var(--ice);
+  height: 6px;
+}
+.explainer__step-title {
+  margin-bottom: 6px;
+}
+.explainer__step-text {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.78);
+}
+.explainer__cta {
+  margin: 0;
+}
+
+@media (min-width: 900px) {
+  .explainer__grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 500px);
+    grid-template-areas:
+      'intro figure'
+      'steps figure'
+      'cta figure';
+    column-gap: clamp(40px, 8vw, 120px);
+    row-gap: 36px;
+  }
+  .explainer__intro {
+    grid-area: intro;
+    align-self: end;
+  }
+  .explainer__figure {
+    grid-area: figure;
+  }
+  .explainer__steps {
+    grid-area: steps;
+  }
+  .explainer__cta {
+    grid-area: cta;
+    align-self: start;
+  }
+
+  /* Scrubbed mode (added by motion.js on screens at least 900 × 700).
+     Everything is sized to fit one screen, because the stage is pinned. */
+  .explainer.is-scrubbed .explainer__track {
+    height: 320vh;
+  }
+  .explainer.is-scrubbed .explainer__stage {
+    position: sticky;
+    top: 0;
+    height: 100svh;
+    display: flex;
+    align-items: center;
+    padding-block: calc(var(--header-h) + 16px) 24px;
+    overflow: hidden;
+  }
+  .explainer.is-scrubbed .explainer__grid {
+    row-gap: 22px;
+  }
+  .explainer.is-scrubbed .explainer__title {
+    font-size: clamp(2.2rem, 3.6vw, 3.4rem);
+    margin-bottom: 14px;
+  }
+  .explainer.is-scrubbed .explainer__lede {
+    font-size: 1.02rem;
+  }
+  .explainer.is-scrubbed .explainer__steps {
+    gap: 16px;
+  }
+  .explainer.is-scrubbed .explainer__step-text {
+    font-size: 0.95rem;
+  }
+  .explainer.is-scrubbed .explainer__figure {
+    width: auto;
+    height: calc(100svh - var(--header-h) - 64px);
+    max-height: 760px;
+    aspect-ratio: 500 / 760;
+  }
+  .explainer.is-scrubbed .explainer__leg {
+    width: auto;
+    height: 100%;
+  }
+}

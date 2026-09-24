@@ -1,0 +1,393 @@
+/* ==========================================================================
+   Sock carousel (homepage hero)
+   Roles: .is-center / .is-left / .is-right / .is-back / .is-back-left /
+   .is-back-right / .is-hidden. sock-carousel.js only swaps these classes and
+   the --slide-* colour variables; every movement below is a CSS transition on
+   transform, filter and opacity, so it stays on the compositor.
+   ========================================================================== */
+
+.sock-carousel {
+  --dur: 650ms;
+  --curve: cubic-bezier(0.4, 0, 0.2, 1);
+  --item-h: 74svh;
+  display: block;
+  position: relative;
+  isolation: isolate; /* keep the hero's z-indexes below the sticky header and menu */
+  width: 100%;
+  overflow: hidden;
+  background-color: var(--slide-bg);
+  color: var(--slide-fg);
+  transition:
+    background-color var(--dur) var(--curve),
+    color var(--dur) var(--curve);
+}
+
+.sock-carousel__stage {
+  position: relative;
+  width: 100%;
+  /* Fill the screen below the announcement bar; the header floats on top. */
+  height: calc(100svh - var(--announce-h, 0px));
+  min-height: 620px;
+  overflow: hidden;
+  touch-action: pan-y;
+}
+
+/* 1. Grain overlay (fractal noise, per the original brief) */
+.sock-carousel__grain {
+  position: absolute;
+  inset: 0;
+  z-index: 50;
+  pointer-events: none;
+  opacity: 0.4;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.08'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
+  background-repeat: repeat;
+}
+
+/* Soft pool of the slide's panel colour behind the centre sock */
+.sock-carousel__glow {
+  position: absolute;
+  left: 50%;
+  bottom: -18svh;
+  z-index: 1;
+  width: min(1100px, 120vw);
+  height: 90svh;
+  transform: translateX(-50%);
+  background-color: var(--slide-panel);
+  -webkit-mask-image: radial-gradient(closest-side, #000 0%, rgba(0, 0, 0, 0.55) 45%, transparent 100%);
+  mask-image: radial-gradient(closest-side, #000 0%, rgba(0, 0, 0, 0.55) 45%, transparent 100%);
+  transition: background-color var(--dur) var(--curve);
+  pointer-events: none;
+}
+
+/* 2. Giant ghost word */
+.sock-carousel__ghost {
+  position: absolute;
+  inset-inline: 0;
+  top: 18%;
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(90px, 28vw, 380px);
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--slide-ghost);
+  pointer-events: none;
+  user-select: none;
+  transition: color var(--dur) var(--curve);
+}
+
+/* 4. Items */
+.sock-carousel__items {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+}
+.sock-carousel__item {
+  --x: 0vw;
+  --y: 0svh;
+  --s: 1;
+  --blur: 0px;
+  --o: 1;
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  height: var(--item-h);
+  aspect-ratio: 0.6 / 1;
+  transform-origin: 50% 100%;
+  transform: translate(calc(-50% + var(--x)), calc(var(--y) * -1)) scale(var(--s));
+  filter: blur(var(--blur));
+  opacity: var(--o);
+  transition:
+    transform var(--dur) var(--curve),
+    filter var(--dur) var(--curve),
+    opacity var(--dur) var(--curve);
+  will-change: transform, filter, opacity;
+  pointer-events: none;
+}
+.sock-carousel__item img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: bottom center;
+  -webkit-user-drag: none;
+  user-select: none;
+  filter: drop-shadow(0 28px 30px rgba(2, 24, 45, 0.28));
+}
+
+/* Desktop roles */
+.sock-carousel__item.is-center {
+  --y: 5svh;
+  z-index: 20;
+}
+.sock-carousel__item.is-left,
+.sock-carousel__item.is-right {
+  --y: 13svh;
+  --s: 0.4;
+  --blur: 2px;
+  --o: 0.85;
+  z-index: 10;
+}
+.sock-carousel__item.is-left {
+  --x: -19vw;
+}
+.sock-carousel__item.is-right {
+  --x: 19vw;
+}
+.sock-carousel__item.is-back,
+.sock-carousel__item.is-back-left,
+.sock-carousel__item.is-back-right {
+  --y: 15svh;
+  --s: 0.29;
+  --blur: 4px;
+  z-index: 5;
+}
+.sock-carousel__item.is-back-left {
+  --x: -9vw;
+}
+.sock-carousel__item.is-back-right {
+  --x: 9vw;
+}
+.sock-carousel__item.is-hidden {
+  --y: 15svh;
+  --s: 0.2;
+  --blur: 6px;
+  --o: 0;
+  z-index: 1;
+}
+
+/* Mobile roles (< 640px) */
+@media (max-width: 639px) {
+  .sock-carousel {
+    --item-h: 54svh;
+  }
+  .sock-carousel__item.is-center {
+    --y: 27svh;
+  }
+  .sock-carousel__item.is-left,
+  .sock-carousel__item.is-right {
+    --y: 32svh;
+    --s: 0.32;
+  }
+  .sock-carousel__item.is-left {
+    --x: -32vw;
+  }
+  .sock-carousel__item.is-right {
+    --x: 32vw;
+  }
+  .sock-carousel__item.is-back,
+  .sock-carousel__item.is-back-left,
+  .sock-carousel__item.is-back-right {
+    --y: 33svh;
+    --s: 0.24;
+  }
+  .sock-carousel__item.is-back-left {
+    --x: -14vw;
+  }
+  .sock-carousel__item.is-back-right {
+    --x: 14vw;
+  }
+}
+
+/* 5. Bottom-left copy + navigation */
+.sock-carousel__copy {
+  position: absolute;
+  left: 16px;
+  bottom: 24px;
+  z-index: 60;
+  max-width: min(300px, calc(100vw - 32px));
+}
+.sock-carousel__heading {
+  margin: 0 0 14px;
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  line-height: 1.4;
+  text-transform: uppercase;
+  opacity: 0.9;
+}
+.sock-carousel__text {
+  transition: opacity 260ms var(--curve), transform 260ms var(--curve);
+}
+.sock-carousel__text.is-swapping {
+  opacity: 0;
+  transform: translateY(8px);
+}
+.sock-carousel__persona {
+  margin: 0 0 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+.sock-carousel__persona:empty {
+  display: none;
+}
+.sock-carousel__name {
+  margin: 0 0 8px;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  line-height: 1.2;
+  text-transform: uppercase;
+  opacity: 0.95;
+}
+.sock-carousel__desc {
+  display: none;
+  margin: 0 0 16px;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  opacity: 0.9;
+}
+.sock-carousel__meta {
+  margin: 0 0 16px;
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+.sock-carousel__meta:empty {
+  display: none;
+}
+.sock-carousel__nav {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.sock-carousel__arrow {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  border: 2px solid currentColor;
+  border-radius: 50%;
+  background: transparent;
+  color: inherit;
+  transition:
+    transform 150ms var(--curve),
+    background-color 150ms var(--curve);
+}
+.sock-carousel__arrow:hover {
+  transform: scale(1.08);
+  background-color: rgba(255, 255, 255, 0.12);
+}
+.sock-carousel__ticks {
+  display: flex;
+  gap: 2px;
+  margin-left: 8px;
+}
+.sock-carousel__tick {
+  position: relative;
+  width: 24px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+}
+.sock-carousel__tick::after {
+  content: '';
+  position: absolute;
+  left: 2px;
+  right: 2px;
+  top: 50%;
+  height: 3px;
+  border-radius: 3px;
+  background: currentColor;
+  opacity: 0.35;
+  transform: translateY(-50%);
+  transition: opacity 300ms var(--curve), transform 300ms var(--curve);
+}
+.sock-carousel__tick[aria-current='true']::after {
+  opacity: 1;
+  transform: translateY(-50%) scaleY(1.4);
+}
+
+/* 6. Bottom-right call to action */
+.sock-carousel__cta {
+  position: absolute;
+  right: 16px;
+  bottom: 24px;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: inherit;
+  font-family: var(--font-display);
+  font-size: clamp(20px, 4vw, 56px);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  text-decoration: none;
+  opacity: 0.95;
+  transition: opacity 200ms var(--curve);
+}
+.sock-carousel__cta:hover {
+  opacity: 1;
+}
+.sock-carousel__cta .icon {
+  width: 20px;
+  height: 20px;
+  transition: transform 200ms var(--curve);
+}
+.sock-carousel__cta:hover .icon {
+  transform: translateX(6px);
+}
+
+@media (max-width: 639px) {
+  .sock-carousel__ticks {
+    display: none;
+  }
+  .sock-carousel__cta {
+    bottom: 30px;
+  }
+}
+
+@media (min-width: 640px) {
+  .sock-carousel__copy {
+    left: 96px;
+    bottom: 80px;
+  }
+  .sock-carousel__name {
+    font-size: 22px;
+    letter-spacing: 0.02em;
+  }
+  .sock-carousel__desc {
+    display: block;
+  }
+  .sock-carousel__arrow {
+    width: 64px;
+    height: 64px;
+  }
+  .sock-carousel__cta {
+    right: 40px;
+    bottom: 80px;
+  }
+  .sock-carousel__cta .icon {
+    width: 32px;
+    height: 32px;
+  }
+}
+
+/* Keyboard focus stays visible on every slide colour */
+.sock-carousel :focus-visible {
+  outline: 3px solid currentColor;
+  outline-offset: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sock-carousel,
+  .sock-carousel__item,
+  .sock-carousel__glow,
+  .sock-carousel__ghost,
+  .sock-carousel__text {
+    transition-duration: 1ms;
+  }
+}

@@ -1,0 +1,129 @@
+{
+  "general": {
+    "meta": {
+      "tags": "Tagged \"{{ tags }}\"",
+      "page": "Page {{ page }}"
+    },
+    "pagination": {
+      "label": "Pagination",
+      "previous": "Previous page",
+      "next": "Next page",
+      "page": "Page {{ number }}"
+    },
+    "search": {
+      "search": "Search",
+      "placeholder": "Search socks, sizes, guides"
+    },
+    "social": {
+      "label": "Vital Socks on {{ network }}"
+    },
+    "breadcrumbs": {
+      "label": "Breadcrumb",
+      "home": "Home"
+    },
+    "shop_all": "Shop all socks"
+  },
+  "accessibility": {
+    "skip_to_content": "Skip to content",
+    "close": "Close",
+    "menu": "Menu",
+    "cart": "Cart",
+    "cart_count": {
+      "one": "{{ count }} item",
+      "other": "{{ count }} items"
+    },
+    "account": "Account",
+    "search": "Search",
+    "previous_design": "Previous design",
+    "next_design": "Next design",
+    "design_carousel": "Sock designs",
+    "go_to_design": "Show {{ name }}",
+    "quantity_decrease": "Decrease quantity for {{ product }}",
+    "quantity_increase": "Increase quantity for {{ product }}",
+    "remove_item": "Remove {{ product }}",
+    "new_window": "Opens in a new window",
+    "loading": "Loading"
+  },
+  "products": {
+    "product": {
+      "add_to_cart": "Add to cart",
+      "adding": "Adding",
+      "added": "Added",
+      "sold_out": "Sold out",
+      "unavailable": "Unavailable",
+      "choose_option": "Choose {{ option }}",
+      "find_my_size": "Find my size",
+      "quantity": "Quantity",
+      "from_price": "From {{ price }}",
+      "regular_price": "Regular price",
+      "sale_price": "Sale price",
+      "sale": "Sale",
+      "compression": "Compression",
+      "graded_by": "Graded by an orthotist",
+      "view": "View {{ product }}",
+      "error": "That didn't go into your cart. Try again, or refresh the page."
+    }
+  },
+  "sections": {
+    "cart": {
+      "title": "Your cart",
+      "empty": "Your cart is empty.",
+      "empty_cta": "Browse the designs",
+      "subtotal": "Subtotal",
+      "checkout": "Check out",
+      "note": "Order note",
+      "update": "Update cart",
+      "continue": "Keep shopping",
+      "remove": "Remove"
+    },
+    "newsletter": {
+      "email": "Email address",
+      "subscribe": "Sign up",
+      "success": "You're on the list. New prints land in your inbox first.",
+      "error": "Check your email address and try again."
+    },
+    "contact": {
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone (optional)",
+      "message": "How can we help?",
+      "send": "Send message",
+      "success": "Thanks, your message is on its way. We'll get back to you soon.",
+      "error": "Some details need fixing before this can send."
+    },
+    "fit_finder": {
+      "ankle": "Ankle circumference (cm)",
+      "calf": "Calf circumference (cm)",
+      "result": "Your size",
+      "no_match": "Those measurements don't match one of our sizes. Send them to us and we'll advise you personally.",
+      "prompt": "Enter both measurements to see your size.",
+      "contact": "Ask us about fit"
+    },
+    "collection": {
+      "empty": "No socks here yet. New designs are on the way.",
+      "sort_by": "Sort by",
+      "product_count": {
+        "one": "{{ count }} design",
+        "other": "{{ count }} designs"
+      }
+    },
+    "search": {
+      "title": "Search",
+      "results": {
+        "one": "{{ count }} result for \"{{ terms }}\"",
+        "other": "{{ count }} results for \"{{ terms }}\""
+      },
+      "no_results": "Nothing matched \"{{ terms }}\". Try a design name, like Cherry Pop, or a word like travel."
+    },
+    "blog": {
+      "read_more": "Read the article",
+      "by": "By {{ author }}",
+      "back": "Back to {{ blog }}"
+    },
+    "not_found": {
+      "title": "This page walked off",
+      "text": "The link may be old or mistyped. Everything we make is still in the shop.",
+      "cta": "Go to the shop"
+    }
+  }
+}

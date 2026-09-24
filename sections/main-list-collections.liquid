@@ -1,0 +1,29 @@
+<div class="page-hero container">
+  <h1 class="h1 page-hero__title">{{ section.settings.heading | escape }}</h1>
+</div>
+<div class="container section--tight" style="padding-top: 0;">
+  <ul class="article-grid" role="list">
+    {%- for collection in collections -%}
+      {%- if collection.handle != 'frontpage' -%}
+        <li>
+          <a class="article-card" href="{{ collection.url }}">
+            <div class="article-card__media">
+              {%- if collection.featured_image -%}
+                {{ collection.featured_image | image_url: width: 900 | image_tag: loading: 'lazy', widths: '450, 900', sizes: '(min-width: 1100px) 33vw, 100vw' }}
+              {%- endif -%}
+            </div>
+            <h2 class="article-card__title">{{ collection.title | escape }}</h2>
+            <p class="article-card__meta">{{ 'sections.collection.product_count' | t: count: collection.products_count }}</p>
+          </a>
+        </li>
+      {%- endif -%}
+    {%- endfor -%}
+  </ul>
+</div>
+
+{% schema %}
+{
+  "name": "Collections list",
+  "settings": [{ "type": "text", "id": "heading", "label": "Heading", "default": "Collections" }]
+}
+{% endschema %}

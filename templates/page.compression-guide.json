@@ -1,0 +1,135 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "settings": {
+        "eyebrow": "Compression guide",
+        "narrow": true
+      }
+    },
+    "explainer": {
+      "type": "compression-explainer",
+      "blocks": {
+        "step-1": {
+          "type": "step",
+          "settings": {
+            "zone": "Ankle",
+            "level": "Firmest",
+            "title": "Firmest at the ankle",
+            "text": "Pressure is highest where fluid pools first after a long day on your feet."
+          }
+        },
+        "step-2": {
+          "type": "step",
+          "settings": {
+            "zone": "Calf",
+            "level": "Easing",
+            "title": "Easing through the calf",
+            "text": "It eases off up the calf, working with the muscle that pumps blood back up the leg."
+          }
+        },
+        "step-3": {
+          "type": "step",
+          "settings": {
+            "zone": "Below the knee",
+            "level": "Lightest",
+            "title": "Lightest below the knee",
+            "text": "Lightest at the top, so the cuff stays up without digging in."
+          }
+        }
+      },
+      "block_order": [
+        "step-1",
+        "step-2",
+        "step-3"
+      ],
+      "settings": {
+        "eyebrow": "The short version",
+        "heading": "Pressure that climbs the right way",
+        "text": "<p>Firmest at the ankle, lighter as it climbs. That gradient is what makes a compression sock a compression sock.</p>",
+        "link_label": "Find your size",
+        "link": "/pages/size-guide"
+      }
+    },
+    "compare": {
+      "type": "compare",
+      "blocks": {
+        "r1": {
+          "type": "row",
+          "settings": {
+            "feature": "Graduated compression",
+            "us": "yes",
+            "col_2": "no",
+            "col_3": "Varies"
+          }
+        },
+        "r2": {
+          "type": "row",
+          "settings": {
+            "feature": "Compression range stated in mmHg",
+            "us": "yes",
+            "col_2": "no",
+            "col_3": "Often missing"
+          }
+        },
+        "r3": {
+          "type": "row",
+          "settings": {
+            "feature": "Grading overseen by an orthotist",
+            "us": "yes",
+            "col_2": "no",
+            "col_3": "Rarely"
+          }
+        },
+        "r4": {
+          "type": "row",
+          "settings": {
+            "feature": "Sized by ankle and calf measurement",
+            "us": "yes",
+            "col_2": "no",
+            "col_3": "Sometimes"
+          }
+        },
+        "r5": {
+          "type": "row",
+          "settings": {
+            "feature": "Prints you'd actually wear",
+            "us": "yes",
+            "col_2": "yes",
+            "col_3": "Rarely"
+          }
+        }
+      },
+      "block_order": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5"
+      ],
+      "settings": {
+        "heading": "Not all compression is graded",
+        "column_2": "Fashion socks",
+        "column_3": "Generic compression",
+        "note": "Comparison with typical products in each category, not specific brands."
+      }
+    },
+    "shop": {
+      "type": "featured-collection",
+      "settings": {
+        "eyebrow": "Ready?",
+        "heading": "Pick your pair",
+        "collection": "launch-prints",
+        "limit": 5,
+        "columns": 5,
+        "link_label": "Shop all socks"
+      }
+    }
+  },
+  "order": [
+    "main",
+    "explainer",
+    "compare",
+    "shop"
+  ]
+}

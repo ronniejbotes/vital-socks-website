@@ -1,0 +1,58 @@
+<div class="page-hero container">
+  <h1 class="h1 page-hero__title">{{ 'sections.cart.title' | t }}</h1>
+</div>
+<div class="container section--tight" style="padding-top: 0;">
+  {%- if cart.item_count == 0 -%}
+    <div class="drawer__empty">
+      <p>{{ 'sections.cart.empty' | t }}</p>
+      <a class="btn" href="{{ routes.all_products_collection_url }}">{{ 'sections.cart.empty_cta' | t }}</a>
+    </div>
+  {%- else -%}
+    <form class="cart-page__grid" action="{{ routes.cart_url }}" method="post" id="CartPageForm">
+      <ul role="list">
+        {%- for item in cart.items -%}
+          <li class="cart-line">
+            <a class="cart-line__media" href="{{ item.url }}" tabindex="-1" aria-hidden="true">
+              {%- if item.image -%}{{ item.image | image_url: width: 240 | image_tag: loading: 'lazy', alt: '' }}{%- endif -%}
+            </a>
+            <div>
+              <a class="cart-line__title" href="{{ item.url }}">{{ item.product.title | escape }}</a>
+              {%- unless item.product.has_only_default_variant -%}
+                <p class="cart-line__variant">{{ item.variant.title | escape }}</p>
+              {%- endunless -%}
+              <div class="field" style="max-width: 120px;">
+                <label for="Qty-{{ item.key }}">{{ 'products.product.quantity' | t }}</label>
+                <input id="Qty-{{ item.key }}" type="number" name="updates[]" value="{{ item.quantity }}" min="0">
+              </div>
+            </div>
+            <div class="cart-line__price">
+              {{ item.final_line_price | money }}<br>
+              <a class="cart-line__remove" href="{{ item.url_to_remove }}">{{ 'sections.cart.remove' | t }}</a>
+            </div>
+          </li>
+        {%- endfor -%}
+      </ul>
+      <div class="cart-page__summary">
+        <div class="cart-totals">
+          <span>{{ 'sections.cart.subtotal' | t }}</span>
+          <span>{{ cart.total_price | money }}</span>
+        </div>
+        {%- if settings.cart_reassurance != blank -%}
+          <p class="cart-reassure">{{ settings.cart_reassurance | escape }}</p>
+        {%- endif -%}
+        {%- if settings.cart_note -%}
+          <div class="field">
+            <label for="CartNote">{{ 'sections.cart.note' | t }}</label>
+            <textarea id="CartNote" name="note">{{ cart.note }}</textarea>
+          </div>
+        {%- endif -%}
+        <button class="btn btn--block" type="submit" name="checkout">{% render 'icon', name: 'lock', size: 18 %} {{ 'sections.cart.checkout' | t }}</button>
+        <p style="margin-top: 12px;"><button class="btn btn--ghost btn--block" type="submit" name="update">{{ 'sections.cart.update' | t }}</button></p>
+      </div>
+    </form>
+  {%- endif -%}
+</div>
+
+{% schema %}
+{ "name": "Cart page", "settings": [] }
+{% endschema %}

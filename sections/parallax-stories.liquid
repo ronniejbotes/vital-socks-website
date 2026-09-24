@@ -1,0 +1,153 @@
+{%- comment -%}
+  Full-bleed story panels. Each photo is taller than its panel and motion.js
+  slides it more slowly than the page, so the background drifts as you scroll.
+  Text sits on the photo's empty side over a navy scrim for contrast.
+{%- endcomment -%}
+{{ 'section-stories.css' | asset_url | stylesheet_tag }}
+
+<section class="stories" aria-labelledby="StoriesHeading-{{ section.id }}">
+  <div class="container stories__head">
+    {%- if section.settings.eyebrow != blank -%}
+      <p class="eyebrow">{{ section.settings.eyebrow | escape }}</p>
+    {%- endif -%}
+    <h2 class="h2 stories__title" id="StoriesHeading-{{ section.id }}" data-reveal>{{ section.settings.heading | escape }}</h2>
+    {%- if section.settings.text != blank -%}
+      <p class="lede">{{ section.settings.text | escape }}</p>
+    {%- endif -%}
+  </div>
+
+  {%- for block in section.blocks -%}
+    {%- liquid
+      assign link = block.settings.link
+      if block.settings.product != blank
+        assign link = block.settings.product.url
+      endif
+      case block.settings.bundled
+        when 'shift-espresso'
+          assign focal = '72% 50%'
+        when 'travel-checker'
+          assign focal = '30% 50%'
+        when 'street-cherry-pop'
+          assign focal = '64% 50%'
+        when 'rest-daisy'
+          assign focal = '32% 50%'
+        else
+          assign focal = '66% 50%'
+      endcase
+    -%}
+    <article class="story story--{{ block.settings.align }}" data-parallax {{ block.shopify_attributes }}>
+      <div class="story__media" data-parallax-media>
+        {%- if block.settings.image != blank -%}
+          {%- assign focal_style = block.settings.image.presentation.focal_point | prepend: 'object-position: ' -%}
+          {{
+            block.settings.image
+            | image_url: width: 2400
+            | image_tag:
+              widths: '750, 1100, 1500, 2000, 2400',
+              sizes: '100vw',
+              loading: 'lazy',
+              alt: block.settings.image.alt,
+              style: focal_style
+          }}
+        {%- elsif block.settings.bundled != 'none' -%}
+          {%- assign md = 'story-' | append: block.settings.bundled | append: '-md.webp' -%}
+          {%- assign lg = 'story-' | append: block.settings.bundled | append: '.webp' -%}
+          <img
+            src="{{ lg | asset_url }}"
+            srcset="{{ md | asset_url }} 1400w, {{ lg | asset_url }} 2400w"
+            sizes="100vw"
+            width="2400"
+            height="1340"
+            loading="lazy"
+            alt="{{ block.settings.alt | escape }}"
+            style="object-position: {{ focal }};"
+          >
+        {%- endif -%}
+      </div>
+      <div class="story__scrim" aria-hidden="true"></div>
+      <div class="container story__inner">
+        <div class="story__copy" data-reveal>
+          {%- if block.settings.eyebrow != blank -%}
+            <p class="eyebrow">{{ block.settings.eyebrow | escape }}</p>
+          {%- endif -%}
+          <h3 class="h1 story__heading">{{ block.settings.heading | escape }}</h3>
+          {%- if block.settings.text != blank -%}
+            <p class="story__text">{{ block.settings.text | escape }}</p>
+          {%- endif -%}
+          {%- if link != blank and block.settings.link_label != blank -%}
+            <a class="btn btn--light" href="{{ link }}">
+              {{- block.settings.link_label | escape -}}
+              {% render 'icon', name: 'arrow-right', size: 18 %}
+            </a>
+          {%- endif -%}
+        </div>
+      </div>
+    </article>
+  {%- endfor -%}
+</section>
+
+{% schema %}
+{
+  "name": "Parallax stories",
+  "class": "section-stories",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Where they earn their keep" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Made for the way you move" },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Intro",
+      "default": "Long shifts, long flights and loud outfits. Each print was drawn with someone in mind."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "story",
+      "name": "Story",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Photo", "info": "Landscape, at least 2400px wide. Leave room on one side for text." },
+        {
+          "type": "select",
+          "id": "bundled",
+          "label": "Bundled photo (used when no photo is uploaded)",
+          "options": [
+            { "value": "shift-espresso", "label": "Nurse in Espresso" },
+            { "value": "travel-checker", "label": "Traveller in Checker" },
+            { "value": "street-cherry-pop", "label": "Street style in Cherry Pop" },
+            { "value": "rest-daisy", "label": "Rest day in Daisy" },
+            { "value": "run-black", "label": "Dawn run in Black" },
+            { "value": "none", "label": "None" }
+          ],
+          "default": "none"
+        },
+        { "type": "text", "id": "alt", "label": "Bundled photo description", "info": "Alt text for the bundled photo." },
+        {
+          "type": "select",
+          "id": "align",
+          "label": "Text side",
+          "options": [
+            { "value": "left", "label": "Left" },
+            { "value": "right", "label": "Right" }
+          ],
+          "default": "left"
+        },
+        { "type": "text", "id": "eyebrow", "label": "Eyebrow" },
+        { "type": "text", "id": "heading", "label": "Heading", "default": "Twelve hours on your feet" },
+        { "type": "textarea", "id": "text", "label": "Text" },
+        { "type": "text", "id": "link_label", "label": "Button label" },
+        { "type": "product", "id": "product", "label": "Link to product" },
+        { "type": "url", "id": "link", "label": "Or link to page" }
+      ]
+    }
+  ],
+  "max_blocks": 6,
+  "presets": [
+    {
+      "name": "Parallax stories",
+      "blocks": [
+        { "type": "story", "settings": { "bundled": "shift-espresso", "align": "left", "heading": "Twelve hours on your feet" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

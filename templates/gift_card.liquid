@@ -1,0 +1,54 @@
+{% layout none %}
+<!doctype html>
+<html lang="en-ZA">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="robots" content="noindex">
+    <title>Your gift card &ndash; {{ shop.name }}</title>
+    <style>
+      @font-face { font-family: 'Anton'; src: url('{{ 'anton-latin.woff2' | asset_url }}') format('woff2'); font-display: swap; }
+      @font-face { font-family: 'Inter'; src: url('{{ 'inter-latin-var.woff2' | asset_url }}') format('woff2'); font-weight: 400 700; font-display: swap; }
+      :root {
+        --ink: {{ settings.color_ink }};
+        --ink-rgb: {{ settings.color_ink.red }}, {{ settings.color_ink.green }}, {{ settings.color_ink.blue }};
+        --royal: {{ settings.color_royal }};
+        --sky: {{ settings.color_sky }};
+        --ice: {{ settings.color_ice }};
+        --frost: {{ settings.color_frost }};
+        --paper: {{ settings.color_paper }};
+      }
+      .gift { max-width: 520px; margin: 0 auto; padding: 56px 20px; text-align: center; }
+      .gift__card { margin: 32px 0; padding: 36px 24px; border-radius: 22px; background: var(--royal); color: #fff; }
+      .gift__value { font-family: var(--font-display); font-size: 4rem; line-height: 1; margin: 0 0 12px; }
+      .gift__code { font-family: ui-monospace, monospace; font-size: 1.3rem; letter-spacing: 0.12em; }
+    </style>
+    {{ 'base.css' | asset_url | stylesheet_tag }}
+    {{ content_for_header }}
+  </head>
+  <body>
+    <main class="gift">
+      <img src="{{ 'vital-socks-logo.png' | asset_url }}" alt="{{ shop.name | escape }}" width="200" height="84" style="margin: 0 auto;">
+      <div class="gift__card">
+        <p class="gift__value">{{ gift_card.balance | money }}</p>
+        {%- if gift_card.balance != gift_card.initial_value -%}
+          <p>Original value: {{ gift_card.initial_value | money }}</p>
+        {%- endif -%}
+        <p class="gift__code">{{ gift_card.code | format_code }}</p>
+        {%- if gift_card.expired -%}
+          <p>Expired on {{ gift_card.expires_on | date: '%-d %B %Y' }}</p>
+        {%- elsif gift_card.expires_on -%}
+          <p>Valid until {{ gift_card.expires_on | date: '%-d %B %Y' }}</p>
+        {%- endif -%}
+      </div>
+      <p>Use this code at checkout.</p>
+      <p style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+        <a class="btn" href="{{ shop.url }}">Start shopping</a>
+        <button class="btn btn--ghost" type="button" onclick="window.print()">Print</button>
+      </p>
+      {%- if gift_card.pass_url -%}
+        <p><a href="{{ gift_card.pass_url }}">Add to Apple Wallet</a></p>
+      {%- endif -%}
+    </main>
+  </body>
+</html>

@@ -1,0 +1,104 @@
+{%- comment -%}
+  Comparison table. Compares against categories (fashion socks, generic
+  compression), never named brands. Each row's cells accept "yes", "no" or any
+  short text.
+{%- endcomment -%}
+<section class="compare section tone-frost" aria-labelledby="CompareHeading-{{ section.id }}">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        {%- if section.settings.eyebrow != blank -%}
+          <p class="eyebrow">{{ section.settings.eyebrow | escape }}</p>
+        {%- endif -%}
+        <h2 class="h2 section-head__title" id="CompareHeading-{{ section.id }}" data-reveal>{{ section.settings.heading | escape }}</h2>
+      </div>
+      {%- if section.settings.text != blank -%}
+        <p class="section-head__text">{{ section.settings.text | escape }}</p>
+      {%- endif -%}
+    </div>
+
+    <div class="compare__wrap" tabindex="0" role="region" aria-labelledby="CompareHeading-{{ section.id }}" data-reveal>
+      <table class="compare__table">
+        <thead>
+          <tr>
+            <th scope="col"><span class="visually-hidden">{{ section.settings.feature_label | escape }}</span></th>
+            <th scope="col" class="is-us">{{ shop.name | escape }}</th>
+            <th scope="col">{{ section.settings.column_2 | escape }}</th>
+            <th scope="col">{{ section.settings.column_3 | escape }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {%- for block in section.blocks -%}
+            <tr {{ block.shopify_attributes }}>
+              <th scope="row">{{ block.settings.feature | escape }}</th>
+              {%- assign cells = block.settings.us | append: '|' | append: block.settings.col_2 | append: '|' | append: block.settings.col_3 | split: '|' -%}
+              {%- for cell in cells -%}
+                {%- assign value = cell | strip | downcase -%}
+                <td{% if forloop.first %} class="is-us"{% endif %}>
+                  {%- if value == 'yes' -%}
+                    <span class="compare__yes">{% render 'icon', name: 'check', size: 22, stroke: 2.5 %}</span>
+                    <span class="visually-hidden">Yes</span>
+                  {%- elsif value == 'no' -%}
+                    <span class="compare__no">{% render 'icon', name: 'minus', size: 22 %}</span>
+                    <span class="visually-hidden">No</span>
+                  {%- else -%}
+                    {{ cell | escape }}
+                  {%- endif -%}
+                </td>
+              {%- endfor -%}
+            </tr>
+          {%- endfor -%}
+        </tbody>
+      </table>
+    </div>
+    {%- if section.settings.note != blank -%}
+      <p class="compare__note">{{ section.settings.note | escape }}</p>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Comparison table",
+  "class": "section-compare",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Side by side" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Not all compression is graded" },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Text",
+      "default": "Plenty of socks feel tight. Fewer tell you how tight, where, and who checked."
+    },
+    { "type": "text", "id": "feature_label", "label": "First column label (screen readers)", "default": "Feature" },
+    { "type": "text", "id": "column_2", "label": "Column 2 heading", "default": "Fashion socks" },
+    { "type": "text", "id": "column_3", "label": "Column 3 heading", "default": "Generic compression" },
+    { "type": "text", "id": "note", "label": "Footnote", "default": "Comparison with typical products in each category, not specific brands." }
+  ],
+  "blocks": [
+    {
+      "type": "row",
+      "name": "Row",
+      "settings": [
+        { "type": "text", "id": "feature", "label": "Feature", "default": "Graduated compression" },
+        { "type": "text", "id": "us", "label": "Vital Socks", "info": "yes, no, or short text", "default": "yes" },
+        { "type": "text", "id": "col_2", "label": "Column 2", "default": "no" },
+        { "type": "text", "id": "col_3", "label": "Column 3", "default": "Varies" }
+      ]
+    }
+  ],
+  "max_blocks": 10,
+  "presets": [
+    {
+      "name": "Comparison table",
+      "blocks": [
+        { "type": "row", "settings": { "feature": "Graduated compression", "us": "yes", "col_2": "no", "col_3": "Varies" } },
+        { "type": "row", "settings": { "feature": "Compression range stated in mmHg", "us": "yes", "col_2": "no", "col_3": "Often missing" } },
+        { "type": "row", "settings": { "feature": "Grading overseen by an orthotist", "us": "yes", "col_2": "no", "col_3": "Rarely" } },
+        { "type": "row", "settings": { "feature": "Sized by ankle and calf measurement", "us": "yes", "col_2": "no", "col_3": "Sometimes" } },
+        { "type": "row", "settings": { "feature": "Prints you'd actually wear", "us": "yes", "col_2": "yes", "col_3": "Rarely" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

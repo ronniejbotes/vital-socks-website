@@ -1,0 +1,21 @@
+<div class="page-hero container{% if section.settings.narrow %} container--narrow{% endif %}">
+  {%- if section.settings.eyebrow != blank -%}
+    <p class="eyebrow">{{ section.settings.eyebrow | escape }}</p>
+  {%- endif -%}
+  <h1 class="h1 page-hero__title">{{ page.title | escape }}</h1>
+</div>
+{%- if page.content != blank -%}
+  <div class="container{% if section.settings.narrow %} container--narrow{% endif %} section--tight" style="padding-top: 0;">
+    <div class="rte">{{ page.content }}</div>
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Page content",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow" },
+    { "type": "checkbox", "id": "narrow", "label": "Narrow reading width", "default": true }
+  ]
+}
+{% endschema %}

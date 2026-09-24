@@ -1,0 +1,123 @@
+{
+  "sections": {
+    "intro": {
+      "type": "rich-text",
+      "blocks": {
+        "e": {
+          "type": "eyebrow",
+          "settings": {
+            "text": "Our story"
+          }
+        },
+        "h": {
+          "type": "heading",
+          "settings": {
+            "heading": "Compression, done by someone who fits it for a living",
+            "tag": "h1",
+            "size": "h1"
+          }
+        },
+        "t": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Vital Socks started in an orthotics practice, where the difference between a tight sock and a graded one is part of the job. The idea was simple: make compression socks people want to wear, and get the grading right.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "e",
+        "h",
+        "t"
+      ],
+      "settings": {
+        "tone": "frost",
+        "align": "center"
+      }
+    },
+    "founder": {
+      "type": "founder",
+      "blocks": {
+        "p0": {
+          "type": "point",
+          "settings": {
+            "text": "Compression grading overseen by an orthotist"
+          }
+        },
+        "p1": {
+          "type": "point",
+          "settings": {
+            "text": "Compression range stated on every product"
+          }
+        },
+        "p2": {
+          "type": "point",
+          "settings": {
+            "text": "Sized by your ankle and calf, not your shoe"
+          }
+        }
+      },
+      "block_order": [
+        "p0",
+        "p1",
+        "p2"
+      ],
+      "settings": {
+        "placeholder_text": "Portrait of Farida coming soon",
+        "eyebrow": "Who grades your socks",
+        "heading": "An orthotist, not a guess",
+        "text": "<p>Vital Socks was started by an orthotist who measures and fits medical compression garments for her patients. She knows what the wrong pressure does to a leg, so she oversees the compression grading on every Vital design.</p>",
+        "link_label": "Visit Farida's practice"
+      }
+    },
+    "stories": {
+      "type": "parallax-stories",
+      "blocks": {
+        "rest": {
+          "type": "story",
+          "settings": {
+            "bundled": "rest-daisy",
+            "alt": "Feet up on a sofa in Daisy compression socks",
+            "align": "right",
+            "eyebrow": "The easy day",
+            "heading": "Rest days count too",
+            "text": "Slow Sundays, long drives, and the months when your legs are doing more work than usual.",
+            "link_label": "Shop Daisy",
+            "product": "daisy"
+          }
+        },
+        "run": {
+          "type": "story",
+          "settings": {
+            "bundled": "run-black",
+            "alt": "A runner stretching on a Cape Town sea wall at dawn in black compression socks",
+            "align": "left",
+            "eyebrow": "The everyday",
+            "heading": "Quiet, and quick",
+            "text": "The plain black pair: under trousers at work, over the calves on a dawn run.",
+            "link_label": "Shop Black",
+            "product": "black"
+          }
+        }
+      },
+      "block_order": [
+        "rest",
+        "run"
+      ],
+      "settings": {
+        "eyebrow": "Where they earn their keep",
+        "heading": "More kinds of day",
+        "text": ""
+      }
+    },
+    "newsletter": {
+      "type": "newsletter",
+      "settings": {}
+    }
+  },
+  "order": [
+    "intro",
+    "founder",
+    "stories",
+    "newsletter"
+  ]
+}

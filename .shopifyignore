@@ -1,0 +1,9 @@
+# Local tooling and docs: never pushed to Shopify by `shopify theme push`.
+# (The GitHub integration ignores these non-theme folders anyway.)
+dev/
+node_modules/
+package.json
+package-lock.json
+README.md
+CLAUDE.md
+.theme-check.yml

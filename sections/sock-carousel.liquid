@@ -1,0 +1,317 @@
+{%- comment -%}
+  Sock carousel — the homepage hero.
+  Adapted from the "TOONHUB" carousel brief: full-viewport stage whose
+  background cross-fades per design, a giant ghost word behind the products,
+  a centre product flanked by blurred side and back items, circular arrows
+  bottom-left and a large call to action bottom-right. All motion runs on the
+  same 650ms cubic-bezier(0.4, 0, 0.2, 1) curve.
+
+  Each block is one design. Link a product to pull its price, URL and
+  compression grade (metafield custom.compression_level); everything else is
+  editable per block. With no image uploaded, a bundled render is used.
+{%- endcomment -%}
+{{ 'section-sock-carousel.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'sock-carousel.js' | asset_url }}" defer></script>
+
+{%- liquid
+  assign n = section.blocks.size
+  assign last = n | minus: 1
+  assign second_last = n | minus: 2
+  assign heading_tag = section.settings.heading_tag | default: 'h1'
+-%}
+
+{%- capture slides_json -%}
+  [
+  {%- for block in section.blocks -%}
+    {%- liquid
+      assign p = block.settings.product
+      assign name = block.settings.name | default: p.title
+      assign desc = block.settings.description
+      if desc == blank and p != blank
+        assign desc = p.description | replace: '</p>', '</p> ' | strip_html | truncatewords: 22
+      endif
+      assign url = routes.all_products_collection_url
+      if p != blank
+        assign url = p.url
+      endif
+      assign fg = '#FFFFFF'
+      assign brightness = block.settings.bg | color_brightness
+      if brightness > 110
+        assign fg = settings.color_ink
+      endif
+      assign tone = 'dark'
+      if brightness > 110
+        assign tone = 'light'
+      endif
+      assign price = ''
+      if p != blank and section.settings.show_price
+        assign price = p.price | money
+        if p.price_varies
+          assign price = 'products.product.from_price' | t: price: price
+        endif
+      endif
+      assign grade = p.metafields.custom.compression_level.value | default: block.settings.grade
+    -%}
+    {
+      "name": {{ name | json }},
+      "persona": {{ block.settings.persona | json }},
+      "description": {{ desc | json }},
+      "url": {{ url | json }},
+      "price": {{ price | strip_html | json }},
+      "grade": {{ grade | json }},
+      "bg": {{ block.settings.bg | json }},
+      "panel": {{ block.settings.panel | json }},
+      "ghost": {{ block.settings.ghost | json }},
+      "fg": {{ fg | json }},
+      "tone": {{ tone | json }}
+    }{% unless forloop.last %},{% endunless %}
+  {%- endfor -%}
+  ]
+{%- endcapture -%}
+
+{%- if n > 0 -%}
+  {%- liquid
+    assign first = section.blocks.first
+    assign first_fg = '#FFFFFF'
+    assign first_brightness = first.settings.bg | color_brightness
+    if first_brightness > 110
+      assign first_fg = settings.color_ink
+    endif
+    assign first_name = first.settings.name | default: first.settings.product.title
+    assign first_desc = first.settings.description
+    if first_desc == blank and first.settings.product != blank
+      assign first_desc = first.settings.product.description | replace: '</p>', '</p> ' | strip_html | truncatewords: 22
+    endif
+    assign first_url = routes.all_products_collection_url
+    if first.settings.product != blank
+      assign first_url = first.settings.product.url
+    endif
+  -%}
+  <sock-carousel
+    class="sock-carousel"
+    id="SockCarousel-{{ section.id }}"
+    style="--slide-bg: {{ first.settings.bg }}; --slide-panel: {{ first.settings.panel }}; --slide-fg: {{ first_fg }}; --slide-ghost: {{ first.settings.ghost }};"
+    data-autoplay="{{ section.settings.autoplay }}"
+    data-autoplay-speed="{{ section.settings.autoplay_speed | times: 1000 }}"
+    aria-roledescription="carousel"
+    aria-label="{{ 'accessibility.design_carousel' | t }}"
+  >
+    <div class="sock-carousel__stage">
+      <div class="sock-carousel__grain" aria-hidden="true"></div>
+      <div class="sock-carousel__glow" aria-hidden="true"></div>
+      <p class="sock-carousel__ghost" aria-hidden="true" data-ghost>{{ section.settings.ghost_text | escape }}</p>
+
+      <div class="sock-carousel__items">
+        {%- for block in section.blocks -%}
+          {%- liquid
+            assign offset = forloop.index0
+            assign role = 'hidden'
+            if offset == 0
+              assign role = 'center'
+            elsif offset == 1
+              assign role = 'right'
+            elsif offset == last
+              assign role = 'left'
+            elsif n == 4 and offset == 2
+              assign role = 'back'
+            elsif n >= 5 and offset == 2
+              assign role = 'back-right'
+            elsif n >= 5 and offset == second_last
+              assign role = 'back-left'
+            endif
+            assign item_name = block.settings.name | default: block.settings.product.title
+            assign alt = item_name | append: ' compression sock'
+          -%}
+          <div
+            class="sock-carousel__item is-{{ role }}"
+            data-item
+            {% unless role == 'center' %}
+              aria-hidden="true"
+            {% endunless %}
+            {{ block.shopify_attributes }}
+          >
+            {%- if block.settings.image != blank -%}
+              {%- if forloop.first -%}
+                {{
+                  block.settings.image
+                  | image_url: width: 1100
+                  | image_tag:
+                    widths: '360, 550, 720, 1100',
+                    sizes: '(max-width: 639px) 40vh, 50vh',
+                    alt: alt,
+                    draggable: 'false',
+                    fetchpriority: 'high',
+                    loading: 'eager'
+                }}
+              {%- else -%}
+                {{
+                  block.settings.image
+                  | image_url: width: 1100
+                  | image_tag:
+                    widths: '360, 550, 720, 1100',
+                    sizes: '(max-width: 639px) 40vh, 50vh',
+                    alt: alt,
+                    draggable: 'false',
+                    fetchpriority: 'low',
+                    loading: 'eager'
+                }}
+              {%- endif -%}
+            {%- elsif block.settings.bundled != 'none' -%}
+              {%- assign sm = 'sock-' | append: block.settings.bundled | append: '-sm.webp' -%}
+              {%- assign lg = 'sock-' | append: block.settings.bundled | append: '.webp' -%}
+              <img
+                src="{{ lg | asset_url }}"
+                srcset="{{ sm | asset_url }} 290w, {{ lg | asset_url }} 560w"
+                sizes="(max-width: 639px) 40vh, 50vh"
+                width="560"
+                height="1400"
+                alt="{{ alt | escape }}"
+                draggable="false"
+                loading="eager"
+                fetchpriority="{% if forloop.first %}high{% else %}low{% endif %}"
+              >
+            {%- endif -%}
+          </div>
+        {%- endfor -%}
+      </div>
+
+      <div class="sock-carousel__copy">
+        <{{ heading_tag }} class="sock-carousel__heading">{{ section.settings.heading | escape }}</{{ heading_tag }}>
+        <div class="sock-carousel__text" data-text>
+          <p class="sock-carousel__persona" data-persona>{{ first.settings.persona | escape }}</p>
+          <p class="sock-carousel__name" data-name>{{ first_name | escape }}</p>
+          <p class="sock-carousel__desc" data-desc>{{ first_desc | escape }}</p>
+          <p class="sock-carousel__meta" data-meta></p>
+        </div>
+        <div class="sock-carousel__nav">
+          <button class="sock-carousel__arrow" type="button" data-prev>
+            {% render 'icon', name: 'arrow-left', size: 26, stroke: 2.25 %}
+            <span class="visually-hidden">{{ 'accessibility.previous_design' | t }}</span>
+          </button>
+          <button class="sock-carousel__arrow" type="button" data-next>
+            {% render 'icon', name: 'arrow-right', size: 26, stroke: 2.25 %}
+            <span class="visually-hidden">{{ 'accessibility.next_design' | t }}</span>
+          </button>
+          <div class="sock-carousel__ticks">
+            {%- for block in section.blocks -%}
+              {%- assign tick_name = block.settings.name | default: block.settings.product.title -%}
+              <button
+                class="sock-carousel__tick"
+                type="button"
+                data-go="{{ forloop.index0 }}"
+                {% if forloop.first %}
+                  aria-current="true"
+                {% endif %}
+              >
+                <span class="visually-hidden">{{ 'accessibility.go_to_design' | t: name: tick_name }}</span>
+              </button>
+            {%- endfor -%}
+          </div>
+        </div>
+      </div>
+
+      <a class="sock-carousel__cta" href="{{ first_url }}" data-cta>
+        <span data-cta-label>{{ section.settings.cta_label | escape }}</span>
+        {% render 'icon', name: 'arrow-right', size: 32, stroke: 2.25 %}
+      </a>
+
+      <p class="visually-hidden" aria-live="polite" data-live></p>
+    </div>
+
+    <script type="application/json" data-slides>
+      {{ slides_json }}
+    </script>
+  </sock-carousel>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Sock carousel",
+  "tag": "section",
+  "class": "section-sock-carousel",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "info": "The page's main heading for search engines. Keep the words people search for.",
+      "default": "Compression socks, graded by an orthotist"
+    },
+    {
+      "type": "select",
+      "id": "heading_tag",
+      "label": "Heading level",
+      "options": [
+        { "value": "h1", "label": "H1 (use on the homepage)" },
+        { "value": "h2", "label": "H2" }
+      ],
+      "default": "h1"
+    },
+    { "type": "text", "id": "ghost_text", "label": "Giant background word", "default": "Vital" },
+    { "type": "text", "id": "cta_label", "label": "Button label", "default": "Shop this pair" },
+    { "type": "checkbox", "id": "show_price", "label": "Show price", "default": true },
+    { "type": "checkbox", "id": "autoplay", "label": "Auto-rotate", "default": false },
+    {
+      "type": "range",
+      "id": "autoplay_speed",
+      "label": "Seconds per design",
+      "min": 4,
+      "max": 12,
+      "step": 1,
+      "unit": "s",
+      "default": 6
+    }
+  ],
+  "blocks": [
+    {
+      "type": "design",
+      "name": "Design",
+      "settings": [
+        { "type": "product", "id": "product", "label": "Product" },
+        { "type": "text", "id": "name", "label": "Name", "info": "Defaults to the product title." },
+        { "type": "text", "id": "persona", "label": "Who it's for", "default": "The shift worker" },
+        { "type": "textarea", "id": "description", "label": "Description" },
+        {
+          "type": "text",
+          "id": "grade",
+          "label": "Compression grade",
+          "info": "Shown if the product has no custom.compression_level metafield, e.g. 15–20 mmHg."
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Cut-out image",
+          "info": "Transparent PNG or WebP of the sock, about 1100px tall."
+        },
+        {
+          "type": "select",
+          "id": "bundled",
+          "label": "Bundled render (used when no image is uploaded)",
+          "options": [
+            { "value": "cherry-pop", "label": "Cherry Pop" },
+            { "value": "espresso", "label": "Espresso" },
+            { "value": "checker", "label": "Checker" },
+            { "value": "daisy", "label": "Daisy" },
+            { "value": "black", "label": "Black" },
+            { "value": "none", "label": "None" }
+          ],
+          "default": "none"
+        },
+        { "type": "color", "id": "bg", "label": "Background", "default": "#0060C2" },
+        { "type": "color", "id": "panel", "label": "Glow behind the sock", "default": "#229EE3" },
+        { "type": "color", "id": "ghost", "label": "Giant word colour", "default": "#FFFFFF" }
+      ]
+    }
+  ],
+  "max_blocks": 8,
+  "presets": [
+    {
+      "name": "Sock carousel",
+      "blocks": [
+        { "type": "design", "settings": { "name": "Cherry Pop", "bundled": "cherry-pop" } },
+        { "type": "design", "settings": { "name": "Espresso", "bundled": "espresso", "bg": "#9AC7E9", "panel": "#EAF4FB" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

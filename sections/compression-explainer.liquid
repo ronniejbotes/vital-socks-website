@@ -1,0 +1,133 @@
+{%- comment -%}
+  Signature section: graduated compression explained with the logo's own
+  three stripes. On desktop the stage pins and scrolling wraps the bands up
+  the leg one by one (royal = ankle/firmest, sky = calf/easing,
+  ice = below the knee/lightest). Without JavaScript, or with reduced motion,
+  everything is simply shown.
+{%- endcomment -%}
+{{ 'section-explainer.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign steps = section.blocks | where: 'type', 'step'
+-%}
+<section class="explainer tone-ink" data-explainer>
+  {% render 'ribbons' %}
+  <div class="explainer__track" data-explainer-track>
+    <div class="explainer__stage">
+      <div class="container explainer__grid">
+        <div class="explainer__intro">
+          {%- if section.settings.eyebrow != blank -%}
+            <p class="eyebrow">{{ section.settings.eyebrow | escape }}</p>
+          {%- endif -%}
+          <h2 class="h2 explainer__title">{{ section.settings.heading | escape }}</h2>
+          {%- if section.settings.text != blank -%}
+            <div class="lede explainer__lede">{{ section.settings.text }}</div>
+          {%- endif -%}
+        </div>
+
+        <figure class="explainer__figure">
+          <svg class="explainer__leg" viewBox="0 0 500 760" role="img" aria-labelledby="ExplainerLegTitle-{{ section.id }}">
+            <title id="ExplainerLegTitle-{{ section.id }}">{{ section.settings.figure_label | escape }}</title>
+            <defs>
+              <linearGradient id="LegFill-{{ section.id }}" x1="0" y1="1" x2="0" y2="0">
+                <stop offset="0" stop-color="#ffffff" stop-opacity="0.16" />
+                <stop offset="1" stop-color="#ffffff" stop-opacity="0.04" />
+              </linearGradient>
+            </defs>
+            <path
+              class="explainer__leg-shape"
+              d="M140 20 C 118 110, 92 180, 98 262 C 104 360, 150 440, 158 540 C 162 590, 132 620, 140 662 C 146 694, 166 706, 196 706 L 360 706 C 392 706, 404 684, 380 670 C 340 648, 290 624, 258 584 C 240 560, 236 500, 238 420 C 240 330, 252 230, 256 140 C 258 90, 260 50, 262 20 Z"
+              fill="url(#LegFill-{{ section.id }})"
+            />
+            <path class="explainer__band explainer__band--1" data-band pathLength="1" d="M 116 606 C 160 572, 224 580, 286 520" />
+            <path class="explainer__band explainer__band--2" data-band pathLength="1" d="M 90 440 C 140 402, 216 414, 280 350" />
+            <path class="explainer__band explainer__band--3" data-band pathLength="1" d="M 84 262 C 132 226, 212 236, 280 170" />
+
+            {%- for step in steps limit: 3 -%}
+              {%- liquid
+                case forloop.index
+                  when 1
+                    assign ly = 520
+                  when 2
+                    assign ly = 350
+                  else
+                    assign ly = 170
+                endcase
+              -%}
+              <g class="explainer__label explainer__label--{{ forloop.index }}" data-band-label>
+                <line x1="296" y1="{{ ly }}" x2="318" y2="{{ ly }}" />
+                <text x="326" y="{{ ly | minus: 20 }}" class="explainer__label-kicker">{{ step.settings.zone | escape }}</text>
+                <text x="326" y="{{ ly | plus: 16 }}" class="explainer__label-value">{{ step.settings.level | escape }}</text>
+              </g>
+            {%- endfor -%}
+          </svg>
+        </figure>
+
+        <ol class="explainer__steps" role="list">
+          {%- for step in steps -%}
+            <li class="explainer__step explainer__step--{{ forloop.index }}" data-step {{ step.shopify_attributes }}>
+              <span class="explainer__marker" aria-hidden="true"></span>
+              <div>
+                <h3 class="h3 explainer__step-title">{{ step.settings.title | escape }}</h3>
+                <p class="explainer__step-text">{{ step.settings.text | escape }}</p>
+              </div>
+            </li>
+          {%- endfor -%}
+        </ol>
+
+        {%- if section.settings.link != blank and section.settings.link_label != blank -%}
+          <p class="explainer__cta">
+            <a class="link-arrow" href="{{ section.settings.link }}">
+              {{- section.settings.link_label | escape -}}
+              {% render 'icon', name: 'arrow-right', size: 18 %}
+            </a>
+          </p>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Compression explainer",
+  "tag": "div",
+  "class": "section-explainer",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Graduated compression" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Pressure that climbs the right way" },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text",
+      "default": "<p>A compression sock only works if the pressure is graded: firmest at the ankle, lighter as it climbs. Get the gradient wrong and it is just a tight sock. That grading is what an orthotist checks on every Vital design.</p>"
+    },
+    { "type": "text", "id": "figure_label", "label": "Diagram description for screen readers", "default": "A leg wrapped in three bands: firmest at the ankle, easing at the calf, lightest below the knee." },
+    { "type": "text", "id": "link_label", "label": "Link label", "default": "Read the compression guide" },
+    { "type": "url", "id": "link", "label": "Link" }
+  ],
+  "blocks": [
+    {
+      "type": "step",
+      "name": "Step",
+      "settings": [
+        { "type": "text", "id": "zone", "label": "Zone on the leg", "default": "Ankle" },
+        { "type": "text", "id": "level", "label": "Pressure word", "default": "Firmest" },
+        { "type": "text", "id": "title", "label": "Title", "default": "Firmest at the ankle" },
+        { "type": "textarea", "id": "text", "label": "Text" }
+      ]
+    }
+  ],
+  "max_blocks": 3,
+  "presets": [
+    {
+      "name": "Compression explainer",
+      "blocks": [
+        { "type": "step", "settings": { "zone": "Ankle", "level": "Firmest", "title": "Firmest at the ankle", "text": "Pressure is highest where fluid pools first after a long day on your feet." } },
+        { "type": "step", "settings": { "zone": "Calf", "level": "Easing", "title": "Easing through the calf", "text": "It eases off up the calf, working with the muscle that pumps blood back up the leg." } },
+        { "type": "step", "settings": { "zone": "Below the knee", "level": "Lightest", "title": "Lightest below the knee", "text": "Lightest at the top, so the cuff stays up without digging in." } }
+      ]
+    }
+  ]
+}
+{% endschema %}

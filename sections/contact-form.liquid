@@ -1,0 +1,41 @@
+<section class="section" aria-labelledby="ContactHeading-{{ section.id }}">
+  <div class="container container--narrow">
+    <h2 class="h2" id="ContactHeading-{{ section.id }}">{{ section.settings.heading | escape }}</h2>
+    {%- if section.settings.text != blank -%}<div class="lede" style="margin-bottom: 32px;">{{ section.settings.text }}</div>{%- endif -%}
+    {%- form 'contact', id: 'ContactForm' -%}
+      {%- if form.posted_successfully? -%}
+        <p class="form-message form-message--success" role="status">{{ 'sections.contact.success' | t }}</p>
+      {%- elsif form.errors -%}
+        <p class="form-message form-message--error" role="alert">{{ 'sections.contact.error' | t }}</p>
+      {%- endif -%}
+      <div class="field">
+        <label for="ContactName">{{ 'sections.contact.name' | t }}</label>
+        <input id="ContactName" type="text" name="contact[name]" autocomplete="name" value="{{ form.name }}">
+      </div>
+      <div class="field">
+        <label for="ContactEmail">{{ 'sections.contact.email' | t }}</label>
+        <input id="ContactEmail" type="email" name="contact[email]" autocomplete="email" required value="{{ form.email }}">
+      </div>
+      <div class="field">
+        <label for="ContactPhone">{{ 'sections.contact.phone' | t }}</label>
+        <input id="ContactPhone" type="tel" name="contact[phone]" autocomplete="tel" value="{{ form.phone }}">
+      </div>
+      <div class="field">
+        <label for="ContactBody">{{ 'sections.contact.message' | t }}</label>
+        <textarea id="ContactBody" name="contact[body]" required>{{ form.body }}</textarea>
+      </div>
+      <button class="btn" type="submit">{{ 'sections.contact.send' | t }}</button>
+    {%- endform -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Contact form",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Ask us anything" },
+    { "type": "richtext", "id": "text", "label": "Text", "default": "<p>Sizing question or help with an order? Send us a message.</p>" }
+  ],
+  "presets": [{ "name": "Contact form" }]
+}
+{% endschema %}

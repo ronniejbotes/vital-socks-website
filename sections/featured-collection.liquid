@@ -1,0 +1,84 @@
+{%- comment -%}
+  Product grid from a collection. Until products exist (fresh store, or the
+  local preview), it shows the five bundled launch designs so the page never
+  looks empty.
+{%- endcomment -%}
+{%- liquid
+  assign collection = section.settings.collection
+  assign has_products = false
+  if collection != blank and collection.products_count > 0
+    assign has_products = true
+  endif
+  assign link = section.settings.link | default: routes.all_products_collection_url
+-%}
+<section class="featured section" aria-labelledby="FeaturedHeading-{{ section.id }}">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        {%- if section.settings.eyebrow != blank -%}
+          <p class="eyebrow">{{ section.settings.eyebrow | escape }}</p>
+        {%- endif -%}
+        <h2 class="h2 section-head__title" id="FeaturedHeading-{{ section.id }}" data-reveal>
+          {{- section.settings.heading | escape -}}
+        </h2>
+      </div>
+      {%- if section.settings.link_label != blank -%}
+        <a class="link-arrow" href="{{ link }}">
+          {{- section.settings.link_label | escape -}}
+          {% render 'icon', name: 'arrow-right', size: 18 %}
+        </a>
+      {%- endif -%}
+    </div>
+
+    <ul class="product-grid" role="list" style="--cols: {{ section.settings.columns }};" data-stagger>
+      {%- if has_products -%}
+        {%- for product in collection.products limit: section.settings.limit -%}
+          <li>{% render 'product-card', product: product, index: forloop.index0 %}</li>
+        {%- endfor -%}
+      {%- else -%}
+        {%- assign bundled = 'cherry-pop:Cherry Pop:The trend,espresso:Espresso:The shift worker,checker:Checker:The young one,daisy:Daisy:,black:Black:' | split: ',' -%}
+        {%- assign tints = 'var(--frost)|var(--ice)|var(--sky)' | split: '|' -%}
+        {%- for entry in bundled limit: section.settings.limit -%}
+          {%- liquid
+            assign parts = entry | split: ':'
+            assign handle = parts[0]
+            assign title = parts[1]
+            assign persona = parts[2]
+            assign i = forloop.index0 | modulo: 3
+            assign sm = 'sock-' | append: handle | append: '-sm.webp'
+          -%}
+          <li>
+            <div class="card" style="--card-bg: {{ tints[i] }};">
+              <div class="card__media">
+                <img src="{{ sm | asset_url }}" alt="{{ title | escape }} compression sock" width="290" height="720" loading="lazy">
+              </div>
+              <div class="card__info">
+                {%- if persona != blank -%}
+                  <span class="card__persona">{{ persona | escape }}</span>
+                {%- endif -%}
+                <h3 class="card__title"><a class="card__link" href="{{ link }}">{{ title | escape }}</a></h3>
+              </div>
+            </div>
+          </li>
+        {%- endfor -%}
+      {%- endif -%}
+    </ul>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Featured collection",
+  "class": "section-featured",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "The launch prints" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Pick your pair" },
+    { "type": "collection", "id": "collection", "label": "Collection" },
+    { "type": "range", "id": "limit", "label": "Products shown", "min": 2, "max": 12, "step": 1, "default": 5 },
+    { "type": "range", "id": "columns", "label": "Columns on desktop", "min": 2, "max": 5, "step": 1, "default": 5 },
+    { "type": "text", "id": "link_label", "label": "Link label", "default": "Shop all socks" },
+    { "type": "url", "id": "link", "label": "Link" }
+  ],
+  "presets": [{ "name": "Featured collection" }]
+}
+{% endschema %}

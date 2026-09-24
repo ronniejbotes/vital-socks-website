@@ -1,0 +1,18 @@
+<section class="not-found tone-frost">
+  {% render 'ribbons' %}
+  <div class="container not-found__inner">
+    <p class="display" aria-hidden="true">404</p>
+    <h1 class="h2">{{ 'sections.not_found.title' | t }}</h1>
+    <p class="lede" style="margin-inline: auto;">{{ 'sections.not_found.text' | t }}</p>
+    <p>
+      <a class="btn" href="{{ routes.all_products_collection_url }}">
+        {{- 'sections.not_found.cta' | t -}}
+        {% render 'icon', name: 'arrow-right', size: 18 %}
+      </a>
+    </p>
+  </div>
+</section>
+
+{% schema %}
+{ "name": "404", "settings": [] }
+{% endschema %}

@@ -1,0 +1,19 @@
+{%- comment -%}
+  Product price for cards and listings. Params: product.
+  South African prices must be shown VAT-inclusive; set that up in Settings > Taxes.
+{%- endcomment -%}
+<span class="price">
+  {%- if product.price_varies -%}
+    {%- assign min_price = product.price_min | money -%}
+    <span>{{ 'products.product.from_price' | t: price: min_price }}</span>
+  {%- else -%}
+    {%- if product.compare_at_price > product.price -%}
+      <span class="visually-hidden">{{ 'products.product.sale_price' | t }}</span>
+    {%- endif -%}
+    <span>{{ product.price | money }}</span>
+  {%- endif -%}
+  {%- if product.compare_at_price > product.price -%}
+    <span class="visually-hidden">{{ 'products.product.regular_price' | t }}</span>
+    <s class="price__compare">{{ product.compare_at_price | money }}</s>
+  {%- endif -%}
+</span>

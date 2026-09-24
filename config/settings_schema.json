@@ -1,0 +1,125 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "Vital Socks",
+    "theme_version": "1.0.0",
+    "theme_author": "Vital Socks",
+    "theme_documentation_url": "https://github.com/ronniejbotes/vital-socks-website",
+    "theme_support_url": "https://github.com/ronniejbotes/vital-socks-website"
+  },
+  {
+    "name": "Brand colours",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "The three blues come straight from the logo's stripes. They also stand for graduated compression: royal is firmest (ankle), sky is easing (calf), ice is lightest (knee)."
+      },
+      { "type": "color", "id": "color_ink", "label": "Navy ink", "info": "Text and dark sections", "default": "#02182D" },
+      { "type": "color", "id": "color_royal", "label": "Royal blue", "info": "Buttons and links", "default": "#0060C2" },
+      { "type": "color", "id": "color_sky", "label": "Sky blue", "default": "#229EE3" },
+      { "type": "color", "id": "color_ice", "label": "Ice blue", "default": "#9AC7E9" },
+      { "type": "color", "id": "color_frost", "label": "Frost", "info": "Pale tint used behind products", "default": "#EAF4FB" },
+      { "type": "color", "id": "color_paper", "label": "Page background", "default": "#FFFFFF" }
+    ]
+  },
+  {
+    "name": "Logo",
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "logo",
+        "label": "Logo for light backgrounds",
+        "info": "Leave empty to use the logo bundled with the theme."
+      },
+      {
+        "type": "image_picker",
+        "id": "logo_inverse",
+        "label": "White logo for coloured backgrounds",
+        "info": "Used over the homepage carousel. Leave empty to use the bundled white logo."
+      },
+      {
+        "type": "range",
+        "id": "logo_width",
+        "min": 100,
+        "max": 260,
+        "step": 4,
+        "unit": "px",
+        "label": "Logo width",
+        "default": 164
+      },
+      {
+        "type": "image_picker",
+        "id": "favicon",
+        "label": "Favicon",
+        "info": "Square .png, at least 96 × 96px. Leave empty to use the bundled icon."
+      }
+    ]
+  },
+  {
+    "name": "Business details",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "Shown in the footer and in search-engine structured data. South African online stores must show these details (ECTA, section 43)."
+      },
+      { "type": "text", "id": "legal_name", "label": "Registered business name" },
+      { "type": "text", "id": "registration_number", "label": "Company registration number" },
+      { "type": "text", "id": "vat_number", "label": "VAT number" },
+      { "type": "textarea", "id": "address", "label": "Physical address" },
+      { "type": "text", "id": "contact_email", "label": "Customer care email" },
+      { "type": "text", "id": "contact_phone", "label": "Customer care phone" },
+      { "type": "header", "content": "Founder" },
+      { "type": "text", "id": "founder_name", "label": "Name", "default": "Farida Cajee-Botes" },
+      { "type": "text", "id": "founder_title", "label": "Professional title", "default": "Orthotist and Prosthetist" },
+      {
+        "type": "url",
+        "id": "founder_url",
+        "label": "Practice website",
+        "info": "Linked from the founder section and listed in structured data."
+      }
+    ]
+  },
+  {
+    "name": "Social media",
+    "settings": [
+      { "type": "text", "id": "social_instagram", "label": "Instagram", "placeholder": "https://instagram.com/vitalsocks" },
+      { "type": "text", "id": "social_tiktok", "label": "TikTok", "placeholder": "https://tiktok.com/@vitalsocks" },
+      { "type": "text", "id": "social_facebook", "label": "Facebook", "placeholder": "https://facebook.com/vitalsocks" },
+      { "type": "text", "id": "social_youtube", "label": "YouTube" },
+      { "type": "text", "id": "social_linkedin", "label": "LinkedIn" }
+    ]
+  },
+  {
+    "name": "Cart",
+    "settings": [
+      {
+        "type": "select",
+        "id": "cart_type",
+        "label": "Cart type",
+        "options": [
+          { "value": "drawer", "label": "Drawer" },
+          { "value": "page", "label": "Page" }
+        ],
+        "default": "drawer"
+      },
+      { "type": "checkbox", "id": "cart_note", "label": "Show order note", "default": false },
+      {
+        "type": "text",
+        "id": "cart_reassurance",
+        "label": "Reassurance line",
+        "default": "Prices include VAT. Delivery is calculated at checkout."
+      }
+    ]
+  },
+  {
+    "name": "Motion",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "Visitors who ask their device for reduced motion always get a still version of the site."
+      },
+      { "type": "checkbox", "id": "enable_animations", "label": "Scroll animations and parallax", "default": true },
+      { "type": "checkbox", "id": "enable_smooth_scroll", "label": "Smooth scrolling", "default": true }
+    ]
+  }
+]

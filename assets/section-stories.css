@@ -1,0 +1,79 @@
+/* ==========================================================================
+   Parallax stories
+   .story__media is 124% of the panel's height; motion.js scrubs it from
+   -10% to +10% so the photo moves slower than the page. Without motion it
+   just sits centred.
+   ========================================================================== */
+
+.stories__head {
+  padding-block: var(--section-y) clamp(40px, 6vw, 72px);
+}
+.stories__title {
+  max-width: 12ch;
+}
+
+.story {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  min-height: 92svh;
+  overflow: hidden;
+  isolation: isolate;
+  color: #fff;
+  background: var(--ink);
+}
+.story + .story {
+  margin-top: 0;
+}
+.story__media {
+  position: absolute;
+  inset: -12% 0;
+  z-index: -2;
+  will-change: transform;
+}
+.story__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.story__scrim {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(0deg, rgba(var(--ink-rgb), 0.86) 0%, rgba(var(--ink-rgb), 0.45) 42%, rgba(var(--ink-rgb), 0) 70%);
+}
+.story__inner {
+  position: relative;
+  display: flex;
+  padding-block: clamp(48px, 8vw, 96px);
+}
+.story__copy {
+  max-width: 34rem;
+}
+.story__heading {
+  margin-bottom: 18px;
+}
+.story__text {
+  margin-bottom: 28px;
+  color: rgba(255, 255, 255, 0.88);
+  font-size: clamp(1.05rem, 1.4vw, 1.2rem);
+}
+.story .eyebrow::before {
+  background: #fff;
+}
+
+@media (min-width: 900px) {
+  .story {
+    align-items: center;
+    min-height: 100svh;
+  }
+  .story--left .story__scrim {
+    background: linear-gradient(90deg, rgba(var(--ink-rgb), 0.84) 0%, rgba(var(--ink-rgb), 0.5) 32%, rgba(var(--ink-rgb), 0) 58%);
+  }
+  .story--right .story__scrim {
+    background: linear-gradient(270deg, rgba(var(--ink-rgb), 0.84) 0%, rgba(var(--ink-rgb), 0.5) 32%, rgba(var(--ink-rgb), 0) 58%);
+  }
+  .story--right .story__inner {
+    justify-content: flex-end;
+  }
+}

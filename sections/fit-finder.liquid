@@ -1,0 +1,191 @@
+{%- comment -%}
+  Interactive fit finder + an indexable HTML size table.
+  Each "Size" block is one row of the size chart. Sizing drives the pressure
+  the sock applies, so these numbers must come from the manufacturer's spec.
+  While "Sample sizes" is ticked, a notice is shown to every visitor so
+  placeholder numbers can't go live by accident.
+{%- endcomment -%}
+{{ 'section-fit-finder.css' | asset_url | stylesheet_tag }}
+
+<section class="fit section tone-{{ section.settings.tone }}" id="fit-finder" aria-labelledby="FitHeading-{{ section.id }}" data-fit-finder>
+  <div class="container">
+    <div class="section-head">
+      <div>
+        {%- if section.settings.eyebrow != blank -%}
+          <p class="eyebrow">{{ section.settings.eyebrow | escape }}</p>
+        {%- endif -%}
+        <h2 class="h2 section-head__title" id="FitHeading-{{ section.id }}" data-reveal>{{ section.settings.heading | escape }}</h2>
+      </div>
+      {%- if section.settings.text != blank -%}
+        <p class="section-head__text">{{ section.settings.text | escape }}</p>
+      {%- endif -%}
+    </div>
+
+    {%- if section.settings.sample_data -%}
+      <p class="fit__sample" role="note">
+        {% render 'icon', name: 'ruler', size: 18 %}
+        {{ section.settings.sample_notice | escape }}
+      </p>
+    {%- endif -%}
+
+    <div class="fit__grid">
+      <div class="fit__how">
+        <svg class="fit__diagram" viewBox="0 0 260 420" aria-hidden="true" focusable="false">
+          <path
+            class="fit__leg"
+            d="M84 10 C 70 70, 52 120, 56 176 C 60 240, 90 290, 94 350 C 96 372, 80 386, 86 402 C 90 412, 102 414, 118 414 L 214 414 C 232 414, 238 402, 224 394 C 200 380, 170 366, 152 340 C 142 324, 140 290, 141 240 C 142 180, 150 110, 152 10 Z"
+          />
+          <ellipse class="fit__ring fit__ring--c" cx="99" cy="176" rx="47" ry="10" />
+          <ellipse class="fit__ring fit__ring--b" cx="118" cy="318" rx="26" ry="7" />
+          <text x="160" y="170" class="fit__tag">C</text>
+          <text x="160" y="186" class="fit__tag-sub">calf, widest</text>
+          <text x="160" y="312" class="fit__tag">B</text>
+          <text x="160" y="328" class="fit__tag-sub">ankle, narrowest</text>
+        </svg>
+        <ol class="fit__steps" role="list">
+          {%- for step in section.blocks -%}
+            {%- if step.type == 'tip' -%}
+              <li {{ step.shopify_attributes }}>
+                <strong>{{ step.settings.title | escape }}</strong>
+                <span>{{ step.settings.text | escape }}</span>
+              </li>
+            {%- endif -%}
+          {%- endfor -%}
+        </ol>
+      </div>
+
+      <div class="fit__tool">
+        <form class="fit__form" data-fit-form novalidate>
+          <div class="field">
+            <label for="FitAnkle-{{ section.id }}">{{ 'sections.fit_finder.ankle' | t }}</label>
+            <input id="FitAnkle-{{ section.id }}" type="number" inputmode="decimal" min="10" max="60" step="0.5" data-fit-ankle placeholder="22">
+          </div>
+          <div class="field">
+            <label for="FitCalf-{{ section.id }}">{{ 'sections.fit_finder.calf' | t }}</label>
+            <input id="FitCalf-{{ section.id }}" type="number" inputmode="decimal" min="15" max="80" step="0.5" data-fit-calf placeholder="36">
+          </div>
+        </form>
+        <div class="fit__result" aria-live="polite" data-fit-result>
+          <p class="fit__result-label">{{ 'sections.fit_finder.result' | t }}</p>
+          <p class="fit__result-size" data-fit-size>&mdash;</p>
+          <p class="fit__result-note" data-fit-note>{{ 'sections.fit_finder.prompt' | t }}</p>
+          <a class="fit__result-link" href="{{ section.settings.contact_page.url | default: '/pages/contact' }}" data-fit-contact hidden>
+            {{- 'sections.fit_finder.contact' | t -}}
+          </a>
+        </div>
+        <template data-fit-strings>
+          {"prompt": {{ 'sections.fit_finder.prompt' | t | json }}, "noMatch": {{ 'sections.fit_finder.no_match' | t | json }}}
+        </template>
+
+        <div class="fit__table-wrap" tabindex="0" role="region" aria-label="{{ section.settings.table_caption | escape }}">
+          <table class="fit__table">
+            <caption class="visually-hidden">{{ section.settings.table_caption | escape }}</caption>
+            <thead>
+              <tr>
+                <th scope="col">Size</th>
+                <th scope="col">Ankle (B)</th>
+                <th scope="col">Calf (C)</th>
+                <th scope="col">Shoe</th>
+              </tr>
+            </thead>
+            <tbody>
+              {%- for block in section.blocks -%}
+                {%- if block.type == 'size' -%}
+                  <tr
+                    data-size="{{ block.settings.label | escape }}"
+                    data-ankle-min="{{ block.settings.ankle_min }}"
+                    data-ankle-max="{{ block.settings.ankle_max }}"
+                    data-calf-min="{{ block.settings.calf_min }}"
+                    data-calf-max="{{ block.settings.calf_max }}"
+                    {{ block.shopify_attributes }}
+                  >
+                    <th scope="row">{{ block.settings.label | escape }}</th>
+                    <td>{{ block.settings.ankle_min }}&ndash;{{ block.settings.ankle_max }} cm</td>
+                    <td>{{ block.settings.calf_min }}&ndash;{{ block.settings.calf_max }} cm</td>
+                    <td>{{ block.settings.shoe | escape }}</td>
+                  </tr>
+                {%- endif -%}
+              {%- endfor -%}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Fit finder",
+  "class": "section-fit",
+  "settings": [
+    {
+      "type": "select",
+      "id": "tone",
+      "label": "Background",
+      "options": [
+        { "value": "paper", "label": "White" },
+        { "value": "frost", "label": "Frost" },
+        { "value": "ice", "label": "Ice blue" }
+      ],
+      "default": "paper"
+    },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Fit finder" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Two measurements. One size." },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Text",
+      "default": "Compression only works at the right size, and your shoe size can't tell us that. Measure your ankle and calf and we'll do the rest."
+    },
+    { "type": "text", "id": "table_caption", "label": "Size table description", "default": "Vital Socks size chart" },
+    { "type": "page", "id": "contact_page", "label": "Page for fit questions", "info": "Linked when measurements don't match a size. Defaults to /pages/contact." },
+    {
+      "type": "checkbox",
+      "id": "sample_data",
+      "label": "Sample sizes",
+      "info": "Untick only once the size rows hold the real Vital Socks size chart.",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "sample_notice",
+      "label": "Sample notice",
+      "default": "Sample sizing shown. The final Vital Socks size chart is on its way."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "size",
+      "name": "Size",
+      "settings": [
+        { "type": "text", "id": "label", "label": "Size", "default": "M" },
+        { "type": "number", "id": "ankle_min", "label": "Ankle from (cm)", "default": 21 },
+        { "type": "number", "id": "ankle_max", "label": "Ankle to (cm)", "default": 24 },
+        { "type": "number", "id": "calf_min", "label": "Calf from (cm)", "default": 30 },
+        { "type": "number", "id": "calf_max", "label": "Calf to (cm)", "default": 38 },
+        { "type": "text", "id": "shoe", "label": "Shoe size guide", "default": "UK 6–8" }
+      ]
+    },
+    {
+      "type": "tip",
+      "name": "Measuring tip",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Title", "default": "Measure in the morning" },
+        { "type": "text", "id": "text", "label": "Text", "default": "Legs are at their slimmest before the day's swelling sets in." }
+      ]
+    }
+  ],
+  "max_blocks": 12,
+  "presets": [
+    {
+      "name": "Fit finder",
+      "blocks": [
+        { "type": "tip", "settings": { "title": "Measure in the morning", "text": "Legs are at their slimmest before the day's swelling sets in." } },
+        { "type": "size", "settings": { "label": "S", "ankle_min": 18, "ankle_max": 21, "calf_min": 25, "calf_max": 33, "shoe": "UK 3–5" } },
+        { "type": "size", "settings": { "label": "M", "ankle_min": 21, "ankle_max": 24, "calf_min": 30, "calf_max": 38, "shoe": "UK 6–8" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

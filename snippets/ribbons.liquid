@@ -1,0 +1,16 @@
+{%- comment -%}
+  The three logo stripes as drifting background ribbons. motion.js moves each
+  one at its own data-speed as the section scrolls, so the background shifts
+  in layers. Decorative only.
+{%- endcomment -%}
+<div class="ribbons" aria-hidden="true">
+  <svg data-ribbon data-speed="0.5" style="top: 6%; color: var(--ice);" viewBox="0 0 1600 360" preserveAspectRatio="none" focusable="false">
+    <path d="M-40 250 C 260 70, 540 60, 820 190 S 1360 330, 1660 100" fill="none" stroke="currentColor" stroke-width="70" stroke-linecap="round" />
+  </svg>
+  <svg data-ribbon data-speed="1" style="top: 38%; color: var(--sky);" viewBox="0 0 1600 360" preserveAspectRatio="none" focusable="false">
+    <path d="M-40 120 C 300 300, 620 300, 900 170 S 1400 40, 1660 230" fill="none" stroke="currentColor" stroke-width="58" stroke-linecap="round" />
+  </svg>
+  <svg data-ribbon data-speed="1.6" style="top: 68%; color: var(--royal);" viewBox="0 0 1600 360" preserveAspectRatio="none" focusable="false">
+    <path d="M-40 260 C 240 90, 580 110, 860 220 S 1380 300, 1660 80" fill="none" stroke="currentColor" stroke-width="46" stroke-linecap="round" />
+  </svg>
+</div>

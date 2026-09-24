@@ -1,0 +1,118 @@
+{%- comment -%}
+  Site-wide JSON-LD.
+  - Home page: OnlineStore (a schema.org Organization subtype) + WebSite.
+  - Product, collection, article and page templates: BreadcrumbList.
+  Product and Article markup is output by main-product / main-article using
+  Shopify's `structured_data` filter, and FAQPage by the faq section.
+  Every business fact here comes from Theme settings > Business details, so
+  there is one place to keep it true.
+{%- endcomment -%}
+{%- liquid
+  assign org_id = shop.url | append: '/#organization'
+  if settings.logo != blank
+    assign logo_url = settings.logo | image_url: width: 600 | prepend: 'https:'
+  else
+    assign logo_url = 'vital-socks-logo-square.png' | asset_url | prepend: 'https:'
+  endif
+
+  assign same_as = ''
+  assign social_keys = 'social_instagram,social_tiktok,social_facebook,social_youtube,social_linkedin' | split: ','
+  for key in social_keys
+    assign link = settings[key]
+    if link != blank
+      assign same_as = same_as | append: link | append: '|'
+    endif
+  endfor
+  if settings.founder_url != blank
+    assign founder_url = settings.founder_url
+  endif
+  assign same_as = same_as | split: '|'
+-%}
+{%- if request.page_type == 'index' -%}
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "OnlineStore",
+      "@id": {{ org_id | json }},
+      "name": {{ shop.name | json }},
+      {%- if settings.legal_name != blank %}"legalName": {{ settings.legal_name | json }},{% endif %}
+      "url": {{ shop.url | json }},
+      "logo": {{ logo_url | json }},
+      {%- if shop.description != blank %}"description": {{ shop.description | json }},{% endif %}
+      {%- if settings.contact_email != blank %}"email": {{ settings.contact_email | json }},{% endif %}
+      {%- if settings.contact_phone != blank %}"telephone": {{ settings.contact_phone | json }},{% endif %}
+      {%- if settings.vat_number != blank %}"vatID": {{ settings.vat_number | json }},{% endif %}
+      {%- if settings.address != blank %}
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": {{ settings.address | newline_to_br | strip_html | strip_newlines | json }},
+        "addressCountry": "ZA"
+      },
+      {%- endif %}
+      {%- if settings.founder_name != blank %}
+      "founder": {
+        "@type": "Person",
+        "name": {{ settings.founder_name | json }}
+        {%- if settings.founder_title != blank %},"jobTitle": {{ settings.founder_title | json }}{% endif %}
+        {%- if founder_url %},"url": {{ founder_url | json }}{% endif %}
+      },
+      {%- endif %}
+      {%- if same_as.size > 0 %}"sameAs": {{ same_as | json }},{% endif %}
+      "areaServed": { "@type": "Country", "name": "South Africa" },
+      "currenciesAccepted": {{ cart.currency.iso_code | json }}
+    }
+  </script>
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "@id": {{ shop.url | append: '/#website' | json }},
+      "name": {{ shop.name | json }},
+      "url": {{ shop.url | json }},
+      "inLanguage": "en-ZA",
+      "publisher": { "@id": {{ org_id | json }} }
+    }
+  </script>
+{%- endif -%}
+
+{%- liquid
+  assign crumbs = false
+  case request.page_type
+    when 'product', 'collection', 'article', 'blog', 'page'
+      assign crumbs = true
+  endcase
+-%}
+{%- if crumbs -%}
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": {{ 'general.breadcrumbs.home' | t | json }},
+          "item": {{ shop.url | json }}
+        }
+        {%- case request.page_type -%}
+          {%- when 'product' -%}
+            {%- if collection -%}
+              ,{ "@type": "ListItem", "position": 2, "name": {{ collection.title | json }}, "item": {{ shop.url | append: collection.url | json }} }
+              ,{ "@type": "ListItem", "position": 3, "name": {{ product.title | json }}, "item": {{ shop.url | append: product.url | json }} }
+            {%- else -%}
+              ,{ "@type": "ListItem", "position": 2, "name": {{ product.title | json }}, "item": {{ shop.url | append: product.url | json }} }
+            {%- endif -%}
+          {%- when 'collection' -%}
+            ,{ "@type": "ListItem", "position": 2, "name": {{ collection.title | json }}, "item": {{ shop.url | append: collection.url | json }} }
+          {%- when 'blog' -%}
+            ,{ "@type": "ListItem", "position": 2, "name": {{ blog.title | json }}, "item": {{ shop.url | append: blog.url | json }} }
+          {%- when 'article' -%}
+            ,{ "@type": "ListItem", "position": 2, "name": {{ blog.title | json }}, "item": {{ shop.url | append: blog.url | json }} }
+            ,{ "@type": "ListItem", "position": 3, "name": {{ article.title | json }}, "item": {{ shop.url | append: article.url | json }} }
+          {%- when 'page' -%}
+            ,{ "@type": "ListItem", "position": 2, "name": {{ page.title | json }}, "item": {{ shop.url | append: page.url | json }} }
+        {%- endcase -%}
+      ]
+    }
+  </script>
+{%- endif -%}

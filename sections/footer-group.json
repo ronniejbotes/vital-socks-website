@@ -1,0 +1,21 @@
+{
+  "type": "footer",
+  "name": "Footer group",
+  "sections": {
+    "footer": {
+      "type": "footer",
+      "blocks": {
+        "shop": { "type": "menu", "settings": { "heading": "Shop", "menu": "footer" } },
+        "help": { "type": "menu", "settings": { "heading": "Help", "menu": "footer-help" } },
+        "contact": { "type": "contact", "settings": { "heading": "Talk to us", "text": "" } }
+      },
+      "block_order": ["shop", "help", "contact"],
+      "settings": {
+        "tagline": "Compression socks with the grading done properly. A South African brand, founded by an orthotist.",
+        "show_payment_icons": true,
+        "wordmark": "Vital"
+      }
+    }
+  },
+  "order": ["footer"]
+}

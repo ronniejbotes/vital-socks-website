@@ -1,0 +1,17 @@
+{
+  "name": "vital-socks-theme",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Vital Socks Shopify theme (Online Store 2.0). The theme itself needs no build step; these scripts are local tooling only.",
+  "scripts": {
+    "preview": "node dev/preview/server.mjs",
+    "check": "shopify theme check --path .",
+    "package": "node dev/package-theme.mjs"
+  },
+  "devDependencies": {
+    "liquidjs": "^10.21.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

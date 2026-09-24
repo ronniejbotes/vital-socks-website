@@ -1,0 +1,97 @@
+{%- comment -%}
+  The orthotist behind the brand — the credibility the competition lacks.
+  Name and title come from Theme settings > Business details. Only add a quote
+  here if Farida has actually said it.
+{%- endcomment -%}
+<section class="founder section tone-ink" aria-labelledby="FounderHeading-{{ section.id }}">
+  <div class="container founder__grid">
+    <div class="founder__media" data-reveal>
+      {%- if section.settings.image != blank -%}
+        {{
+          section.settings.image
+          | image_url: width: 1200
+          | image_tag: widths: '500, 800, 1200', sizes: '(min-width: 900px) 40vw, 100vw', loading: 'lazy'
+        }}
+      {%- else -%}
+        <div class="founder__placeholder">
+          <p>{{ section.settings.placeholder_text | escape }}</p>
+        </div>
+      {%- endif -%}
+    </div>
+    <div class="founder__copy" data-reveal>
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="eyebrow">{{ section.settings.eyebrow | escape }}</p>
+      {%- endif -%}
+      <h2 class="h2" id="FounderHeading-{{ section.id }}">{{ section.settings.heading | escape }}</h2>
+      {%- if section.settings.quote != blank -%}
+        <blockquote class="founder__quote">{{ section.settings.quote | escape }}</blockquote>
+      {%- endif -%}
+      <p class="founder__name">{{ settings.founder_name | escape }}</p>
+      <p class="founder__title">{{ settings.founder_title | escape }}</p>
+      {%- if section.settings.text != blank -%}
+        <div class="lede">{{ section.settings.text }}</div>
+      {%- endif -%}
+      {%- if section.blocks.size > 0 -%}
+        <ul class="founder__points" role="list">
+          {%- for block in section.blocks -%}
+            <li class="founder__point" {{ block.shopify_attributes }}>
+              {% render 'icon', name: 'check', size: 22 %}
+              <span>{{ block.settings.text | escape }}</span>
+            </li>
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+      {%- if settings.founder_url != blank and section.settings.link_label != blank -%}
+        <a class="btn btn--light" href="{{ settings.founder_url }}" target="_blank" rel="noopener">
+          {{- section.settings.link_label | escape -}}
+          <span class="visually-hidden">({{ 'accessibility.new_window' | t }})</span>
+          {% render 'icon', name: 'arrow-right', size: 18 %}
+        </a>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Orthotist",
+  "class": "section-founder",
+  "settings": [
+    { "type": "image_picker", "id": "image", "label": "Portrait" },
+    { "type": "text", "id": "placeholder_text", "label": "Placeholder text (shown until a portrait is added)", "default": "Portrait of Farida coming soon" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Who grades your socks" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "An orthotist, not a guess" },
+    {
+      "type": "textarea",
+      "id": "quote",
+      "label": "Quote",
+      "info": "Only use words the founder has actually said."
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text",
+      "default": "<p>Vital Socks was started by an orthotist who measures and fits medical compression garments for her patients. She knows what the wrong pressure does to a leg, so she oversees the compression grading on every Vital design.</p>"
+    },
+    { "type": "text", "id": "link_label", "label": "Practice link label", "default": "Visit Farida's practice" }
+  ],
+  "blocks": [
+    {
+      "type": "point",
+      "name": "Point",
+      "settings": [{ "type": "text", "id": "text", "label": "Text", "default": "Compression range stated on every product" }]
+    }
+  ],
+  "max_blocks": 5,
+  "presets": [
+    {
+      "name": "Orthotist",
+      "blocks": [
+        { "type": "point", "settings": { "text": "Compression grading overseen by an orthotist" } },
+        { "type": "point", "settings": { "text": "Compression range stated on every product" } },
+        { "type": "point", "settings": { "text": "Sized by your ankle and calf, not your shoe" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,36 @@
+<div class="page-hero container">
+  <h1 class="h1 page-hero__title">{{ 'sections.search.title' | t }}</h1>
+  <form class="search-form" action="{{ routes.search_url }}" method="get" role="search" style="margin-top: 24px;">
+    <label class="visually-hidden" for="SearchInput">{{ 'general.search.search' | t }}</label>
+    <input class="input" id="SearchInput" type="search" name="q" value="{{ search.terms | escape }}" placeholder="{{ 'general.search.placeholder' | t }}">
+    <input type="hidden" name="options[prefix]" value="last">
+    <button class="btn" type="submit">{% render 'icon', name: 'search', size: 18 %}<span class="visually-hidden">{{ 'general.search.search' | t }}</span></button>
+  </form>
+</div>
+<div class="container section--tight" style="padding-top: 0;">
+  {%- if search.performed -%}
+    {%- if search.results_count > 0 -%}
+      <p class="toolbar">{{ 'sections.search.results' | t: count: search.results_count, terms: search.terms }}</p>
+      <ul class="product-grid" role="list">
+        {%- for item in search.results -%}
+          <li>
+            {%- if item.object_type == 'product' -%}
+              {% render 'product-card', product: item, index: forloop.index0 %}
+            {%- else -%}
+              <a class="article-card" href="{{ item.url }}">
+                <h2 class="article-card__title">{{ item.title | escape }}</h2>
+                <p class="article-card__meta">{{ item.content | strip_html | truncatewords: 20 }}</p>
+              </a>
+            {%- endif -%}
+          </li>
+        {%- endfor -%}
+      </ul>
+    {%- else -%}
+      <p class="empty-state">{{ 'sections.search.no_results' | t: terms: search.terms }}</p>
+    {%- endif -%}
+  {%- endif -%}
+</div>
+
+{% schema %}
+{ "name": "Search results", "settings": [] }
+{% endschema %}

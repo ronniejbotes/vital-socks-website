@@ -1,0 +1,25 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-article",
+      "settings": {
+        "show_author_box": true
+      }
+    },
+    "shop": {
+      "type": "featured-collection",
+      "settings": {
+        "eyebrow": "Put it into practice",
+        "heading": "The launch prints",
+        "collection": "launch-prints",
+        "limit": 5,
+        "columns": 5,
+        "link_label": "Shop all socks"
+      }
+    }
+  },
+  "order": [
+    "main",
+    "shop"
+  ]
+}

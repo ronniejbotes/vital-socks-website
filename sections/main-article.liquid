@@ -1,0 +1,50 @@
+{%- comment -%}
+  Article page. Author details feed E-E-A-T: set the author's name in the
+  article and, for clinical topics, publish under the founder.
+{%- endcomment -%}
+<article class="article">
+  <header class="article__header container container--narrow">
+    <nav class="breadcrumbs" aria-label="{{ 'general.breadcrumbs.label' | t }}" style="display: flex; justify-content: center;">
+      <ol role="list">
+        <li><a href="{{ routes.root_url }}">{{ 'general.breadcrumbs.home' | t }}</a></li>
+        <li><a href="{{ blog.url }}">{{ blog.title | escape }}</a></li>
+      </ol>
+    </nav>
+    <h1 class="h1">{{ article.title | escape }}</h1>
+    <p class="article-card__meta">
+      {{ 'sections.blog.by' | t: author: article.author }} &middot;
+      <time datetime="{{ article.published_at | date: '%Y-%m-%d' }}">{{ article.published_at | date: '%-d %B %Y' }}</time>
+    </p>
+  </header>
+  <div class="container container--narrow">
+    {%- if article.image -%}
+      <div class="article__cover">
+        {{ article.image | image_url: width: 1600 | image_tag: widths: '800, 1200, 1600', sizes: '(min-width: 820px) 780px, 100vw', fetchpriority: 'high' }}
+      </div>
+    {%- endif -%}
+    <div class="rte">{{ article.content }}</div>
+    {%- if section.settings.show_author_box and settings.founder_name != blank and article.author contains settings.founder_name -%}
+      <aside class="article__author">
+        {% render 'icon', name: 'stethoscope', size: 32 %}
+        <div>
+          <strong>{{ settings.founder_name | escape }}</strong><br>
+          <span>{{ settings.founder_title | escape }}</span>
+        </div>
+      </aside>
+    {%- endif -%}
+    <p style="margin-top: 48px;"><a class="link-arrow" href="{{ blog.url }}">{{ 'sections.blog.back' | t: blog: blog.title }}</a></p>
+  </div>
+</article>
+
+<script type="application/ld+json">
+  {{ article | structured_data }}
+</script>
+
+{% schema %}
+{
+  "name": "Article",
+  "settings": [
+    { "type": "checkbox", "id": "show_author_box", "label": "Show the founder box on her articles", "default": true }
+  ]
+}
+{% endschema %}

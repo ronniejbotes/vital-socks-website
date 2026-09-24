@@ -1,0 +1,22 @@
+<div class="custom-liquid{% if section.settings.padded %} section{% endif %}">
+  {%- if section.settings.padded -%}<div class="container">{%- endif -%}
+  {{ section.settings.custom_liquid }}
+  {%- if section.settings.padded -%}</div>{%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "Custom Liquid",
+  "class": "section-custom-liquid",
+  "settings": [
+    {
+      "type": "liquid",
+      "id": "custom_liquid",
+      "label": "Custom Liquid",
+      "info": "Add app snippets or other code."
+    },
+    { "type": "checkbox", "id": "padded", "label": "Add spacing and page width", "default": true }
+  ],
+  "presets": [{ "name": "Custom Liquid" }]
+}
+{% endschema %}

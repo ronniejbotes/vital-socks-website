@@ -1,0 +1,116 @@
+<!doctype html>
+{%- liquid
+  assign html_lang = request.locale.iso_code
+  if html_lang == 'en'
+    assign html_lang = 'en-ZA'
+  endif
+-%}
+<html class="no-js" lang="{{ html_lang }}">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="theme-color" content="{{ settings.color_ink }}">
+    <link rel="canonical" href="{{ canonical_url }}">
+    <link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
+
+    {%- if settings.favicon != blank -%}
+      <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 96, height: 96 }}">
+      <link rel="apple-touch-icon" href="{{ settings.favicon | image_url: width: 180, height: 180 }}">
+    {%- else -%}
+      <link rel="icon" type="image/png" sizes="32x32" href="{{ 'favicon-32.png' | asset_url }}">
+      <link rel="icon" type="image/png" sizes="96x96" href="{{ 'favicon-96.png' | asset_url }}">
+      <link rel="apple-touch-icon" href="{{ 'apple-touch-icon.png' | asset_url }}">
+    {%- endif -%}
+
+    {{ 'anton-latin.woff2' | asset_url | preload_tag: as: 'font', type: 'font/woff2', crossorigin: 'anonymous' }}
+    {{ 'inter-latin-var.woff2' | asset_url | preload_tag: as: 'font', type: 'font/woff2', crossorigin: 'anonymous' }}
+
+    {% render 'meta-tags' %}
+
+    <style>
+      @font-face {
+        font-family: 'Anton';
+        src: url('{{ 'anton-latin.woff2' | asset_url }}') format('woff2');
+        font-weight: 400;
+        font-style: normal;
+        font-display: swap;
+      }
+      @font-face {
+        font-family: 'Inter';
+        src: url('{{ 'inter-latin-var.woff2' | asset_url }}') format('woff2');
+        font-weight: 400 700;
+        font-style: normal;
+        font-display: swap;
+      }
+      :root {
+        --ink: {{ settings.color_ink }};
+        --ink-rgb: {{ settings.color_ink.red }}, {{ settings.color_ink.green }}, {{ settings.color_ink.blue }};
+        --royal: {{ settings.color_royal }};
+        --sky: {{ settings.color_sky }};
+        --ice: {{ settings.color_ice }};
+        --frost: {{ settings.color_frost }};
+        --paper: {{ settings.color_paper }};
+        --logo-width: {{ settings.logo_width }}px;
+      }
+    </style>
+
+    {{ 'base.css' | asset_url | stylesheet_tag }}
+
+    <script>
+      document.documentElement.classList.replace('no-js', 'js');
+    </script>
+
+    {{ content_for_header }}
+
+    {% render 'structured-data' %}
+  </head>
+
+  <body class="template-{{ template.name | handle }}{% if template.suffix != blank %} template-{{ template.name | handle }}--{{ template.suffix | handle }}{% endif %}">
+    <a class="skip-link" href="#MainContent">{{ 'accessibility.skip_to_content' | t }}</a>
+
+    {% sections 'header-group' %}
+
+    <main id="MainContent" class="main" tabindex="-1">
+      {{ content_for_layout }}
+    </main>
+
+    {% sections 'footer-group' %}
+
+    {%- if settings.cart_type == 'drawer' -%}
+      {% section 'cart-drawer' %}
+    {%- endif -%}
+
+    <script>
+      window.VS = {
+        routes: {
+          root: {{ routes.root_url | json }},
+          cart: {{ routes.cart_url | json }},
+          cartAdd: {{ routes.cart_add_url | json }},
+          cartChange: {{ routes.cart_change_url | json }},
+          cartUpdate: {{ routes.cart_update_url | json }}
+        },
+        cartType: {{ settings.cart_type | json }},
+        motion: {
+          animate: {{ settings.enable_animations | json }},
+          smooth: {{ settings.enable_smooth_scroll | json }}
+        },
+        strings: {
+          addToCart: {{ 'products.product.add_to_cart' | t | json }},
+          adding: {{ 'products.product.adding' | t | json }},
+          added: {{ 'products.product.added' | t | json }},
+          soldOut: {{ 'products.product.sold_out' | t | json }},
+          unavailable: {{ 'products.product.unavailable' | t | json }},
+          cartError: {{ 'products.product.error' | t | json }}
+        }
+      };
+    </script>
+    <script src="{{ 'vendor-gsap.min.js' | asset_url }}" defer></script>
+    <script src="{{ 'vendor-scrolltrigger.min.js' | asset_url }}" defer></script>
+    {%- if settings.enable_smooth_scroll -%}
+      <script src="{{ 'vendor-lenis.min.js' | asset_url }}" defer></script>
+    {%- endif -%}
+    <script src="{{ 'theme.js' | asset_url }}" defer></script>
+    <script src="{{ 'motion.js' | asset_url }}" defer></script>
+  </body>
+</html>

@@ -1,0 +1,169 @@
+{%- liquid
+  assign menu = linklists[section.settings.menu]
+  assign overlay = false
+  if section.settings.overlay_home and template.name == 'index'
+    assign overlay = true
+  endif
+  assign logo_alt = shop.name | escape
+-%}
+{%- if overlay -%}
+  <style>
+    .template-index #MainContent > .shopify-section:first-child {
+      margin-top: calc(var(--header-h) * -1);
+    }
+  </style>
+{%- endif -%}
+
+<header class="header{% if overlay %} header--overlay{% endif %}" data-header{% if overlay %} data-overlay{% endif %}>
+  <div class="container header__inner">
+    <button
+      class="icon-btn header__menu-toggle"
+      type="button"
+      aria-controls="MenuDrawer"
+      aria-expanded="false"
+      data-menu-open
+    >
+      {% render 'icon', name: 'menu' %}
+      <span class="visually-hidden">{{ 'accessibility.menu' | t }}</span>
+    </button>
+
+    <a class="header__logo" href="{{ routes.root_url }}">
+      {%- if settings.logo != blank -%}
+        {{
+          settings.logo
+          | image_url: width: 520
+          | image_tag: class: 'logo--default', alt: logo_alt, widths: '260, 390, 520', sizes: '(min-width: 990px) 260px, 44vw'
+        }}
+      {%- else -%}
+        <img
+          class="logo--default"
+          src="{{ 'vital-socks-logo.png' | asset_url }}"
+          alt="{{ logo_alt }}"
+          width="720"
+          height="304"
+        >
+      {%- endif -%}
+      {%- if overlay -%}
+        {%- if settings.logo_inverse != blank -%}
+          {{
+            settings.logo_inverse
+            | image_url: width: 520
+            | image_tag: class: 'logo--inverse', alt: logo_alt, widths: '260, 390, 520', sizes: '(min-width: 990px) 260px, 44vw'
+          }}
+        {%- else -%}
+          <img
+            class="logo--inverse"
+            src="{{ 'vital-socks-logo-white.png' | asset_url }}"
+            alt="{{ logo_alt }}"
+            width="720"
+            height="304"
+          >
+        {%- endif -%}
+      {%- endif -%}
+    </a>
+
+    <nav class="header__nav" aria-label="{{ section.settings.nav_label | escape }}">
+      <ul class="header__nav-list" role="list">
+        {%- for link in menu.links -%}
+          <li>
+            <a
+              class="header__nav-link"
+              href="{{ link.url }}"
+              {% if link.current %}
+                aria-current="page"
+              {% endif %}
+            >
+              {{- link.title | escape -}}
+            </a>
+          </li>
+        {%- endfor -%}
+      </ul>
+    </nav>
+
+    <div class="header__actions">
+      <a class="icon-btn" href="{{ routes.search_url }}">
+        {% render 'icon', name: 'search' %}
+        <span class="visually-hidden">{{ 'accessibility.search' | t }}</span>
+      </a>
+      {%- if shop.customer_accounts_enabled -%}
+        <shopify-account menu="customer-account-main-menu"></shopify-account>
+      {%- endif -%}
+      <a class="icon-btn" href="{{ routes.cart_url }}" data-cart-open>
+        {% render 'icon', name: 'bag' %}
+        <span class="cart-count" data-cart-count aria-hidden="true">
+          {%- if cart.item_count > 0 -%}{{ cart.item_count }}{%- endif -%}
+        </span>
+        <span class="visually-hidden" data-cart-count-label>
+          {{- 'accessibility.cart' | t }}, {{ 'accessibility.cart_count' | t: count: cart.item_count -}}
+        </span>
+      </a>
+    </div>
+  </div>
+</header>
+
+<div class="menu-drawer" id="MenuDrawer" data-menu-drawer>
+  <div
+    class="menu-drawer__panel"
+    role="dialog"
+    aria-modal="true"
+    aria-label="{{ 'accessibility.menu' | t }}"
+    tabindex="-1"
+    data-lenis-prevent
+  >
+    <button class="icon-btn menu-drawer__close" type="button" data-menu-close>
+      {% render 'icon', name: 'close' %}
+      <span class="visually-hidden">{{ 'accessibility.close' | t }}</span>
+    </button>
+    <nav aria-label="{{ section.settings.nav_label | escape }}">
+      <ul class="menu-drawer__list" role="list">
+        {%- for link in menu.links -%}
+          <li>
+            <a
+              href="{{ link.url }}"
+              {% if link.current %}
+                aria-current="page"
+              {% endif %}
+            >
+              {{- link.title | escape -}}
+            </a>
+          </li>
+        {%- endfor -%}
+      </ul>
+    </nav>
+    <div class="menu-drawer__foot">
+      {%- if settings.contact_email != blank -%}
+        <p><a href="mailto:{{ settings.contact_email }}">{{ settings.contact_email }}</a></p>
+      {%- endif -%}
+      {%- if settings.founder_name != blank -%}
+        <p>{{ section.settings.drawer_note | replace: '[founder]', settings.founder_name | escape }}</p>
+      {%- endif -%}
+    </div>
+  </div>
+  <div class="menu-drawer__scrim" data-menu-close></div>
+</div>
+
+{% schema %}
+{
+  "name": "Header",
+  "class": "section-header",
+  "settings": [
+    { "type": "link_list", "id": "menu", "label": "Menu", "default": "main-menu" },
+    { "type": "text", "id": "nav_label", "label": "Menu label for screen readers", "default": "Main" },
+    {
+      "type": "checkbox",
+      "id": "overlay_home",
+      "label": "Float over the homepage carousel",
+      "info": "The header turns solid as soon as the visitor starts scrolling.",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "drawer_note",
+      "label": "Mobile menu footnote",
+      "info": "[founder] is replaced by the founder name from Theme settings.",
+      "default": "Compression grading overseen by [founder], orthotist."
+    }
+  ],
+  "enabled_on": { "groups": ["header"] }
+}
+{% endschema %}

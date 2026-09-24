@@ -1,0 +1,28 @@
+{%- comment -%}
+  robots.txt for Vital Socks (served at /robots.txt).
+
+  It starts from Shopify's maintained default rules, output through the
+  robots object, so Shopify's own SEO updates keep flowing in. Do not paste
+  the rules in as plain text.
+
+  The defaults already block /admin, /cart, /checkout, /account, internal
+  search, sorted/filtered collection URLs and preview links, and they list
+  the sitemap Shopify generates at /sitemap.xml.
+
+  AI search crawlers (OAI-SearchBot, PerplexityBot, ClaudeBot,
+  Google-Extended and others) are allowed through the '*' group. Don't give
+  them their own group to "allow" them: a named group replaces the '*' rules
+  for that bot, which would unblock cart and checkout pages for it.
+{%- endcomment -%}
+# Vital Socks - graded compression socks, South Africa
+{% for group in robots.default_groups %}
+  {{- group.user_agent -}}
+
+  {% for rule in group.rules %}
+    {{- rule -}}
+  {% endfor %}
+
+  {%- if group.sitemap != blank -%}
+    {{ group.sitemap }}
+  {%- endif -%}
+{% endfor %}

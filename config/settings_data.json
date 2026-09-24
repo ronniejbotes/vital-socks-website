@@ -1,0 +1,22 @@
+{
+  "current": "Default",
+  "presets": {
+    "Default": {
+      "color_ink": "#02182D",
+      "color_royal": "#0060C2",
+      "color_sky": "#229EE3",
+      "color_ice": "#9AC7E9",
+      "color_frost": "#EAF4FB",
+      "color_paper": "#FFFFFF",
+      "logo_width": 164,
+      "founder_name": "Farida Cajee-Botes",
+      "founder_title": "Orthotist and Prosthetist",
+      "founder_url": "https://www.cajeebotes.com",
+      "cart_type": "drawer",
+      "cart_note": false,
+      "cart_reassurance": "Prices include VAT. Delivery is calculated at checkout.",
+      "enable_animations": true,
+      "enable_smooth_scroll": true
+    }
+  }
+}

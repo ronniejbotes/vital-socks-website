@@ -1,0 +1,41 @@
+{%- paginate blog.articles by 9 -%}
+  <div class="page-hero container">
+    {%- if section.settings.eyebrow != blank -%}<p class="eyebrow">{{ section.settings.eyebrow | escape }}</p>{%- endif -%}
+    <h1 class="h1 page-hero__title">{{ blog.title | escape }}</h1>
+    {%- if section.settings.intro != blank -%}<p class="lede page-hero__text">{{ section.settings.intro | escape }}</p>{%- endif -%}
+  </div>
+  <div class="container section--tight" style="padding-top: 0;">
+    {%- if blog.articles.size > 0 -%}
+      <ul class="article-grid" role="list">
+        {%- for article in blog.articles -%}
+          <li>
+            <a class="article-card" href="{{ article.url }}">
+              <div class="article-card__media">
+                {%- if article.image -%}
+                  {{ article.image | image_url: width: 900 | image_tag: loading: 'lazy', widths: '450, 900', sizes: '(min-width: 1100px) 33vw, (min-width: 750px) 50vw, 100vw' }}
+                {%- endif -%}
+              </div>
+              <p class="article-card__meta">{{ article.published_at | date: '%-d %B %Y' }}</p>
+              <h2 class="article-card__title">{{ article.title | escape }}</h2>
+              {%- if article.excerpt != blank -%}<p class="article-card__meta">{{ article.excerpt | strip_html | truncatewords: 24 }}</p>{%- endif -%}
+            </a>
+          </li>
+        {%- endfor -%}
+      </ul>
+    {%- else -%}
+      <p class="empty-state">{{ section.settings.empty_text | escape }}</p>
+    {%- endif -%}
+    {%- if paginate.pages > 1 -%}{% render 'pagination', paginate: paginate %}{%- endif -%}
+  </div>
+{%- endpaginate -%}
+
+{% schema %}
+{
+  "name": "Blog posts",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Legwork" },
+    { "type": "text", "id": "intro", "label": "Intro", "default": "Plain answers about compression, sizing and looking after your legs." },
+    { "type": "text", "id": "empty_text", "label": "Empty message", "default": "The first articles are being written." }
+  ]
+}
+{% endschema %}

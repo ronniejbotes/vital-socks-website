@@ -1,0 +1,117 @@
+{%- comment -%}
+  Rendered once in layout/theme.liquid and re-rendered through the Section
+  Rendering API (sections=cart-drawer) whenever the cart changes. theme.js
+  swaps the #CartDrawerContents node, so keep that id stable.
+{%- endcomment -%}
+<div class="drawer" id="CartDrawer" data-cart-drawer>
+  <div class="drawer__scrim" data-cart-close></div>
+  <div
+    class="drawer__panel"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="CartDrawerTitle"
+    tabindex="-1"
+  >
+    <div class="drawer__head">
+      <h2 class="drawer__title" id="CartDrawerTitle">{{ 'sections.cart.title' | t }}</h2>
+      <button class="icon-btn" type="button" data-cart-close>
+        {% render 'icon', name: 'close' %}
+        <span class="visually-hidden">{{ 'accessibility.close' | t }}</span>
+      </button>
+    </div>
+
+    <div id="CartDrawerContents" class="drawer__contents" data-cart-contents data-item-count="{{ cart.item_count }}">
+      {%- if cart.item_count == 0 -%}
+        <div class="drawer__body" data-lenis-prevent>
+          <div class="drawer__empty">
+            <p>{{ 'sections.cart.empty' | t }}</p>
+            <a class="btn" href="{{ routes.all_products_collection_url }}">
+              {{- 'sections.cart.empty_cta' | t -}}
+              {% render 'icon', name: 'arrow-right', size: 18 %}
+            </a>
+          </div>
+        </div>
+      {%- else -%}
+        <div class="drawer__body" data-lenis-prevent>
+          <ul role="list">
+            {%- for item in cart.items -%}
+              <li class="cart-line" data-line-key="{{ item.key }}">
+                <a class="cart-line__media" href="{{ item.url }}" tabindex="-1" aria-hidden="true">
+                  {%- if item.image -%}
+                    {{ item.image | image_url: width: 200 | image_tag: loading: 'lazy', alt: '', width: 84 }}
+                  {%- endif -%}
+                </a>
+                <div>
+                  <a class="cart-line__title" href="{{ item.url }}">{{ item.product.title | escape }}</a>
+                  {%- unless item.product.has_only_default_variant -%}
+                    <p class="cart-line__variant">{{ item.variant.title | escape }}</p>
+                  {%- endunless -%}
+                  <div class="qty">
+                    <button
+                      type="button"
+                      data-qty-change="-1"
+                      aria-label="{{ 'accessibility.quantity_decrease' | t: product: item.product.title | escape }}"
+                    >
+                      {% render 'icon', name: 'minus', size: 16 %}
+                    </button>
+                    <input
+                      type="number"
+                      min="0"
+                      value="{{ item.quantity }}"
+                      data-qty-input
+                      aria-label="{{ 'products.product.quantity' | t }}"
+                    >
+                    <button
+                      type="button"
+                      data-qty-change="1"
+                      aria-label="{{ 'accessibility.quantity_increase' | t: product: item.product.title | escape }}"
+                    >
+                      {% render 'icon', name: 'plus', size: 16 %}
+                    </button>
+                  </div>
+                </div>
+                <div class="cart-line__price">
+                  {%- if item.original_line_price != item.final_line_price -%}
+                    <s class="price__compare">{{ item.original_line_price | money }}</s><br>
+                  {%- endif -%}
+                  {{ item.final_line_price | money }}
+                  <br>
+                  <button
+                    class="cart-line__remove"
+                    type="button"
+                    data-line-remove
+                    aria-label="{{ 'accessibility.remove_item' | t: product: item.product.title | escape }}"
+                  >
+                    {{ 'sections.cart.remove' | t }}
+                  </button>
+                </div>
+              </li>
+            {%- endfor -%}
+          </ul>
+        </div>
+        <div class="drawer__foot">
+          <div class="cart-totals">
+            <span>{{ 'sections.cart.subtotal' | t }}</span>
+            <span>{{ cart.total_price | money }}</span>
+          </div>
+          {%- if settings.cart_reassurance != blank -%}
+            <p class="cart-reassure">{{ settings.cart_reassurance | escape }}</p>
+          {%- endif -%}
+          <form action="{{ routes.cart_url }}" method="post">
+            <button class="btn btn--block" type="submit" name="checkout">
+              {% render 'icon', name: 'lock', size: 18 %}
+              {{ 'sections.cart.checkout' | t }}
+            </button>
+          </form>
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Cart drawer",
+  "settings": []
+}
+{% endschema %}

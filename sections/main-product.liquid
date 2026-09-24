@@ -1,0 +1,363 @@
+{%- comment -%}
+  Product page.
+  Compression facts come from ONE place — product metafields — so the grade
+  shown here, on cards, in the carousel and in agents.md always agrees:
+    custom.compression_level  (single line text, e.g. "15–20 mmHg")
+    custom.compression_class  (single line text, optional)
+    custom.persona            (single line text, e.g. "The shift worker")
+    custom.fabric             (multi-line text)
+    custom.care               (multi-line text)
+    custom.card_color         (colour, tile behind the product)
+  Upload a transparent cut-out as the first product image.
+{%- endcomment -%}
+{{ 'section-product.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign current_variant = product.selected_or_first_available_variant
+  assign form_id = 'ProductForm-' | append: section.id
+  assign grade = product.metafields.custom.compression_level.value
+  assign grade_class = product.metafields.custom.compression_class.value
+  assign persona = product.metafields.custom.persona.value
+  assign fabric = product.metafields.custom.fabric.value
+  assign care = product.metafields.custom.care.value
+  assign tile = 'var(--frost)'
+  if product.metafields.custom.card_color != blank
+    assign tile = product.metafields.custom.card_color.value
+  endif
+  assign featured_media = current_variant.featured_media | default: product.featured_media
+  assign size_guide_url = ''
+  if section.settings.size_guide_page != blank
+    assign size_guide_url = section.settings.size_guide_page.url | append: '#fit-finder'
+  endif
+-%}
+
+<section class="product section--tight" data-product-section data-section-id="{{ section.id }}">
+  <div class="container">
+    <nav class="breadcrumbs" aria-label="{{ 'general.breadcrumbs.label' | t }}">
+      <ol role="list">
+        <li><a href="{{ routes.root_url }}">{{ 'general.breadcrumbs.home' | t }}</a></li>
+        {%- if collection -%}
+          <li><a href="{{ collection.url }}">{{ collection.title | escape }}</a></li>
+        {%- else -%}
+          <li><a href="{{ routes.all_products_collection_url }}">{{ 'general.shop_all' | t }}</a></li>
+        {%- endif -%}
+        <li aria-current="page">{{ product.title | escape }}</li>
+      </ol>
+    </nav>
+
+    <div class="product__grid">
+      <div class="product__gallery" style="--tile: {{ tile }};">
+        <div class="product__stage" data-gallery-stage>
+          {%- for media in product.media -%}
+            {%- liquid
+              assign fit = 'cover'
+              if media.aspect_ratio < 0.8
+                assign fit = 'contain'
+              endif
+              assign is_active = false
+              if featured_media and media.id == featured_media.id
+                assign is_active = true
+              elsif featured_media == blank and forloop.first
+                assign is_active = true
+              endif
+              assign media_alt = media.alt | default: product.title | escape
+            -%}
+            <div
+              class="product__slide{% if is_active %} is-active{% endif %}"
+              data-media-id="{{ media.id }}"
+              data-fit="{{ fit }}"
+              {% unless is_active %}
+                hidden
+              {% endunless %}
+            >
+              {%- if media.media_type == 'image' -%}
+                {%- if forloop.first -%}
+                  {{ media | image_url: width: 1400 | image_tag: widths: '500, 800, 1100, 1400', sizes: '(min-width: 990px) 50vw, 100vw', fetchpriority: 'high', loading: 'eager', alt: media_alt }}
+                {%- else -%}
+                  {{ media | image_url: width: 1400 | image_tag: widths: '500, 800, 1100, 1400', sizes: '(min-width: 990px) 50vw, 100vw', loading: 'lazy', alt: media_alt }}
+                {%- endif -%}
+              {%- else -%}
+                {{ media | media_tag: image_size: '1400x' }}
+              {%- endif -%}
+            </div>
+          {%- else -%}
+            <div class="product__slide is-active" data-fit="contain">
+              {{ 'product-apparel-1' | placeholder_svg_tag: 'product__placeholder' }}
+            </div>
+          {%- endfor -%}
+        </div>
+        {%- if product.media.size > 1 -%}
+          <ul class="product__thumbs" role="list">
+            {%- for media in product.media -%}
+              <li>
+                {%- liquid
+                  assign thumb_fit = 'cover'
+                  if media.aspect_ratio < 0.8
+                    assign thumb_fit = 'contain'
+                  endif
+                -%}
+                <button
+                  class="product__thumb"
+                  type="button"
+                  data-fit="{{ thumb_fit }}"
+                  data-thumb="{{ media.id }}"
+                  {% if featured_media and media.id == featured_media.id %}
+                    aria-current="true"
+                  {% endif %}
+                >
+                  {{ media.preview_image | image_url: width: 180 | image_tag: loading: 'lazy', alt: '' }}
+                  <span class="visually-hidden">{{ media.alt | default: product.title | escape }}</span>
+                </button>
+              </li>
+            {%- endfor -%}
+          </ul>
+        {%- endif -%}
+      </div>
+
+      <div class="product__info">
+        {%- if persona != blank -%}
+          <p class="eyebrow">{{ persona | escape }}</p>
+        {%- endif -%}
+        <h1 class="h1 product__title">{{ product.title | escape }}</h1>
+
+        <div class="product__price-row">
+          <div class="price product__price" data-price aria-live="polite">
+            {%- if current_variant.compare_at_price > current_variant.price -%}
+              <span class="visually-hidden">{{ 'products.product.sale_price' | t }}</span>
+            {%- endif -%}
+            <span data-price-current>{{ current_variant.price | money }}</span>
+            <s class="price__compare" data-price-compare {% unless current_variant.compare_at_price > current_variant.price %}hidden{% endunless %}>
+              {{- current_variant.compare_at_price | money -}}
+            </s>
+          </div>
+          {%- if grade != blank -%}
+            <span class="badge badge--grade">{{ grade | escape }}</span>
+          {%- endif -%}
+        </div>
+        {%- if grade_class != blank -%}
+          <p class="product__grade-note">{{ grade_class | escape }}</p>
+        {%- endif -%}
+
+        {%- if section.settings.show_excerpt and product.description != blank -%}
+          <p class="product__excerpt">{{ product.description | replace: '</p>', '</p> ' | strip_html | truncatewords: 32 }}</p>
+        {%- endif -%}
+
+        {%- form 'product', product, id: form_id, class: 'product-form', novalidate: 'novalidate', data-product-form: '' -%}
+          <input type="hidden" name="id" value="{{ current_variant.id }}" data-variant-id>
+
+          {%- unless product.has_only_default_variant -%}
+            {%- for option in product.options_with_values -%}
+              <fieldset class="product__option" data-option-index="{{ forloop.index0 }}">
+                <legend class="product__legend">{{ option.name | escape }}</legend>
+                {%- if size_guide_url != blank and forloop.first -%}
+                  <a class="product__size-link" href="{{ size_guide_url }}">
+                    {% render 'icon', name: 'ruler', size: 16 %}
+                    {{ 'products.product.find_my_size' | t }}
+                  </a>
+                {%- endif -%}
+                <div class="product__choices">
+                  {%- for value in option.values -%}
+                    <input
+                      class="visually-hidden"
+                      type="radio"
+                      id="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}"
+                      name="options[{{ option.name | escape }}]"
+                      value="{{ value | escape }}"
+                      {% if option.selected_value == value %}
+                        checked
+                      {% endif %}
+                      data-option
+                    >
+                    <label class="product__choice" for="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}">
+                      {{- value | escape -}}
+                    </label>
+                  {%- endfor -%}
+                </div>
+              </fieldset>
+            {%- endfor -%}
+            <noscript>
+              <div class="field">
+                <label for="{{ form_id }}-variant">{{ 'products.product.choose_option' | t: option: product.options.first }}</label>
+                <select id="{{ form_id }}-variant" name="id">
+                  {%- for variant in product.variants -%}
+                    <option value="{{ variant.id }}" {% if variant == current_variant %}selected{% endif %} {% unless variant.available %}disabled{% endunless %}>
+                      {{ variant.title | escape }} &ndash; {{ variant.price | money }}
+                    </option>
+                  {%- endfor -%}
+                </select>
+              </div>
+            </noscript>
+          {%- endunless -%}
+
+          <div class="product__buy">
+            <div class="qty">
+              <button type="button" data-qty-step="-1" aria-label="{{ 'accessibility.quantity_decrease' | t: product: product.title | escape }}">
+                {% render 'icon', name: 'minus', size: 16 %}
+              </button>
+              <input type="number" name="quantity" value="1" min="1" data-qty-field aria-label="{{ 'products.product.quantity' | t }}">
+              <button type="button" data-qty-step="1" aria-label="{{ 'accessibility.quantity_increase' | t: product: product.title | escape }}">
+                {% render 'icon', name: 'plus', size: 16 %}
+              </button>
+            </div>
+            <button
+              class="btn product__add"
+              type="submit"
+              name="add"
+              data-add-button
+              {% unless current_variant.available %}
+                disabled
+              {% endunless %}
+            >
+              <span data-add-label>
+                {%- if current_variant.available -%}
+                  {{ 'products.product.add_to_cart' | t }}
+                {%- else -%}
+                  {{ 'products.product.sold_out' | t }}
+                {%- endif -%}
+              </span>
+            </button>
+          </div>
+          <p class="form-message form-message--error" data-form-error hidden role="alert"></p>
+          {%- if section.settings.show_dynamic_checkout -%}
+            <div class="product__dynamic">{{ form | payment_button }}</div>
+          {%- endif -%}
+        {%- endform -%}
+
+        {%- assign trust_blocks = section.blocks | where: 'type', 'trust' -%}
+        {%- if trust_blocks.size > 0 -%}
+          <ul class="product__trust" role="list">
+            {%- for block in trust_blocks -%}
+              <li {{ block.shopify_attributes }}>
+                {% render 'icon', name: block.settings.icon, size: 20 %}
+                <span>{{ block.settings.text | escape }}</span>
+              </li>
+            {%- endfor -%}
+          </ul>
+        {%- endif -%}
+
+        {%- for block in section.blocks -%}
+          {%- if block.type == '@app' -%}
+            {% render block %}
+          {%- endif -%}
+        {%- endfor -%}
+
+        <div class="product__details">
+          {%- if product.description != blank -%}
+            <details class="faq__item" open>
+              <summary><span>{{ section.settings.details_label | escape }}</span>{% render 'icon', name: 'plus', size: 20 %}</summary>
+              <div class="faq__answer rte">{{ product.description }}</div>
+            </details>
+          {%- endif -%}
+          <details class="faq__item">
+            <summary><span>{{ section.settings.compression_label | escape }}</span>{% render 'icon', name: 'plus', size: 20 %}</summary>
+            <div class="faq__answer rte">
+              {%- if grade != blank -%}
+                <p><strong>{{ 'products.product.compression' | t }}:</strong> {{ grade | escape }}{% if grade_class != blank %} ({{ grade_class | escape }}){% endif %}</p>
+              {%- endif -%}
+              {{ section.settings.compression_text }}
+              {%- if size_guide_url != blank -%}
+                <p><a href="{{ size_guide_url }}">{{ 'products.product.find_my_size' | t }}</a></p>
+              {%- endif -%}
+            </div>
+          </details>
+          {%- if fabric != blank or care != blank -%}
+            <details class="faq__item">
+              <summary><span>{{ section.settings.care_label | escape }}</span>{% render 'icon', name: 'plus', size: 20 %}</summary>
+              <div class="faq__answer rte">
+                {%- if fabric != blank -%}<p>{{ fabric | newline_to_br }}</p>{%- endif -%}
+                {%- if care != blank -%}<p>{{ care | newline_to_br }}</p>{%- endif -%}
+              </div>
+            </details>
+          {%- endif -%}
+          <details class="faq__item">
+            <summary><span>{{ section.settings.delivery_label | escape }}</span>{% render 'icon', name: 'plus', size: 20 %}</summary>
+            <div class="faq__answer rte">
+              {{ section.settings.delivery_text }}
+              <p>
+                {%- if shop.shipping_policy.body != blank -%}
+                  <a href="{{ shop.shipping_policy.url }}">{{ shop.shipping_policy.title | escape }}</a>
+                {%- endif -%}
+                {%- if shop.refund_policy.body != blank -%}
+                  &middot; <a href="{{ shop.refund_policy.url }}">{{ shop.refund_policy.title | escape }}</a>
+                {%- endif -%}
+              </p>
+            </div>
+          </details>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="application/json" data-product-json>
+    {
+      "variants": [
+        {%- for variant in product.variants -%}
+          {
+            "id": {{ variant.id }},
+            "options": {{ variant.options | json }},
+            "available": {{ variant.available | json }},
+            "price": {{ variant.price | money | json }},
+            "compare_at_price": {% if variant.compare_at_price > variant.price %}{{ variant.compare_at_price | money | json }}{% else %}null{% endif %},
+            "media_id": {% if variant.featured_media %}{{ variant.featured_media.id }}{% else %}null{% endif %}
+          }{% unless forloop.last %},{% endunless %}
+        {%- endfor -%}
+      ]
+    }
+  </script>
+</section>
+
+<script type="application/ld+json">
+  {{ product | structured_data }}
+</script>
+
+{% schema %}
+{
+  "name": "Product page",
+  "tag": "div",
+  "class": "section-main-product",
+  "settings": [
+    { "type": "page", "id": "size_guide_page", "label": "Size guide page", "info": "The page that holds the fit finder." },
+    { "type": "checkbox", "id": "show_excerpt", "label": "Show short description above the options", "default": true },
+    { "type": "checkbox", "id": "show_dynamic_checkout", "label": "Show express checkout buttons", "default": true },
+    { "type": "text", "id": "details_label", "label": "Details heading", "default": "The details" },
+    { "type": "text", "id": "compression_label", "label": "Compression heading", "default": "Compression and fit" },
+    {
+      "type": "richtext",
+      "id": "compression_text",
+      "label": "Compression text (all products)",
+      "default": "<p>Graduated: firmest at the ankle, lighter towards the knee. Choose your size by ankle and calf measurement, not shoe size. If you have a circulation condition, diabetes or a history of blood clots, check with a healthcare professional before wearing compression.</p>"
+    },
+    { "type": "text", "id": "care_label", "label": "Fabric and care heading", "default": "Fabric and care" },
+    { "type": "text", "id": "delivery_label", "label": "Delivery heading", "default": "Delivery and returns" },
+    {
+      "type": "richtext",
+      "id": "delivery_text",
+      "label": "Delivery text",
+      "default": "<p>Delivery options and costs are shown at checkout.</p>"
+    }
+  ],
+  "blocks": [
+    { "type": "@app" },
+    {
+      "type": "trust",
+      "name": "Trust line",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            { "value": "stethoscope", "label": "Clinical" },
+            { "value": "truck", "label": "Delivery" },
+            { "value": "lock", "label": "Secure" },
+            { "value": "ruler", "label": "Sizing" },
+            { "value": "check", "label": "Tick" }
+          ],
+          "default": "check"
+        },
+        { "type": "text", "id": "text", "label": "Text", "default": "Compression grading overseen by an orthotist" }
+      ]
+    }
+  ]
+}
+{% endschema %}

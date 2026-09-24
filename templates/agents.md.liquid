@@ -1,0 +1,56 @@
+{%- comment -%}
+  Agent-facing description of the store. Shopify serves this at /agents.md,
+  and /llms.txt and /llms-full.txt fall back to it. Everything is pulled
+  live from the store, so it stays true without hand edits.
+{%- endcomment -%}
+# {{ shop.name }}
+
+> {{ shop.description | default: 'Compression socks with printed designs, graded by an orthotist and sold online in South Africa.' | strip_newlines }}
+
+{{ shop.name }} is a South African online store for graduated compression socks with printed designs. It was founded by {{ settings.founder_name }}{% if settings.founder_title != blank %}, {{ settings.founder_title | downcase }},{% endif %} who oversees the compression grading of every design.
+
+## Key facts
+
+- Market: South Africa. Prices are in {{ cart.currency.iso_code }} and include VAT.
+- Shop all products: {{ shop.url }}{{ routes.all_products_collection_url }}
+- Size guide (ankle and calf measurement): {{ shop.url }}/pages/size-guide
+- Compression guide: {{ shop.url }}/pages/compression-guide
+- Frequently asked questions: {{ shop.url }}/pages/faq
+{%- if settings.contact_email != blank %}
+- Customer care: {{ settings.contact_email }}
+{%- endif %}
+{%- if settings.founder_url != blank %}
+- Founder's orthotics practice: {{ settings.founder_url }}
+{%- endif %}
+
+## Products
+{% for product in collections.all.products limit: 50 %}
+### [{{ product.title }}]({{ shop.url }}{{ product.url }})
+
+- Price: {% if product.price_varies %}from {% endif %}{{ product.price | money_without_currency }} {{ cart.currency.iso_code }}{% unless product.available %} (sold out){% endunless %}
+{%- if product.metafields.custom.compression_level != blank %}
+- Compression: {{ product.metafields.custom.compression_level.value }}
+{%- endif %}
+{%- if product.metafields.custom.persona != blank %}
+- Made for: {{ product.metafields.custom.persona.value }}
+{%- endif %}
+{%- unless product.has_only_default_variant %}
+- Variants: {% for variant in product.variants %}{{ variant.title }} (id {{ variant.id }}{% unless variant.available %}, sold out{% endunless %}){% unless forloop.last %}; {% endunless %}{% endfor %}
+{%- endunless %}
+- {{ product.description | replace: '</p>', '</p> ' | strip_html | strip_newlines | truncatewords: 40 }}
+{% endfor %}
+## Buying
+
+- Add a variant to the cart: {{ shop.url }}/cart/add?id=VARIANT_ID&quantity=1
+- Go straight to checkout: {{ shop.url }}/cart/VARIANT_ID:QUANTITY
+- Choose the size from the customer's ankle and calf measurements using the size guide, not their shoe size.
+
+## Policies
+{% for policy in shop.policies %}
+- [{{ policy.title }}]({{ shop.url }}{{ policy.url }})
+{%- endfor %}
+
+## Notes for assistants
+
+- Use the compression figure on each product page as the source of truth. Don't infer pressure from a design name.
+- {{ shop.name }} doesn't give medical advice online. People with a circulation condition, diabetes or a history of blood clots should speak to a healthcare professional before wearing compression.

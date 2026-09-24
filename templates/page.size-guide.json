@@ -1,0 +1,101 @@
+{
+  "sections": {
+    "fit": {
+      "type": "fit-finder",
+      "blocks": {
+        "tip-1": {
+          "type": "tip",
+          "settings": {
+            "title": "Measure in the morning",
+            "text": "Legs are at their slimmest before the day's swelling sets in."
+          }
+        },
+        "tip-2": {
+          "type": "tip",
+          "settings": {
+            "title": "Ankle (B): the narrowest point",
+            "text": "Just above the ankle bone. Keep the tape snug, not tight."
+          }
+        },
+        "tip-3": {
+          "type": "tip",
+          "settings": {
+            "title": "Calf (C): the widest point",
+            "text": "Sitting with your foot flat, measure around the fullest part of the calf."
+          }
+        },
+        "s": {
+          "type": "size",
+          "settings": {
+            "label": "S",
+            "ankle_min": 18,
+            "ankle_max": 21,
+            "calf_min": 25,
+            "calf_max": 33,
+            "shoe": "UK 3–5"
+          }
+        },
+        "m": {
+          "type": "size",
+          "settings": {
+            "label": "M",
+            "ankle_min": 21,
+            "ankle_max": 24,
+            "calf_min": 30,
+            "calf_max": 38,
+            "shoe": "UK 6–8"
+          }
+        },
+        "l": {
+          "type": "size",
+          "settings": {
+            "label": "L",
+            "ankle_min": 24,
+            "ankle_max": 27,
+            "calf_min": 34,
+            "calf_max": 43,
+            "shoe": "UK 9–11"
+          }
+        },
+        "xl": {
+          "type": "size",
+          "settings": {
+            "label": "XL",
+            "ankle_min": 27,
+            "ankle_max": 30,
+            "calf_min": 38,
+            "calf_max": 47,
+            "shoe": "UK 12–14"
+          }
+        }
+      },
+      "block_order": [
+        "tip-1",
+        "tip-2",
+        "tip-3",
+        "s",
+        "m",
+        "l",
+        "xl"
+      ],
+      "settings": {
+        "tone": "frost",
+        "eyebrow": "Size guide",
+        "heading": "Two measurements. One size.",
+        "text": "Compression only works at the right size. Measure your ankle and calf, then enter them below.",
+        "sample_data": true,
+        "sample_notice": "Sample sizing shown. The final Vital Socks size chart is on its way."
+      }
+    },
+    "main": {
+      "type": "main-page",
+      "settings": {
+        "narrow": true
+      }
+    }
+  },
+  "order": [
+    "main",
+    "fit"
+  ]
+}

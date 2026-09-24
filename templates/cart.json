@@ -1,0 +1,23 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-cart",
+      "settings": {}
+    },
+    "shop": {
+      "type": "featured-collection",
+      "settings": {
+        "eyebrow": "Still deciding?",
+        "heading": "The launch prints",
+        "collection": "launch-prints",
+        "limit": 5,
+        "columns": 5,
+        "link_label": "Shop all socks"
+      }
+    }
+  },
+  "order": [
+    "main",
+    "shop"
+  ]
+}

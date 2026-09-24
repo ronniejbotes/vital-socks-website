@@ -1,0 +1,69 @@
+{%- comment -%}
+  Product card.
+  Params: product (required), index (tint cycle), eager (true for above-the-fold).
+  Upload a transparent cut-out as each product's FIRST image: it floats on the
+  tinted tile. The second image (a lifestyle shot) fades in on hover.
+  Optional metafields: custom.compression_level (text), custom.persona (text),
+  custom.card_color (colour).
+{%- endcomment -%}
+{%- liquid
+  assign tints = 'var(--frost)|var(--ice)|var(--sky)' | split: '|'
+  assign i = index | default: 0 | modulo: 3
+  assign card_bg = tints[i]
+  if product.metafields.custom.card_color != blank
+    assign card_bg = product.metafields.custom.card_color.value
+  endif
+  assign grade = product.metafields.custom.compression_level.value
+  assign persona = product.metafields.custom.persona.value
+  assign loading = 'lazy'
+  if eager
+    assign loading = 'eager'
+  endif
+  assign media_alt = product.featured_media.alt | default: product.title | escape
+-%}
+<div class="card" style="--card-bg: {{ card_bg }};">
+  <div class="card__media">
+    {%- if product.featured_media -%}
+      {{
+        product.featured_media
+        | image_url: width: 900
+        | image_tag:
+          loading: loading,
+          widths: '360, 540, 720, 900',
+          sizes: '(min-width: 990px) 30vw, 50vw',
+          alt: media_alt
+      }}
+    {%- else -%}
+      {{ 'product-apparel-1' | placeholder_svg_tag: 'card__placeholder' }}
+    {%- endif -%}
+    {%- if product.media.size > 1 -%}
+      {%- assign second = product.media[1] -%}
+      {{
+        second
+        | image_url: width: 900
+        | image_tag: loading: 'lazy', widths: '540, 900', sizes: '(min-width: 990px) 30vw, 50vw', alt: '', aria-hidden: 'true'
+      }}
+    {%- endif -%}
+    {%- unless product.available -%}
+      <span class="badge badge--light card__badge">{{ 'products.product.sold_out' | t }}</span>
+    {%- else -%}
+      {%- if product.compare_at_price > product.price -%}
+        <span class="badge card__badge">{{ 'products.product.sale' | t }}</span>
+      {%- endif -%}
+    {%- endunless -%}
+  </div>
+  <div class="card__info">
+    {%- if persona != blank -%}
+      <span class="card__persona">{{ persona | escape }}</span>
+    {%- endif -%}
+    <h3 class="card__title">
+      <a class="card__link" href="{{ product.url }}">{{ product.title | escape }}</a>
+    </h3>
+    <div class="card__meta">
+      {% render 'price', product: product %}
+      {%- if grade != blank -%}
+        <span class="card__grade">{{ grade | escape }}</span>
+      {%- endif -%}
+    </div>
+  </div>
+</div>

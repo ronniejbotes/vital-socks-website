@@ -1,0 +1,85 @@
+{%- comment -%}
+  Scrolling text band. CSS runs it at a steady pace; motion.js takes over when
+  animations are on and nudges the speed with scroll velocity.
+{%- endcomment -%}
+{%- liquid
+  case section.settings.tone
+    when 'ink'
+      assign bg = 'var(--ink)'
+      assign fg = '#fff'
+    when 'sky'
+      assign bg = 'var(--sky)'
+      assign fg = 'var(--ink)'
+    when 'ice'
+      assign bg = 'var(--ice)'
+      assign fg = 'var(--ink)'
+    else
+      assign bg = 'var(--royal)'
+      assign fg = '#fff'
+  endcase
+-%}
+{%- if section.blocks.size > 0 -%}
+  <div
+    class="marquee"
+    style="--marquee-bg: {{ bg }}; --marquee-fg: {{ fg }}; --marquee-duration: {{ section.settings.duration }}s;"
+    data-marquee
+    role="region"
+    aria-label="{{ section.settings.label | escape }}"
+  >
+    <div class="marquee__track" data-marquee-track>
+      {%- for i in (1..2) -%}
+        <div class="marquee__group" {% if i == 2 %}aria-hidden="true"{% endif %}>
+          {%- for copy in (1..2) -%}
+            {%- for block in section.blocks -%}
+              <span class="marquee__item" {% if i == 1 and copy == 1 %}{{ block.shopify_attributes }}{% endif %}>
+                {{- block.settings.text | escape -}}
+                <span class="marquee__dot" aria-hidden="true"></span>
+              </span>
+            {%- endfor -%}
+          {%- endfor -%}
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Marquee",
+  "class": "section-marquee",
+  "settings": [
+    {
+      "type": "select",
+      "id": "tone",
+      "label": "Colour",
+      "options": [
+        { "value": "royal", "label": "Royal blue" },
+        { "value": "sky", "label": "Sky blue" },
+        { "value": "ice", "label": "Ice blue" },
+        { "value": "ink", "label": "Navy" }
+      ],
+      "default": "royal"
+    },
+    { "type": "range", "id": "duration", "label": "Loop length", "min": 16, "max": 80, "step": 2, "unit": "s", "default": 36 },
+    { "type": "text", "id": "label", "label": "Label for screen readers", "default": "What makes Vital different" }
+  ],
+  "blocks": [
+    {
+      "type": "text",
+      "name": "Phrase",
+      "settings": [{ "type": "text", "id": "text", "label": "Text", "default": "Graded compression" }]
+    }
+  ],
+  "max_blocks": 8,
+  "presets": [
+    {
+      "name": "Marquee",
+      "blocks": [
+        { "type": "text", "settings": { "text": "Graded compression" } },
+        { "type": "text", "settings": { "text": "Overseen by an orthotist" } },
+        { "type": "text", "settings": { "text": "Prints worth showing off" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

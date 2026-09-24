@@ -1,0 +1,76 @@
+{
+  "sections": {
+    "faq": {
+      "type": "faq",
+      "blocks": {
+        "q0": {
+          "type": "question",
+          "settings": {
+            "question": "What does graduated compression mean?",
+            "answer": "<p>The sock is firmest at the ankle and gets gradually lighter up the leg. That gradient helps move blood and fluid back up towards the heart instead of letting it pool in the lower legs.</p>"
+          }
+        },
+        "q1": {
+          "type": "question",
+          "settings": {
+            "question": "Which compression level do I need?",
+            "answer": "<p>Every product page states its compression range in mmHg. Lighter ranges suit everyday wear, travel and long shifts. If you have a circulation condition, diabetes or a history of blood clots, speak to a healthcare professional before wearing compression.</p>"
+          }
+        },
+        "q2": {
+          "type": "question",
+          "settings": {
+            "question": "How do I find my size?",
+            "answer": "<p>Measure your ankle at its narrowest point and your calf at its widest, ideally in the morning. The fit finder turns those two numbers into a size. Shoe size alone isn't enough, because compression depends on the leg.</p>"
+          }
+        },
+        "q3": {
+          "type": "question",
+          "settings": {
+            "question": "Who shouldn't wear compression socks?",
+            "answer": "<p>People with peripheral arterial disease, fragile or broken skin on the legs, or reduced feeling in the feet should not wear compression without medical advice. If in doubt, ask your doctor or an orthotist first.</p>"
+          }
+        },
+        "q4": {
+          "type": "question",
+          "settings": {
+            "question": "How do I wash them?",
+            "answer": "<p>Wash cool, skip the fabric softener and let them dry away from direct heat. Heat and softener wear out the elastic, and the elastic is what holds the compression.</p>"
+          }
+        },
+        "q5": {
+          "type": "question",
+          "settings": {
+            "question": "Do you deliver across South Africa?",
+            "answer": "<p>Yes. Delivery options and costs are shown at checkout.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "q0",
+        "q1",
+        "q2",
+        "q3",
+        "q4",
+        "q5"
+      ],
+      "settings": {
+        "eyebrow": "Good questions",
+        "heading": "Compression, answered",
+        "text": "<p>Can't find your question? <a href=\"/pages/contact\">Ask us</a>.</p>",
+        "open_first": true,
+        "structured_data": true
+      }
+    },
+    "main": {
+      "type": "main-page",
+      "settings": {
+        "narrow": true
+      }
+    }
+  },
+  "order": [
+    "main",
+    "faq"
+  ]
+}
