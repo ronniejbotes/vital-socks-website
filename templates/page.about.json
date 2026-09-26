@@ -6,13 +6,13 @@
         "e": {
           "type": "eyebrow",
           "settings": {
-            "text": "Our story"
+            "text": "About Vital Socks"
           }
         },
         "h": {
           "type": "heading",
           "settings": {
-            "heading": "Compression, done by someone who fits it for a living",
+            "heading": "Compression, with more thought behind it.",
             "tag": "h1",
             "size": "h1"
           }
@@ -20,7 +20,7 @@
         "t": {
           "type": "text",
           "settings": {
-            "text": "<p>Vital Socks started in an orthotics practice, where the difference between a tight sock and a graded one is part of the job. The idea was simple: make compression socks people want to wear, and get the grading right.</p>"
+            "text": "<p><em>Designed by an Orthotist. Made for everyday life.</em></p>"
           }
         }
       },
@@ -36,37 +36,92 @@
     },
     "founder": {
       "type": "founder",
+      "blocks": {},
+      "block_order": [],
+      "settings": {
+        "bundled_portrait": true,
+        "portrait_alt": "Farida Cajee-Botes, Orthotist & Prosthetist and designer of Vital Socks",
+        "placeholder_text": "",
+        "eyebrow": "Designed by an Orthotist",
+        "heading": "Professional knowledge behind every pair.",
+        "quote": "Compression is more than making a sock tight. As an Orthotist & Prosthetist, I wanted to create an everyday compression sock with thoughtful fit, function and comfort.",
+        "text": "<p>Our socks are intended for everyday compression. If you have a medical condition, persistent swelling, or think you may need therapeutic compression, <strong>speak to our Orthotist before purchasing.</strong></p>",
+        "link_label": "Not sure what you need? Speak to our Orthotist"
+      }
+    },
+    "approach": {
+      "type": "rich-text",
       "blocks": {
-        "p0": {
-          "type": "point",
+        "knit-heading": {
+          "type": "heading",
           "settings": {
-            "text": "Compression grading overseen by an orthotist"
+            "heading": "Engineered into the knit.",
+            "tag": "h2",
+            "size": "h2"
           }
         },
-        "p1": {
-          "type": "point",
+        "knit-text": {
+          "type": "text",
           "settings": {
-            "text": "Compression range stated on every product"
+            "text": "<p>Our socks are made using <strong>advanced compression-knitting machines</strong> that control the construction of the sock to create graduated compression. The result is <strong>[compression] compression</strong>, designed to be strongest at the ankle and gradually decrease up the leg.</p><p>The compression is built into the sock—not simply added through tightness.</p>"
           }
         },
-        "p2": {
-          "type": "point",
+        "fit-heading": {
+          "type": "heading",
           "settings": {
-            "text": "Sized by your ankle and calf, not your shoe"
+            "heading": "Designed around your leg.",
+            "tag": "h2",
+            "size": "h2"
+          }
+        },
+        "fit-text": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Our socks are sized using ankle circumference, rather than relying only on shoe size, helping you choose a fit suited to your leg.</p><p><a href=\"/pages/size-guide\">Find your size</a></p>"
+          }
+        },
+        "legs-heading": {
+          "type": "heading",
+          "settings": {
+            "heading": "Everyday compression for everyday legs.",
+            "tag": "h2",
+            "size": "h2"
+          }
+        },
+        "legs-text": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Designed for tired, heavy or fatigued legs, including during long days standing, sitting or travelling.</p>"
+          }
+        },
+        "fabric-heading": {
+          "type": "heading",
+          "settings": {
+            "heading": "Comfort in every thread.",
+            "tag": "h2",
+            "size": "h2"
+          }
+        },
+        "fabric-text": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Made with a carefully selected blend of <strong>combed cotton, polyamide and elastane</strong> for a soft feel, comfortable stretch and lasting wear.</p><p>It's a blend chosen to stay comfortable all year round, whether it's winter or summer.</p>"
           }
         }
       },
       "block_order": [
-        "p0",
-        "p1",
-        "p2"
+        "knit-heading",
+        "knit-text",
+        "fit-heading",
+        "fit-text",
+        "legs-heading",
+        "legs-text",
+        "fabric-heading",
+        "fabric-text"
       ],
       "settings": {
-        "placeholder_text": "Portrait of Farida coming soon",
-        "eyebrow": "Who grades your socks",
-        "heading": "An orthotist, not a guess",
-        "text": "<p>Vital Socks was started by an orthotist who measures and fits medical compression garments for her patients. She knows what the wrong pressure does to a leg, so she oversees the compression grading on every Vital design.</p>",
-        "link_label": "Visit Farida's practice"
+        "tone": "frost",
+        "align": "left"
       }
     },
     "stories": {
@@ -80,7 +135,7 @@
             "align": "right",
             "eyebrow": "The easy day",
             "heading": "Rest days count too",
-            "text": "Slow Sundays, long drives, and the months when your legs are doing more work than usual.",
+            "text": "Slow Sundays and long drives.",
             "link_label": "Shop Daisy",
             "product": "daisy"
           }
@@ -104,8 +159,8 @@
         "run"
       ],
       "settings": {
-        "eyebrow": "Where they earn their keep",
-        "heading": "More kinds of day",
+        "eyebrow": "",
+        "heading": "",
         "text": ""
       }
     },
@@ -117,6 +172,7 @@
   "order": [
     "intro",
     "founder",
+    "approach",
     "stories",
     "newsletter"
   ]

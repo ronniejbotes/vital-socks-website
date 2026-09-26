@@ -77,7 +77,7 @@
         "black"
       ],
       "settings": {
-        "heading": "Compression socks, graded by an orthotist",
+        "heading": "Compression socks, designed by an Orthotist",
         "heading_tag": "h1",
         "ghost_text": "Vital",
         "cta_label": "Shop this pair",
@@ -98,7 +98,7 @@
         "m1": {
           "type": "text",
           "settings": {
-            "text": "Overseen by an orthotist"
+            "text": "Designed by an orthotist"
           }
         },
         "m2": {
@@ -110,7 +110,7 @@
         "m3": {
           "type": "text",
           "settings": {
-            "text": "Sized by your calf, not your shoe"
+            "text": "Sized by your ankle, not your shoe"
           }
         }
       },
@@ -134,8 +134,8 @@
           "settings": {
             "zone": "Ankle",
             "level": "Firmest",
-            "title": "Firmest at the ankle",
-            "text": "Pressure is highest where fluid pools first after a long day on your feet."
+            "title": "Ankle — firmest",
+            "text": ""
           }
         },
         "step-2": {
@@ -143,17 +143,17 @@
           "settings": {
             "zone": "Calf",
             "level": "Easing",
-            "title": "Easing through the calf",
-            "text": "It eases off up the calf, working with the muscle that pumps blood back up the leg."
+            "title": "Calf — easing",
+            "text": ""
           }
         },
         "step-3": {
           "type": "step",
           "settings": {
-            "zone": "Below the knee",
+            "zone": "Below knee",
             "level": "Lightest",
-            "title": "Lightest below the knee",
-            "text": "Lightest at the top, so the cuff stays up without digging in."
+            "title": "Below knee — lightest",
+            "text": ""
           }
         }
       },
@@ -164,11 +164,60 @@
       ],
       "settings": {
         "eyebrow": "Graduated compression",
-        "heading": "Pressure that climbs the right way",
-        "text": "<p>A compression sock only works if the pressure is graded: firmest at the ankle, lighter as it climbs. Get the gradient wrong and it is just a tight sock. That grading is what an orthotist checks on every Vital design.</p>",
+        "heading": "Designed with purpose",
+        "text": "<p>[compression] compression, graduating from firmest at the ankle to lighter pressure up the leg.</p>",
+        "closing": "Firm where it starts. Lighter as it rises.",
         "figure_label": "A leg wrapped in three bands: firmest at the ankle, easing at the calf, lightest below the knee.",
         "link_label": "Read the compression guide",
         "link": "/pages/compression-guide"
+      }
+    },
+    "materials": {
+      "type": "image-with-text",
+      "blocks": {
+        "eyebrow": {
+          "type": "eyebrow",
+          "settings": {
+            "text": "Material composition"
+          }
+        },
+        "heading": {
+          "type": "heading",
+          "settings": {
+            "heading": "Comfort in every thread."
+          }
+        },
+        "text": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Made with a carefully selected blend of <strong>combed cotton, polyamide and elastane</strong> for a soft feel, comfortable stretch and lasting wear.</p><p>It's a blend chosen to stay comfortable all year round, whether it's winter or summer.</p>"
+          }
+        },
+        "fibres": {
+          "type": "pills",
+          "settings": {
+            "items": "Combed cotton · Polyamide · Elastane"
+          }
+        },
+        "tagline": {
+          "type": "tagline",
+          "settings": {
+            "text": "Soft. Comfortable. Made to move."
+          }
+        }
+      },
+      "block_order": [
+        "eyebrow",
+        "heading",
+        "text",
+        "fibres",
+        "tagline"
+      ],
+      "settings": {
+        "tone": "frost",
+        "layout": "image-left",
+        "bundled": "materials-daisy",
+        "image_alt": "Close-up of the knitted fabric of a Daisy knee-high compression sock with the Vital Socks logo on its purple cuff"
       }
     },
     "stories": {
@@ -195,7 +244,7 @@
             "align": "right",
             "eyebrow": "The long-haul",
             "heading": "Long-haul legs",
-            "text": "Long flights and long drives are when ankles tend to swell. Pull on Checker before you board.",
+            "text": "Long flights and long drives mean hours in one seat. Pull on Checker before you board.",
             "link_label": "Shop Checker",
             "product": "checker"
           }
@@ -208,7 +257,7 @@
             "align": "left",
             "eyebrow": "The trend",
             "heading": "Loud on purpose",
-            "text": "Compression doesn't have to look clinical. Cherry Pop is the proof.",
+            "text": "Colourful and expressive, on purpose. Cherry Pop is the proof.",
             "link_label": "Shop Cherry Pop",
             "product": "cherry-pop"
           }
@@ -221,15 +270,18 @@
       ],
       "settings": {
         "eyebrow": "Where they earn their keep",
-        "heading": "Made for the way you move",
-        "text": "Long shifts, long flights and loud outfits. Each print was drawn with someone in mind."
+        "heading": "Everyday compression for everyday legs.",
+        "text": "Designed for tired, heavy or fatigued legs, including during long days standing, sitting or travelling.",
+        "head_bundled": "duo",
+        "head_alt": "A nurse in Espresso and a runner in Black knee-high compression socks, standing back to back and smiling with arms folded"
       }
     },
     "shop": {
       "type": "featured-collection",
       "settings": {
-        "eyebrow": "The launch prints",
-        "heading": "Pick your pair",
+        "eyebrow": "Compression made for everyone",
+        "heading": "Your legs. Your style. Your compression.",
+        "text": "<p>Compression doesn't have to look clinical.</p><p>Whether you prefer something classic, subtle, colourful or expressive, our collection brings <strong>[compression] graduated compression</strong> into styles you'll actually want to wear.</p><p><strong>Because supportive socks should fit into your life—not stand out from it.</strong></p>",
         "collection": "launch-prints",
         "limit": 5,
         "columns": 5,
@@ -239,42 +291,22 @@
     },
     "founder": {
       "type": "founder",
-      "blocks": {
-        "p0": {
-          "type": "point",
-          "settings": {
-            "text": "Compression grading overseen by an orthotist"
-          }
-        },
-        "p1": {
-          "type": "point",
-          "settings": {
-            "text": "Compression range stated on every product"
-          }
-        },
-        "p2": {
-          "type": "point",
-          "settings": {
-            "text": "Sized by your ankle and calf, not your shoe"
-          }
-        }
-      },
-      "block_order": [
-        "p0",
-        "p1",
-        "p2"
-      ],
+      "blocks": {},
+      "block_order": [],
       "settings": {
-        "placeholder_text": "Portrait of Farida coming soon",
-        "eyebrow": "Who grades your socks",
-        "heading": "An orthotist, not a guess",
-        "quote": "",
-        "text": "<p>Vital Socks was started by an orthotist who measures and fits medical compression garments for her patients. She knows what the wrong pressure does to a leg, so she oversees the compression grading on every Vital design.</p>",
-        "link_label": "Visit Farida's practice"
+        "bundled_portrait": true,
+        "portrait_alt": "Farida Cajee-Botes, Orthotist & Prosthetist and designer of Vital Socks",
+        "placeholder_text": "",
+        "eyebrow": "Designed by an Orthotist",
+        "heading": "Professional knowledge behind every pair.",
+        "quote": "Compression is more than making a sock tight. As an Orthotist & Prosthetist, I wanted to create an everyday compression sock with thoughtful fit, function and comfort.",
+        "text": "<p>Our socks are intended for everyday compression. If you have a medical condition, persistent swelling, or think you may need therapeutic compression, <strong>speak to our Orthotist before purchasing.</strong></p>",
+        "link_label": "Not sure what you need? Speak to our Orthotist"
       }
     },
     "compare": {
       "type": "compare",
+      "disabled": true,
       "blocks": {
         "r1": {
           "type": "row",
@@ -297,7 +329,7 @@
         "r3": {
           "type": "row",
           "settings": {
-            "feature": "Grading overseen by an orthotist",
+            "feature": "Designed by an Orthotist",
             "us": "yes",
             "col_2": "no",
             "col_3": "Rarely"
@@ -306,7 +338,7 @@
         "r4": {
           "type": "row",
           "settings": {
-            "feature": "Sized by ankle and calf measurement",
+            "feature": "Sized by ankle circumference",
             "us": "yes",
             "col_2": "no",
             "col_3": "Sometimes"
@@ -331,146 +363,19 @@
       ],
       "settings": {
         "eyebrow": "Side by side",
-        "heading": "Not all compression is graded",
-        "text": "Plenty of socks feel tight. Fewer tell you how tight, where, and who checked.",
+        "heading": "Not all compression is graduated",
+        "text": "Compression is more than making a sock tight.",
         "feature_label": "Feature",
         "column_2": "Fashion socks",
         "column_3": "Generic compression",
         "note": "Comparison with typical products in each category, not specific brands."
       }
     },
-    "fit": {
-      "type": "fit-finder",
-      "blocks": {
-        "tip-1": {
-          "type": "tip",
-          "settings": {
-            "title": "Measure in the morning",
-            "text": "Legs are at their slimmest before the day's swelling sets in."
-          }
-        },
-        "tip-2": {
-          "type": "tip",
-          "settings": {
-            "title": "Ankle (B): the narrowest point",
-            "text": "Just above the ankle bone. Keep the tape snug, not tight."
-          }
-        },
-        "tip-3": {
-          "type": "tip",
-          "settings": {
-            "title": "Calf (C): the widest point",
-            "text": "Sitting with your foot flat, measure around the fullest part of the calf."
-          }
-        },
-        "s": {
-          "type": "size",
-          "settings": {
-            "label": "S",
-            "ankle_min": 18,
-            "ankle_max": 21,
-            "calf_min": 25,
-            "calf_max": 33,
-            "shoe": "UK 3–5"
-          }
-        },
-        "m": {
-          "type": "size",
-          "settings": {
-            "label": "M",
-            "ankle_min": 21,
-            "ankle_max": 24,
-            "calf_min": 30,
-            "calf_max": 38,
-            "shoe": "UK 6–8"
-          }
-        },
-        "l": {
-          "type": "size",
-          "settings": {
-            "label": "L",
-            "ankle_min": 24,
-            "ankle_max": 27,
-            "calf_min": 34,
-            "calf_max": 43,
-            "shoe": "UK 9–11"
-          }
-        },
-        "xl": {
-          "type": "size",
-          "settings": {
-            "label": "XL",
-            "ankle_min": 27,
-            "ankle_max": 30,
-            "calf_min": 38,
-            "calf_max": 47,
-            "shoe": "UK 12–14"
-          }
-        }
-      },
-      "block_order": [
-        "tip-1",
-        "tip-2",
-        "tip-3",
-        "s",
-        "m",
-        "l",
-        "xl"
-      ],
+    "articles": {
+      "type": "featured-articles",
       "settings": {
-        "tone": "paper",
-        "eyebrow": "Fit finder",
-        "heading": "Two measurements. One size.",
-        "text": "Compression only works at the right size, and your shoe size can't tell us that. Measure your ankle and calf and we'll do the rest.",
-        "table_caption": "Vital Socks size chart",
-        "sample_data": true,
-        "sample_notice": "Sample sizing shown. The final Vital Socks size chart is on its way."
-      }
-    },
-    "faq": {
-      "type": "faq",
-      "blocks": {
-        "q0": {
-          "type": "question",
-          "settings": {
-            "question": "What does graduated compression mean?",
-            "answer": "<p>The sock is firmest at the ankle and gets gradually lighter up the leg. That gradient helps move blood and fluid back up towards the heart instead of letting it pool in the lower legs.</p>"
-          }
-        },
-        "q1": {
-          "type": "question",
-          "settings": {
-            "question": "Which compression level do I need?",
-            "answer": "<p>Every product page states its compression range in mmHg. Lighter ranges suit everyday wear, travel and long shifts. If you have a circulation condition, diabetes or a history of blood clots, speak to a healthcare professional before wearing compression.</p>"
-          }
-        },
-        "q2": {
-          "type": "question",
-          "settings": {
-            "question": "How do I find my size?",
-            "answer": "<p>Measure your ankle at its narrowest point and your calf at its widest, ideally in the morning. The fit finder turns those two numbers into a size. Shoe size alone isn't enough, because compression depends on the leg.</p>"
-          }
-        },
-        "q3": {
-          "type": "question",
-          "settings": {
-            "question": "Who shouldn't wear compression socks?",
-            "answer": "<p>People with peripheral arterial disease, fragile or broken skin on the legs, or reduced feeling in the feet should not wear compression without medical advice. If in doubt, ask your doctor or an orthotist first.</p>"
-          }
-        }
-      },
-      "block_order": [
-        "q0",
-        "q1",
-        "q2",
-        "q3"
-      ],
-      "settings": {
-        "eyebrow": "Good questions",
-        "heading": "Compression, answered",
-        "text": "<p>Not sure which pair or size you need? Ask us and we'll point you to the right one.</p>",
-        "open_first": true,
-        "structured_data": false
+        "blog": "guides",
+        "tone": "frost"
       }
     },
     "newsletter": {
@@ -479,7 +384,7 @@
         "eyebrow": "New prints",
         "heading": "First dibs on the next drop",
         "text": "One email when a new print lands, plus the odd fitting tip. Nothing else.",
-        "small_print": "We use your email only to send you Vital Socks news. Unsubscribe any time."
+        "small_print": "We'll only use your email to send you Vital Socks news. Unsubscribe any time."
       }
     }
   },
@@ -487,12 +392,12 @@
     "hero",
     "marquee",
     "explainer",
+    "materials",
     "stories",
     "shop",
     "founder",
     "compare",
-    "fit",
-    "faq",
+    "articles",
     "newsletter"
   ]
 }

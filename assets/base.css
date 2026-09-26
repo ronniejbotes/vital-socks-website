@@ -82,6 +82,7 @@ a {
 }
 p {
   margin: 0 0 1em;
+  text-wrap: pretty;
 }
 :where(ul[role='list'], ol[role='list']) {
   list-style: none;
@@ -166,6 +167,12 @@ h4 {
   letter-spacing: -0.005em;
   line-height: 0.94;
 }
+/* Even line lengths, so a heading never ends on one short word. */
+.h1,
+.h2,
+.page-hero__title {
+  text-wrap: balance;
+}
 .display {
   font-size: var(--fs-display);
 }
@@ -199,6 +206,7 @@ h4 {
   background: linear-gradient(90deg, var(--royal) 0 33%, var(--sky) 33% 66%, var(--ice) 66%);
 }
 .lede {
+  text-wrap: pretty;
   font-size: clamp(1.1rem, 1.5vw, 1.3rem);
   line-height: 1.55;
   color: var(--ink-72);
@@ -262,6 +270,16 @@ h4 {
   max-width: 34em;
   margin: 0;
   color: var(--ink-72);
+}
+/* Rich text stacked under the heading (featured collection). */
+.section-head__title + .section-head__text {
+  margin-top: 20px;
+}
+.section-head__text > :first-child {
+  margin-top: 0;
+}
+.section-head__text > :last-child {
+  margin-bottom: 0;
 }
 .tone-ink {
   background: var(--ink);
@@ -419,6 +437,20 @@ h4 {
   border-color: var(--royal);
   box-shadow: 0 0 0 4px rgba(34, 158, 227, 0.25);
 }
+.field-check {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 16px;
+  font-size: var(--fs-small);
+}
+.field-check input {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  margin: 2px 0 0;
+  accent-color: var(--royal);
+}
 .form-message {
   padding: 12px 16px;
   border-radius: var(--radius-sm);
@@ -533,6 +565,15 @@ body:has(.announcement) {
   display: flex;
   align-items: center;
   gap: 2px;
+}
+/* Very small phones (320px): menu, logo and two icons need a tighter row. */
+@media (max-width: 359px) {
+  .header__inner {
+    gap: 8px;
+  }
+  .header__logo {
+    max-width: 40vw;
+  }
 }
 .header__menu-toggle {
   justify-self: start;
@@ -725,6 +766,28 @@ html[data-hero-tone='light'] .header--overlay:not(.is-scrolled) .cart-count {
 .footer__legal p {
   margin: 0 0 6px;
 }
+/* No .rte here: royal links fail contrast on navy, so links inherit the
+   footer text colour and keep an underline. */
+/* The rule under the disclaimer spans the container like the one above it;
+   only the text keeps a reading width. */
+.footer__disclaimer {
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.56);
+  font-size: 0.75rem;
+  line-height: 1.55;
+}
+.footer__disclaimer > * {
+  max-width: 72em;
+}
+.footer__disclaimer p:last-child {
+  margin-bottom: 0;
+}
+.footer__disclaimer a {
+  color: inherit;
+  text-underline-offset: 3px;
+}
 .footer__payments {
   display: flex;
   flex-wrap: wrap;
@@ -736,7 +799,10 @@ html[data-hero-tone='light'] .header--overlay:not(.is-scrolled) .cart-count {
   height: 24px;
 }
 .footer__wordmark {
-  margin: clamp(40px, 6vw, 72px) 0 -0.12em;
+  margin: clamp(40px, 6vw, 72px) 0 0;
+  /* The whole word stays on the page: room below for the glyphs, which run
+     past a 0.8 line box, plus breathing space before the page ends. */
+  padding-bottom: calc(0.08em + clamp(20px, 3vw, 44px));
   font-family: var(--font-display);
   font-size: clamp(5rem, 23vw, 22rem);
   line-height: 0.8;
@@ -905,10 +971,18 @@ html[data-hero-tone='light'] .header--overlay:not(.is-scrolled) .cart-count {
   font-size: 1.1rem;
   font-weight: 700;
 }
-.cart-reassure {
+.cart-reassure,
+.legal-note {
   margin: 0 0 16px;
   color: var(--ink-72);
   font-size: 0.82rem;
+}
+/* Short legal notices beside checkout and form buttons: small, never hidden. */
+.legal-note {
+  line-height: 1.5;
+}
+.legal-note a {
+  text-underline-offset: 3px;
 }
 body.has-overlay-open {
   overflow: hidden;
@@ -945,7 +1019,7 @@ body.has-overlay-open {
   color: var(--ink);
 }
 .badge--grade {
-  background: linear-gradient(90deg, var(--royal), var(--sky));
+  background: var(--royal); /* white on royal is 6:1; white on sky fails */
 }
 
 /* ---------- Product card ---------- */
@@ -1147,12 +1221,14 @@ body.has-overlay-open {
   width: 45%;
   opacity: 0.35;
 }
+/* A pull quote under the H2, sized as reading text so a full sentence stays
+   readable and never outweighs the heading. */
 .founder__quote {
   margin: 0 0 28px;
-  font-family: var(--font-display);
-  font-size: clamp(2rem, 4vw, 3.4rem);
-  line-height: 1;
-  text-transform: uppercase;
+  max-width: 34em;
+  font-size: clamp(1.2rem, 1.8vw, 1.5rem);
+  font-weight: 500;
+  line-height: 1.45;
 }
 .founder__quote::before {
   content: '\201C';
@@ -1184,6 +1260,15 @@ body.has-overlay-open {
 .founder__point .icon {
   color: var(--ice);
   margin-top: 2px;
+}
+.founder__copy .lede {
+  margin: 0 0 32px;
+}
+.founder__copy .lede > :first-child {
+  margin-top: 0;
+}
+.founder__copy .lede > :last-child {
+  margin-bottom: 0;
 }
 @media (min-width: 900px) {
   .founder__grid {
@@ -1351,6 +1436,15 @@ body.has-overlay-open {
 .page-hero__text {
   margin-top: 16px;
 }
+/* Page text keeps a reading measure when the title spans the full container. */
+.page-body:not(.container--narrow) .rte {
+  max-width: 46rem;
+}
+/* A plain white section straight after the page title shares its background,
+   so it starts close under the title instead of after a full section gap. */
+.section-main-page + .shopify-section > .section:not([class*='tone-']) {
+  padding-top: clamp(16px, 3vw, 40px);
+}
 .toolbar {
   display: flex;
   flex-wrap: wrap;
@@ -1387,6 +1481,26 @@ body.has-overlay-open {
   content: '/';
   margin-right: 8px;
   color: var(--ink-56);
+}
+/* On small screens the trail stays on one line: each crumb keeps its
+   separator, and the current page (repeated in the H1 below) is cut short
+   with an ellipsis rather than wrapping onto a line that starts with "/". */
+@media (max-width: 749px) {
+  .breadcrumbs ol {
+    flex-wrap: nowrap;
+  }
+  .breadcrumbs li {
+    flex: 0 0 auto;
+    max-width: 60%;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .breadcrumbs li[aria-current] {
+    flex-shrink: 1;
+    max-width: none;
+  }
 }
 .breadcrumbs a {
   text-decoration: none;
@@ -1456,6 +1570,11 @@ body.has-overlay-open {
   object-fit: cover;
   transition: transform 600ms var(--ease-out);
 }
+/* A post without a cover image still gets a card-shaped brand panel, so
+   the grid stays even and the card shows on a frost background. */
+.article-card__media:empty {
+  background: linear-gradient(160deg, var(--royal), var(--sky) 55%, var(--ice));
+}
 .article-card:hover .article-card__media img {
   transform: scale(1.04);
 }
@@ -1480,6 +1599,60 @@ body.has-overlay-open {
 .article__cover img {
   width: 100%;
 }
+.article__header .breadcrumbs ol {
+  justify-content: center;
+}
+.article__takeaways {
+  margin-top: 56px;
+  padding: clamp(20px, 4vw, 32px);
+  border-left: 4px solid var(--royal);
+  border-radius: var(--radius-sm);
+  background: var(--frost);
+}
+.article__takeaways h2,
+.article__references h2,
+.article__more h2 {
+  margin: 0 0 16px;
+}
+.article__takeaways ul {
+  display: grid;
+  gap: 12px;
+}
+.article__takeaways li {
+  display: grid;
+  grid-template-columns: 24px 1fr;
+  gap: 10px;
+  align-items: start;
+}
+.article__takeaways .icon {
+  margin-top: 3px;
+  color: var(--royal);
+}
+.article__references {
+  margin-top: 48px;
+  font-size: var(--fs-small);
+}
+.article__references ol {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding-left: 1.4em;
+}
+.article__references a {
+  color: var(--royal);
+  overflow-wrap: anywhere;
+  text-underline-offset: 3px;
+}
+.article__disclaimer {
+  margin-top: 48px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+  color: var(--ink-72);
+  font-size: var(--fs-small);
+}
+.article__disclaimer p:last-child {
+  margin-bottom: 0;
+}
 .article__author {
   display: flex;
   gap: 16px;
@@ -1488,6 +1661,77 @@ body.has-overlay-open {
   padding: 24px;
   border-radius: var(--radius);
   background: var(--frost);
+}
+.article__author > .icon {
+  flex: none;
+  color: var(--royal);
+}
+.article__author-media {
+  flex: none;
+  width: 80px;
+  height: 80px;
+  border-radius: var(--pill);
+  overflow: hidden;
+}
+.article__author-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 20%;
+}
+/* The bundled portrait is full length, so zoom in on the face for the
+   headshot circle. CSS only: the image file is not cropped. */
+.article__author-media--bundled img {
+  object-position: 48% 26%;
+  transform: scale(2.3);
+  transform-origin: 48% 26%;
+}
+.article__author-body {
+  min-width: 0;
+}
+.article__author-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  margin: 14px 0 0;
+  font-size: var(--fs-small);
+}
+.article__more {
+  margin-top: 56px;
+}
+.article__more ul {
+  border-top: 1px solid var(--line);
+}
+.article__more a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 44px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--line);
+  font-weight: 600;
+  text-decoration: none;
+}
+.article__more a .icon {
+  flex: none;
+  color: var(--royal);
+  transition: transform 180ms var(--ease);
+}
+.article__more a:hover span {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.article__more a:hover .icon {
+  transform: translateX(3px);
+}
+.article__back {
+  margin-top: 48px;
+}
+@media (max-width: 599px) {
+  .article__author {
+    align-items: flex-start;
+  }
 }
 
 /* ---------- Search & 404 ---------- */
@@ -1526,6 +1770,15 @@ body.has-overlay-open {
     align-items: start;
   }
 }
+/* Quantity uses the drawer's stepper. With JavaScript each change updates
+   the cart straight away, so the "Update cart" button is only for no-JS. */
+.cart-page__update {
+  margin-top: 12px;
+}
+.js .cart-page__update,
+.no-js [data-cart-step] {
+  display: none;
+}
 .cart-page__summary {
   padding: 28px;
   border-radius: var(--radius);
@@ -1540,6 +1793,10 @@ body.has-overlay-open {
 }
 .rich-text .lede {
   margin-inline: var(--lede-margin, auto);
+}
+/* A heading or eyebrow that follows text starts a new part of the section. */
+.rich-text .lede + :is(h1, h2, h3, .eyebrow) {
+  margin-top: clamp(40px, 5vw, 64px);
 }
 .rich-text__actions {
   display: flex;

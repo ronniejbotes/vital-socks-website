@@ -3,12 +3,15 @@
   three stripes. On desktop the stage pins and scrolling wraps the bands up
   the leg one by one (royal = ankle/firmest, sky = calf/easing,
   ice = below the knee/lightest). Without JavaScript, or with reduced motion,
-  everything is simply shown.
+  everything is simply shown. [compression] in the text or closing line shows
+  the compression level of the product chosen in Theme settings > Compression;
+  if that level is blank, the paragraph or closing line holding it is hidden.
 {%- endcomment -%}
 {{ 'section-explainer.css' | asset_url | stylesheet_tag }}
 
 {%- liquid
   assign steps = section.blocks | where: 'type', 'step'
+  assign compression = settings.compression_product.metafields.custom.compression_level.value | default: '' | escape
 -%}
 <section class="explainer tone-ink" data-explainer>
   {% render 'ribbons' %}
@@ -20,8 +23,9 @@
             <p class="eyebrow">{{ section.settings.eyebrow | escape }}</p>
           {%- endif -%}
           <h2 class="h2 explainer__title">{{ section.settings.heading | escape }}</h2>
-          {%- if section.settings.text != blank -%}
-            <div class="lede explainer__lede">{{ section.settings.text }}</div>
+          {%- capture lede -%}{% render 'compression-text', text: section.settings.text %}{%- endcapture -%}
+          {%- if lede != blank -%}
+            <div class="lede explainer__lede">{{ lede }}</div>
           {%- endif -%}
         </div>
 
@@ -69,11 +73,25 @@
               <span class="explainer__marker" aria-hidden="true"></span>
               <div>
                 <h3 class="h3 explainer__step-title">{{ step.settings.title | escape }}</h3>
-                <p class="explainer__step-text">{{ step.settings.text | escape }}</p>
+                {%- if step.settings.text != blank -%}
+                  <p class="explainer__step-text">{{ step.settings.text | escape }}</p>
+                {%- endif -%}
               </div>
             </li>
           {%- endfor -%}
         </ol>
+
+        {%- liquid
+          assign show_closing = true
+          if section.settings.closing == blank
+            assign show_closing = false
+          elsif compression == blank and section.settings.closing contains '[compression]'
+            assign show_closing = false
+          endif
+        -%}
+        {%- if show_closing -%}
+          <p class="explainer__closing">{{ section.settings.closing | escape | replace: '[compression]', compression }}</p>
+        {%- endif -%}
 
         {%- if section.settings.link != blank and section.settings.link_label != blank -%}
           <p class="explainer__cta">
@@ -95,13 +113,15 @@
   "class": "section-explainer",
   "settings": [
     { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Graduated compression" },
-    { "type": "text", "id": "heading", "label": "Heading", "default": "Pressure that climbs the right way" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Strongest at the ankle" },
     {
       "type": "richtext",
       "id": "text",
       "label": "Text",
-      "default": "<p>A compression sock only works if the pressure is graded: firmest at the ankle, lighter as it climbs. Get the gradient wrong and it is just a tight sock. That grading is what an orthotist checks on every Vital design.</p>"
+      "info": "[compression] shows the compression level from Theme settings > Compression.",
+      "default": "<p>Our socks are made using <strong>advanced compression-knitting machines</strong> that control the construction of the sock to create graduated compression. The result is <strong>[compression] compression</strong>, designed to be strongest at the ankle and gradually decrease up the leg.</p>"
     },
+    { "type": "text", "id": "closing", "label": "Closing line", "info": "Optional statement shown under the three steps. [compression] shows the compression level." },
     { "type": "text", "id": "figure_label", "label": "Diagram description for screen readers", "default": "A leg wrapped in three bands: firmest at the ankle, easing at the calf, lightest below the knee." },
     { "type": "text", "id": "link_label", "label": "Link label", "default": "Read the compression guide" },
     { "type": "url", "id": "link", "label": "Link" }
@@ -123,9 +143,9 @@
     {
       "name": "Compression explainer",
       "blocks": [
-        { "type": "step", "settings": { "zone": "Ankle", "level": "Firmest", "title": "Firmest at the ankle", "text": "Pressure is highest where fluid pools first after a long day on your feet." } },
-        { "type": "step", "settings": { "zone": "Calf", "level": "Easing", "title": "Easing through the calf", "text": "It eases off up the calf, working with the muscle that pumps blood back up the leg." } },
-        { "type": "step", "settings": { "zone": "Below the knee", "level": "Lightest", "title": "Lightest below the knee", "text": "Lightest at the top, so the cuff stays up without digging in." } }
+        { "type": "step", "settings": { "zone": "Ankle", "level": "Firmest", "title": "Firmest at the ankle", "text": "Strongest at the ankle, where the compression starts." } },
+        { "type": "step", "settings": { "zone": "Calf", "level": "Easing", "title": "Easing through the calf", "text": "Easing gradually through the calf." } },
+        { "type": "step", "settings": { "zone": "Below the knee", "level": "Lightest", "title": "Lightest below the knee", "text": "Lightest just under the knee, where the sock ends." } }
       ]
     }
   ]

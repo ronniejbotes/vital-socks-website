@@ -16,7 +16,7 @@ import fss from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { Liquid, Tag, Value, Drop } from 'liquidjs';
-import { buildProducts, MENUS, PAGES, POLICIES } from './mock-data.mjs';
+import { buildBlogs, buildProducts, MENUS, PAGES, POLICIES } from './mock-data.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const PORT = Number(process.env.PORT) || 8787;
@@ -100,7 +100,10 @@ class ImageUrl {
   constructor(image, width) {
     this.image = image;
     this.width = width;
-    this.url = image.src || String(image);
+    const src = image.src || String(image);
+    // Protocol-relative like Shopify's CDN URLs, so `| prepend: 'https:'` in
+    // meta tags and JSON-LD gives an absolute URL here too.
+    this.url = src.startsWith('/') && !src.startsWith('//') ? `//localhost:${PORT}${src}` : src;
   }
   toString() {
     return this.url;
@@ -150,12 +153,17 @@ const makeCollection = (handle, title, description = '') => ({
   featured_image: null,
 });
 const collections = arrayWithHandles([
-  makeCollection('all', 'All socks', '<p>Every Vital Socks print, graded compression throughout.</p>'),
+  makeCollection(
+    'all',
+    'All socks',
+    "<p>Compression doesn't have to look clinical. Five knee-high designs, Cherry Pop, Espresso, Checker, Daisy and Black, all in graduated compression, sized S, M and L by ankle circumference.</p>"
+  ),
   makeCollection('launch-prints', 'The launch prints'),
 ]);
 const pages = arrayWithHandles(
   Object.entries(PAGES).map(([handle, p]) => ({ handle, url: `/pages/${handle}`, ...p }))
 );
+const blogs = arrayWithHandles(buildBlogs());
 
 let cartLines = []; // { key, variant_id, quantity }
 
@@ -239,6 +247,8 @@ function resolveSetting(type, value) {
       return collections[value] || null;
     case 'page':
       return pages[value] || null;
+    case 'blog':
+      return blogs[value] || null;
     case 'image_picker':
       return null;
     default:
@@ -374,6 +384,42 @@ engine.registerFilter('structured_data', (obj) => {
     });
   }
   return JSON.stringify({ '@context': 'http://schema.org/', '@type': 'Article', headline: obj.title });
+});
+engine.registerFilter('media_tag', (media) => {
+  if (!media || media.media_type !== 'image') return '';
+  return `<img src="${esc(new ImageUrl(media).url)}" alt="${esc(media.alt || '')}" width="${esc(media.width)}" height="${esc(media.height)}" loading="lazy">`;
+});
+engine.registerFilter('link_to', (text, url, title) => `<a href="${esc(url)}"${title ? ` title="${esc(title)}"` : ''}>${text}</a>`);
+
+/* date: Shopify also takes `format: 'name'`, a named format from the locale's
+   date_formats (or Shopify's defaults). LiquidJS only knows strftime strings. */
+const SHOPIFY_DATE_FORMATS = {
+  abbreviated_date: '%b %d, %Y',
+  basic: '%m/%d/%Y',
+  date: '%B %d, %Y',
+  date_at_time: '%B %d, %Y at %-I:%M %p',
+  default: '%a, %b %d, %Y, %-I:%M %p %z',
+  on_date: 'on %b %d, %Y',
+};
+const liquidDate = engine.filters.date;
+function dateFormat(args) {
+  const positional = args.find((a) => !Array.isArray(a));
+  if (positional !== undefined) return positional;
+  const named = args.find((a) => Array.isArray(a) && a[0] === 'format');
+  if (!named) return undefined;
+  return locale.date_formats?.[named[1]] ?? SHOPIFY_DATE_FORMATS[named[1]] ?? named[1];
+}
+engine.registerFilter('date', function (v, ...args) {
+  return liquidDate.call(this, v, dateFormat(args));
+});
+/* time_tag: <time datetime="ISO">formatted</time> */
+engine.registerFilter('time_tag', function (v, ...args) {
+  if (v === null || v === undefined || v === '') return '';
+  const o = kwargs(args);
+  const text = liquidDate.call(this, v, dateFormat(args) ?? SHOPIFY_DATE_FORMATS.default);
+  const d = new Date(v);
+  const iso = o.datetime ? liquidDate.call(this, v, o.datetime) : Number.isNaN(d.getTime()) ? '' : d.toISOString().replace(/\.\d{3}Z$/, 'Z');
+  return `<time datetime="${esc(iso)}">${text}</time>`;
 });
 
 /* {% form %} */
@@ -535,7 +581,7 @@ const PREVIEW_HEAD = (badge) => `
 <script>window.Shopify = { designMode: false, preview: true };</script>
 ${
   badge
-    ? `<style>.vs-preview-badge{position:fixed;left:50%;bottom:6px;transform:translateX(-50%);z-index:9999;background:#02182D;color:#fff;font:600 10px/1 system-ui;padding:6px 10px;border-radius:999px;opacity:.8;letter-spacing:.08em;pointer-events:none}</style>
+    ? `<style>.vs-preview-badge{position:fixed;right:6px;bottom:6px;z-index:9999;background:#02182D;color:#fff;font:600 10px/1 system-ui;padding:6px 10px;border-radius:999px;opacity:.8;letter-spacing:.08em;pointer-events:none}@media (max-width:639px){.vs-preview-badge{position:static;border-radius:0;opacity:1;padding:10px 16px;text-align:center;border-top:1px solid rgba(255,255,255,.12)}}</style>
 <script>document.addEventListener('DOMContentLoaded',function(){var b=document.createElement('div');b.className='vs-preview-badge';b.textContent='LOCAL PREVIEW · MOCK PRODUCTS, PRICES & SIZES';document.body.appendChild(b);});</script>`
     : ''
 }`;
@@ -555,7 +601,7 @@ function buildGlobals(url, extra = {}) {
       name: 'Vital Socks',
       url: ORIGIN,
       description:
-        'Compression socks in bold prints, with the compression grading overseen by an orthotist. Shop online in South Africa.',
+        'Everyday graduated compression socks, designed by an Orthotist & Prosthetist. Five knee-high prints, sized by your ankle. Delivered across South Africa.',
       currency: 'ZAR',
       customer_accounts_enabled: false,
       enabled_payment_types: ['Visa', 'Mastercard', 'Instant EFT'],
@@ -597,6 +643,7 @@ function buildGlobals(url, extra = {}) {
     linklists,
     collections,
     pages,
+    blogs,
     all_products: productsByHandle,
     recommendations: { performed: false, products: [], products_count: 0 },
     search: { performed: false },
@@ -780,8 +827,21 @@ const server = http.createServer(async (req, res) => {
       return send(res, 200, html, 'text/plain; charset=utf-8');
     }
     if (['/agents.md', '/llms.txt', '/llms-full.txt'].includes(p)) {
-      const globals = buildGlobals(url, { page_type: 'agents' });
-      const out = await engine.parseAndRender(prep(await read('templates/agents.md.liquid')), {}, { globals });
+      // Shopify renders agents.md.liquid with a restricted context: ONLY
+      // `request` and `agents` exist (no shop, settings, collections, cart,
+      // routes or metafields). The preview passes nothing else, so anything
+      // that would be blank on Shopify is blank here too.
+      const agents = {
+        store_name: 'Vital Socks',
+        store_url: ORIGIN,
+        ucp_discovery_url: `${ORIGIN}/.well-known/ucp`,
+        mcp_endpoint_url: `${ORIGIN}/api/mcp`,
+        ucp_versions: ['2026-08-25'],
+        currency: 'ZAR',
+        sitemap_url: `${ORIGIN}/sitemap.xml`,
+      };
+      const request = { host: `localhost:${PORT}`, origin: ORIGIN, path: p, locale: { iso_code: 'en' }, design_mode: false };
+      const out = await engine.parseAndRender(prep(await read('templates/agents.md.liquid')), {}, { globals: { request, agents } });
       return send(res, 200, out, 'text/markdown; charset=utf-8');
     }
 
@@ -789,9 +849,9 @@ const server = http.createServer(async (req, res) => {
     if (p === '/') {
       return renderPage(res, url, {
         template: 'index',
-        title: 'Compression socks, graded by an orthotist | South Africa',
+        title: 'Compression Socks South Africa | Vital Socks',
         description:
-          'Graduated compression socks in bold prints, with the grading overseen by an orthotist. Find your size by ankle and calf. Delivered across South Africa.',
+          'Everyday graduated compression socks, designed by an Orthotist & Prosthetist. Five knee-high prints, sized by your ankle. Delivered across South Africa.',
       });
     }
     let m;
@@ -831,8 +891,25 @@ const server = http.createServer(async (req, res) => {
       });
     }
     if ((m = p.match(/^\/blogs\/([\w-]+)$/))) {
-      const blog = { title: 'Legwork', handle: m[1], url: `/blogs/${m[1]}`, articles: [], articles_count: 0 };
-      return renderPage(res, url, { template: 'blog', title: blog.title, objects: { blog } });
+      const blog = blogs[m[1]];
+      if (!blog) throw Object.assign(new Error('404'), { status: 404 });
+      return renderPage(res, url, {
+        template: 'blog',
+        title: blog.seo?.title || blog.title,
+        description: blog.seo?.description || '',
+        objects: { blog },
+      });
+    }
+    if ((m = p.match(/^\/blogs\/([\w-]+)\/([\w-]+)$/))) {
+      const blog = blogs[m[1]];
+      const article = blog?.articles.find((a) => a.handle === m[2]);
+      if (!article) throw Object.assign(new Error('404'), { status: 404 });
+      return renderPage(res, url, {
+        template: 'article',
+        title: article.title,
+        description: String(article.excerpt_or_content).replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 155),
+        objects: { blog, article, page_image: article.image },
+      });
     }
     if ((m = p.match(/^\/policies\/([\w-]+)$/))) {
       const policy = POLICIES.find((x) => x.handle === m[1]);

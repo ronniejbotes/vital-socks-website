@@ -1,14 +1,26 @@
 {%- comment -%}
-  Site-wide JSON-LD.
-  - Home page: OnlineStore (a schema.org Organization subtype) + WebSite.
-  - Product, collection, article and page templates: BreadcrumbList.
-  Product and Article markup is output by main-product / main-article using
-  Shopify's `structured_data` filter, and FAQPage by the faq section.
+  Site-wide JSON-LD, built as one entity graph linked by @id.
+  - Every page: OnlineStore (a schema.org Organization subtype), @id /#organization.
+  - Home page: WebSite.
+  - Home page, the About page (handle "about") and articles the founder wrote:
+    the founder's Person node, @id /#founder.
+  - Articles: BlogPosting, with the author set to the founder only when she
+    wrote the post, otherwise to the store.
+  - Product, collection, article and blog templates: BreadcrumbList.
+  Product markup is output by main-product with Shopify's `structured_data`
+  filter, and FAQPage by the faq section on the FAQ page only. A page's
+  BreadcrumbList is output by main-page, beside the visible breadcrumb, so a
+  page without that trail (such as About) has no breadcrumb markup either.
   Every business fact here comes from Theme settings > Business details, so
-  there is one place to keep it true.
+  there is one place to keep it true. Every interpolated value goes through
+  the json filter, so each block stays valid JSON whichever settings are blank.
+  Deliberately left out: LocalBusiness (no walk-in address), ratings or
+  reviews (no review app), priceRange, SearchAction, credentials such as an
+  HPCSA number, and a second Product node.
 {%- endcomment -%}
 {%- liquid
   assign org_id = shop.url | append: '/#organization'
+  assign founder_id = shop.url | append: '/#founder'
   if settings.logo != blank
     assign logo_url = settings.logo | image_url: width: 600 | prepend: 'https:'
   else
@@ -23,45 +35,74 @@
       assign same_as = same_as | append: link | append: '|'
     endif
   endfor
-  if settings.founder_url != blank
-    assign founder_url = settings.founder_url
-  endif
   assign same_as = same_as | split: '|'
+
+  assign has_founder = false
+  if settings.founder_name != blank
+    assign has_founder = true
+  endif
+
+  assign by_founder = false
+  if has_founder and request.page_type == 'article' and article.author contains settings.founder_name
+    assign by_founder = true
+  endif
+
+  assign show_person = false
+  if has_founder
+    if request.page_type == 'index' or by_founder
+      assign show_person = true
+    elsif request.page_type == 'page' and page.handle == 'about'
+      assign show_person = true
+    endif
+  endif
+
+  if show_person
+    assign founder_profile = settings.founder_profile_url | default: settings.founder_url
+    assign founder_same_as = ''
+    if settings.founder_profile_url != blank
+      assign founder_same_as = founder_same_as | append: settings.founder_profile_url | append: '|'
+    endif
+    if settings.founder_url != blank
+      assign founder_same_as = founder_same_as | append: settings.founder_url | append: '|'
+    endif
+    if settings.founder_same_as != blank
+      assign extra_lines = settings.founder_same_as | newline_to_br | split: '<br />'
+      for line in extra_lines
+        assign profile_link = line | strip
+        assign scheme = profile_link | slice: 0, 4
+        if scheme == 'http'
+          assign founder_same_as = founder_same_as | append: profile_link | append: '|'
+        endif
+      endfor
+    endif
+    assign founder_same_as = founder_same_as | split: '|' | uniq
+  endif
 -%}
-{%- if request.page_type == 'index' -%}
-  <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "OnlineStore",
-      "@id": {{ org_id | json }},
-      "name": {{ shop.name | json }},
-      {%- if settings.legal_name != blank %}"legalName": {{ settings.legal_name | json }},{% endif %}
-      "url": {{ shop.url | json }},
-      "logo": {{ logo_url | json }},
-      {%- if shop.description != blank %}"description": {{ shop.description | json }},{% endif %}
-      {%- if settings.contact_email != blank %}"email": {{ settings.contact_email | json }},{% endif %}
-      {%- if settings.contact_phone != blank %}"telephone": {{ settings.contact_phone | json }},{% endif %}
-      {%- if settings.vat_number != blank %}"vatID": {{ settings.vat_number | json }},{% endif %}
-      {%- if settings.address != blank %}
-      "address": {
-        "@type": "PostalAddress",
-        "streetAddress": {{ settings.address | newline_to_br | strip_html | strip_newlines | json }},
-        "addressCountry": "ZA"
-      },
-      {%- endif %}
-      {%- if settings.founder_name != blank %}
-      "founder": {
-        "@type": "Person",
-        "name": {{ settings.founder_name | json }}
-        {%- if settings.founder_title != blank %},"jobTitle": {{ settings.founder_title | json }}{% endif %}
-        {%- if founder_url %},"url": {{ founder_url | json }}{% endif %}
-      },
-      {%- endif %}
-      {%- if same_as.size > 0 %}"sameAs": {{ same_as | json }},{% endif %}
-      "areaServed": { "@type": "Country", "name": "South Africa" },
-      "currenciesAccepted": {{ cart.currency.iso_code | json }}
-    }
-  </script>
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "OnlineStore",
+    "@id": {{ org_id | json }},
+    "name": {{ shop.name | json }},
+    {%- if settings.legal_name != blank %}"legalName": {{ settings.legal_name | json }},{% endif %}
+    "url": {{ shop.url | json }},
+    "logo": {{ logo_url | json }},
+    {%- if shop.description != blank %}"description": {{ shop.description | json }},{% endif %}
+    {%- if settings.contact_email != blank %}"email": {{ settings.contact_email | json }},{% endif %}
+    {%- if settings.contact_phone != blank %}"telephone": {{ settings.contact_phone | json }},{% endif %}
+    {%- if settings.vat_number != blank %}"vatID": {{ settings.vat_number | json }},{% endif %}
+    "address": {
+      "@type": "PostalAddress",
+      {%- if settings.address != blank %}"streetAddress": {{ settings.address | newline_to_br | replace: '<br />', ', ' | strip_html | strip_newlines | json }},{% endif %}
+      "addressCountry": "ZA"
+    },
+    {%- if has_founder %}"founder": { "@type": "Person", "@id": {{ founder_id | json }}, "name": {{ settings.founder_name | json }} },{% endif %}
+    {%- if same_as.size > 0 %}"sameAs": {{ same_as | json }},{% endif %}
+    "areaServed": { "@type": "Country", "name": "South Africa" },
+    "currenciesAccepted": {{ cart.currency.iso_code | json }}
+  }
+</script>
+{%- if request.page_type == 'index' %}
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -73,12 +114,62 @@
       "publisher": { "@id": {{ org_id | json }} }
     }
   </script>
-{%- endif -%}
+{%- endif %}
+{%- if show_person %}
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "@id": {{ founder_id | json }},
+      "name": {{ settings.founder_name | json }}
+      {%- if settings.founder_title != blank %},"jobTitle": {{ settings.founder_title | json }}{% endif %}
+      {%- if founder_profile != blank %},"url": {{ founder_profile | json }}{% endif %}
+      {%- if founder_same_as.size > 0 %},"sameAs": {{ founder_same_as | json }}{% endif %}
+    }
+  </script>
+{%- endif %}
+{%- if request.page_type == 'article' %}
+  {%- liquid
+    assign post_description = page_description | default: article.excerpt_or_content | strip_html | strip_newlines | strip | truncate: 155
+    assign post_modified = article.metafields.custom.last_updated.value | default: article.published_at
+    assign refs = article.metafields.custom.references.value
+  -%}
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      "@id": {{ canonical_url | append: '#article' | json }},
+      "headline": {{ article.title | json }},
+      {%- if post_description != blank %}"description": {{ post_description | json }},{% endif %}
+      {%- if article.image %}"image": {{ article.image | image_url: width: 1200 | prepend: 'https:' | json }},{% endif %}
+      "datePublished": {{ article.published_at | date: '%Y-%m-%d' | json }},
+      "dateModified": {{ post_modified | date: '%Y-%m-%d' | json }},
+      "inLanguage": "en-ZA",
+      "author":
+        {%- if by_founder -%}
+          { "@type": "Person", "@id": {{ founder_id | json }}, "name": {{ settings.founder_name | json }} },
+        {%- else -%}
+          { "@type": "Organization", "@id": {{ org_id | json }}, "name": {{ shop.name | json }} },
+        {%- endif %}
+      "publisher": { "@id": {{ org_id | json }} },
+      "mainEntityOfPage": {{ canonical_url | json }},
+      "isPartOf": { "@type": "Blog", "name": {{ blog.title | json }}, "url": {{ shop.url | append: blog.url | json }} }
+      {%- if refs != blank -%}
+        ,"citation": [
+          {%- for ref in refs -%}
+            { "@type": "CreativeWork", "name": {{ ref.text | json }}, "url": {{ ref.url | json }} }
+            {%- unless forloop.last %},{% endunless -%}
+          {%- endfor -%}
+        ]
+      {%- endif %}
+    }
+  </script>
+{%- endif %}
 
 {%- liquid
   assign crumbs = false
   case request.page_type
-    when 'product', 'collection', 'article', 'blog', 'page'
+    when 'product', 'collection', 'article', 'blog'
       assign crumbs = true
   endcase
 -%}
@@ -109,8 +200,6 @@
           {%- when 'article' -%}
             ,{ "@type": "ListItem", "position": 2, "name": {{ blog.title | json }}, "item": {{ shop.url | append: blog.url | json }} }
             ,{ "@type": "ListItem", "position": 3, "name": {{ article.title | json }}, "item": {{ shop.url | append: article.url | json }} }
-          {%- when 'page' -%}
-            ,{ "@type": "ListItem", "position": 2, "name": {{ page.title | json }}, "item": {{ shop.url | append: page.url | json }} }
         {%- endcase -%}
       ]
     }

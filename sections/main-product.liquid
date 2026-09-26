@@ -2,15 +2,20 @@
   Product page.
   Compression facts come from ONE place — product metafields — so the grade
   shown here, on cards, in the carousel and in agents.md always agrees:
-    custom.compression_level  (single line text, e.g. "15–20 mmHg")
+    custom.compression_level  (single line text, e.g. "18–21 mmHg")
     custom.compression_class  (single line text, optional)
     custom.persona            (single line text, e.g. "The shift worker")
-    custom.fabric             (multi-line text)
+    custom.fabric             (multi-line text; leave blank unless a design
+                               differs, because "Fabric text" covers all)
     custom.care               (multi-line text)
     custom.card_color         (colour, tile behind the product)
   Upload a transparent cut-out as the first product image.
+  [compression] in a feature, the compression text or the fabric text shows the
+  compression level of the product chosen in Theme settings > Compression. If
+  that level is blank, the feature or paragraph holding the token is hidden.
 {%- endcomment -%}
 {{ 'section-product.css' | asset_url | stylesheet_tag }}
+{{ 'product-features.css' | asset_url | stylesheet_tag }}
 
 {%- liquid
   assign current_variant = product.selected_or_first_available_variant
@@ -20,6 +25,7 @@
   assign persona = product.metafields.custom.persona.value
   assign fabric = product.metafields.custom.fabric.value
   assign care = product.metafields.custom.care.value
+  assign compression = settings.compression_product.metafields.custom.compression_level.value | default: '' | escape
   assign tile = 'var(--frost)'
   if product.metafields.custom.card_color != blank
     assign tile = product.metafields.custom.card_color.value
@@ -139,7 +145,14 @@
         {%- endif -%}
 
         {%- if section.settings.show_excerpt and product.description != blank -%}
-          <p class="product__excerpt">{{ product.description | replace: '</p>', '</p> ' | strip_html | truncatewords: 32 }}</p>
+          {%- comment -%} The first paragraph of the description, so the excerpt ends on a full sentence. truncatewords only trims a very long first paragraph. {%- endcomment -%}
+          {%- liquid
+            assign excerpt = product.description | split: '</p>' | first | strip_html | strip
+            if excerpt == blank
+              assign excerpt = product.description | replace: '</p>', '</p> ' | strip_html | strip
+            endif
+          -%}
+          <p class="product__excerpt">{{ excerpt | truncatewords: 40 }}</p>
         {%- endif -%}
 
         {%- form 'product', product, id: form_id, class: 'product-form', novalidate: 'novalidate', data-product-form: '' -%}
@@ -242,45 +255,85 @@
         {%- endfor -%}
 
         <div class="product__details">
-          {%- if product.description != blank -%}
+          {%- assign feature_blocks = section.blocks | where: 'type', 'feature' -%}
+          {%- capture features -%}
+            {%- for block in feature_blocks -%}
+              {%- if compression == blank and block.settings.text contains '[compression]' -%}
+                {%- continue -%}
+              {%- endif -%}
+              <li class="product-feature" {{ block.shopify_attributes }}>
+                {% render 'feature-icon', name: block.settings.icon %}
+                <p class="product-feature__title">{{ block.settings.title | escape }}</p>
+                <div class="product-feature__text">{{ block.settings.text | replace: '[compression]', compression }}</div>
+              </li>
+            {%- endfor -%}
+          {%- endcapture -%}
+          {%- if features != blank -%}
             <details class="faq__item" open>
-              <summary><span>{{ section.settings.details_label | escape }}</span>{% render 'icon', name: 'plus', size: 20 %}</summary>
-              <div class="faq__answer rte">{{ product.description }}</div>
+              <summary><span>{{ section.settings.features_label | escape }}</span>{% render 'icon', name: 'plus', size: 20 %}</summary>
+              <div class="faq__answer">
+                <ul class="product-features" role="list">{{ features }}</ul>
+              </div>
             </details>
           {%- endif -%}
           <details class="faq__item">
-            <summary><span>{{ section.settings.compression_label | escape }}</span>{% render 'icon', name: 'plus', size: 20 %}</summary>
+            <summary><span>{{ section.settings.details_label | escape }}</span>{% render 'icon', name: 'plus', size: 20 %}</summary>
             <div class="faq__answer rte">
+              {{- product.description -}}
               {%- if grade != blank -%}
                 <p><strong>{{ 'products.product.compression' | t }}:</strong> {{ grade | escape }}{% if grade_class != blank %} ({{ grade_class | escape }}){% endif %}</p>
               {%- endif -%}
-              {{ section.settings.compression_text }}
+              {% render 'compression-text', text: section.settings.compression_text %}
+              {%- if section.settings.compression_guide_page != blank -%}
+                <p>
+                  <a href="{{ section.settings.compression_guide_page.url }}">
+                    {{- 'products.product.compression_guide' | t -}}
+                  </a>
+                </p>
+              {%- endif -%}
               {%- if size_guide_url != blank -%}
                 <p><a href="{{ size_guide_url }}">{{ 'products.product.find_my_size' | t }}</a></p>
               {%- endif -%}
             </div>
           </details>
-          {%- if fabric != blank or care != blank -%}
+          {%- if fabric != blank or care != blank or section.settings.fabric_text != blank or section.settings.care_text != blank -%}
             <details class="faq__item">
               <summary><span>{{ section.settings.care_label | escape }}</span>{% render 'icon', name: 'plus', size: 20 %}</summary>
               <div class="faq__answer rte">
+                {% render 'compression-text', text: section.settings.fabric_text %}
                 {%- if fabric != blank -%}<p>{{ fabric | newline_to_br }}</p>{%- endif -%}
-                {%- if care != blank -%}<p>{{ care | newline_to_br }}</p>{%- endif -%}
+                {%- if care != blank -%}
+                  <p>{{ care | newline_to_br }}</p>
+                {%- else -%}
+                  {{ section.settings.care_text }}
+                {%- endif -%}
               </div>
+            </details>
+          {%- endif -%}
+          {%- if section.settings.wear_text != blank -%}
+            <details class="faq__item">
+              <summary><span>{{ section.settings.wear_label | escape }}</span>{% render 'icon', name: 'plus', size: 20 %}</summary>
+              <div class="faq__answer rte">{{ section.settings.wear_text }}</div>
             </details>
           {%- endif -%}
           <details class="faq__item">
             <summary><span>{{ section.settings.delivery_label | escape }}</span>{% render 'icon', name: 'plus', size: 20 %}</summary>
             <div class="faq__answer rte">
               {{ section.settings.delivery_text }}
-              <p>
-                {%- if shop.shipping_policy.body != blank -%}
-                  <a href="{{ shop.shipping_policy.url }}">{{ shop.shipping_policy.title | escape }}</a>
-                {%- endif -%}
-                {%- if shop.refund_policy.body != blank -%}
-                  &middot; <a href="{{ shop.refund_policy.url }}">{{ shop.refund_policy.title | escape }}</a>
-                {%- endif -%}
-              </p>
+              {%- if shop.shipping_policy.body != blank or shop.refund_policy.body != blank -%}
+                <p>
+                  {%- if shop.shipping_policy.body != blank -%}
+                    <a href="{{ shop.shipping_policy.url }}">{{ shop.shipping_policy.title | escape }}</a>
+                  {%- endif -%}
+                  {%- if shop.shipping_policy.body != blank and shop.refund_policy.body != blank %} &middot; {% endif -%}
+                  {%- if shop.refund_policy.body != blank -%}
+                    <a href="{{ shop.refund_policy.url }}">{{ shop.refund_policy.title | escape }}</a>
+                  {%- endif -%}
+                </p>
+              {%- endif -%}
+              {%- if section.settings.terms_text != blank -%}
+                <p class="legal-note">{% render 'policy-links', text: section.settings.terms_text %}</p>
+              {%- endif -%}
             </div>
           </details>
         </div>
@@ -316,28 +369,105 @@
   "tag": "div",
   "class": "section-main-product",
   "settings": [
-    { "type": "page", "id": "size_guide_page", "label": "Size guide page", "info": "The page that holds the fit finder." },
-    { "type": "checkbox", "id": "show_excerpt", "label": "Show short description above the options", "default": true },
-    { "type": "checkbox", "id": "show_dynamic_checkout", "label": "Show express checkout buttons", "default": true },
-    { "type": "text", "id": "details_label", "label": "Details heading", "default": "The details" },
-    { "type": "text", "id": "compression_label", "label": "Compression heading", "default": "Compression and fit" },
+    {
+      "type": "page",
+      "id": "size_guide_page",
+      "label": "Size guide page",
+      "info": "The page that holds the fit finder."
+    },
+    {
+      "type": "page",
+      "id": "compression_guide_page",
+      "label": "Compression guide page",
+      "info": "Linked from the \"Compression and fit\" panel."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_excerpt",
+      "label": "Show short description above the options",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_dynamic_checkout",
+      "label": "Show express checkout buttons",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "features_label",
+      "label": "Features heading",
+      "default": "Features"
+    },
+    {
+      "type": "text",
+      "id": "details_label",
+      "label": "Product details heading",
+      "default": "Product details"
+    },
     {
       "type": "richtext",
       "id": "compression_text",
-      "label": "Compression text (all products)",
-      "default": "<p>Graduated: firmest at the ankle, lighter towards the knee. Choose your size by ankle and calf measurement, not shoe size. If you have a circulation condition, diabetes or a history of blood clots, check with a healthcare professional before wearing compression.</p>"
+      "label": "Compression text (under Product details)",
+      "info": "[compression] shows the compression level from Theme settings > Compression.",
+      "default": "<p>Graduated: strongest at the ankle and gradually decreasing up the leg, built into the knit on compression-knitting machines. Knee-high, ending just under the knee. Sized by ankle circumference.</p><p><strong>Please note:</strong> This product is designed for everyday compression and is not intended for diagnosed medical conditions requiring therapeutic compression. If you have a medical condition or persistent swelling, please consult an Orthotist or healthcare professional. Our Orthotist is available for guidance at <a href=\"https://www.cajeebotes.com\">www.cajeebotes.com</a></p>"
     },
-    { "type": "text", "id": "care_label", "label": "Fabric and care heading", "default": "Fabric and care" },
-    { "type": "text", "id": "delivery_label", "label": "Delivery heading", "default": "Delivery and returns" },
+    {
+      "type": "text",
+      "id": "care_label",
+      "label": "Fabric and care heading",
+      "default": "Fabric & care"
+    },
+    {
+      "type": "richtext",
+      "id": "fabric_text",
+      "label": "Fabric text (all products)",
+      "info": "Shown first under \"Fabric and care\". The product metafield custom.fabric adds to it for a design that differs.",
+      "default": "<p><strong>Comfort in every thread.</strong> Made with a carefully selected blend of combed cotton, polyamide and elastane for a soft feel, comfortable stretch and lasting wear.</p>"
+    },
+    {
+      "type": "richtext",
+      "id": "care_text",
+      "label": "Care text (all products)",
+      "info": "Shown under \"Fabric and care\" unless a product has its own custom.care metafield.",
+      "default": "<p>Hand wash every 2–3 days in cold water using a mild soap. Gently remove excess water and leave them to air dry in the shade. Avoid bleach, harsh detergents, tumble drying and excessive heat.</p>"
+    },
+    {
+      "type": "text",
+      "id": "wear_label",
+      "label": "Wear guide heading",
+      "default": "Wear guide"
+    },
+    {
+      "type": "richtext",
+      "id": "wear_text",
+      "label": "Wear guide text",
+      "default": "<p><strong>Putting them on</strong></p><ol><li>Put them on in the morning, before you start your day.</li><li>Turn the sock inside out down to the heel, slip your foot in and line up the heel.</li><li>Ease the sock up your leg a little at a time rather than pulling from the cuff.</li><li>Smooth out any wrinkles. The cuff sits just under the knee, so don't fold or roll it down.</li></ol><p><strong>How they should feel</strong></p><p>They should feel snug and supportive without causing pain, numbness, tingling or significant discomfort. The sock should sit smoothly against your leg without excessive bunching or rolling.</p><p><strong>When to wear them</strong></p><p>Every day: while working, commuting, travelling or spending long periods on your feet, and on flights and other long journeys where you may be sitting for extended periods.</p>"
+    },
+    {
+      "type": "text",
+      "id": "delivery_label",
+      "label": "Delivery heading",
+      "default": "Shipping & exchanges"
+    },
     {
       "type": "richtext",
       "id": "delivery_text",
       "label": "Delivery text",
       "default": "<p>Delivery options and costs are shown at checkout.</p>"
+    },
+    {
+      "type": "text",
+      "id": "terms_text",
+      "label": "Terms line",
+      "info": "Shown under the policy links. \"Terms of service\" links to that policy when it exists.",
+      "default": "Suitability, health information and limits on our liability are set out in our Terms of service."
     }
   ],
   "blocks": [
-    { "type": "@app" },
+    {
+      "type": "@app"
+    },
     {
       "type": "trust",
       "name": "Trust line",
@@ -347,15 +477,86 @@
           "id": "icon",
           "label": "Icon",
           "options": [
-            { "value": "stethoscope", "label": "Clinical" },
-            { "value": "truck", "label": "Delivery" },
-            { "value": "lock", "label": "Secure" },
-            { "value": "ruler", "label": "Sizing" },
-            { "value": "check", "label": "Tick" }
+            {
+              "value": "stethoscope",
+              "label": "Clinical"
+            },
+            {
+              "value": "truck",
+              "label": "Delivery"
+            },
+            {
+              "value": "lock",
+              "label": "Secure"
+            },
+            {
+              "value": "ruler",
+              "label": "Sizing"
+            },
+            {
+              "value": "check",
+              "label": "Tick"
+            }
           ],
           "default": "check"
         },
-        { "type": "text", "id": "text", "label": "Text", "default": "Compression grading overseen by an orthotist" }
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "Designed by an Orthotist"
+        }
+      ]
+    },
+    {
+      "type": "feature",
+      "name": "Feature",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            {
+              "value": "graduated",
+              "label": "Graduated bands"
+            },
+            {
+              "value": "long-days",
+              "label": "Long days (clock)"
+            },
+            {
+              "value": "ankle",
+              "label": "Ankle measurement"
+            },
+            {
+              "value": "fabric",
+              "label": "All-season fabric"
+            },
+            {
+              "value": "orthotist",
+              "label": "Orthotist (tick)"
+            },
+            {
+              "value": "travel",
+              "label": "Travel (plane)"
+            }
+          ],
+          "default": "graduated"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Heading",
+          "default": "Graduated compression"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "info": "[compression] shows the compression level.",
+          "default": "<p>[compression] of support, firmest at the ankle and easing off gradually towards the knee.</p>"
+        }
       ]
     }
   ]

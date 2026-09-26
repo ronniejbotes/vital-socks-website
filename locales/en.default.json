@@ -59,7 +59,7 @@
       "sale_price": "Sale price",
       "sale": "Sale",
       "compression": "Compression",
-      "graded_by": "Graded by an orthotist",
+      "compression_guide": "How graduated compression works",
       "view": "View {{ product }}",
       "error": "That didn't go into your cart. Try again, or refresh the page."
     }
@@ -89,15 +89,23 @@
       "message": "How can we help?",
       "send": "Send message",
       "success": "Thanks, your message is on its way. We'll get back to you soon.",
-      "error": "Some details need fixing before this can send."
+      "error": "Some details need fixing before this can send.",
+      "consent_given": "Yes"
     },
     "fit_finder": {
       "ankle": "Ankle circumference (cm)",
-      "calf": "Calf circumference (cm)",
+      "calf": "Calf circumference (cm), optional",
       "result": "Your size",
+      "prompt": "Enter your ankle measurement to see your size. Add your calf to check the fit.",
+      "match": "Your ankle measurement fits size [size].",
+      "calf_outside": "Your ankle fits size [size], but your calf is outside that size's calf range. Send us both measurements and we'll advise you before you order.",
       "no_match": "Those measurements don't match one of our sizes. Send them to us and we'll advise you personally.",
-      "prompt": "Enter both measurements to see your size.",
-      "contact": "Ask us about fit"
+      "contact": "Ask us about fit",
+      "col_size": "Size",
+      "col_ankle": "Ankle (B)",
+      "col_calf": "Calf (C)",
+      "svg_calf": "calf, widest",
+      "svg_ankle": "ankle, narrowest"
     },
     "collection": {
       "empty": "No socks here yet. New designs are on the way.",
@@ -105,7 +113,8 @@
       "product_count": {
         "one": "{{ count }} design",
         "other": "{{ count }} designs"
-      }
+      },
+      "grid_heading": "{{ title }}: all designs"
     },
     "search": {
       "title": "Search",
@@ -118,7 +127,13 @@
     "blog": {
       "read_more": "Read the article",
       "by": "By {{ author }}",
-      "back": "Back to {{ blog }}"
+      "back": "Back to {{ blog }}",
+      "updated": "Last updated {{ date }}",
+      "takeaways": "Key takeaways",
+      "references": "References",
+      "more": "More answers",
+      "about_author": "About {{ name }}",
+      "practice": "Speak to our Orthotist"
     },
     "not_found": {
       "title": "This page walked off",

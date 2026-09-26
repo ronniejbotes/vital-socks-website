@@ -11,7 +11,8 @@
       },
       "block_order": ["shop", "help", "contact"],
       "settings": {
-        "tagline": "Compression socks with the grading done properly. A South African brand, founded by an orthotist.",
+        "tagline": "Compression, with more thought behind it. Designed by an Orthotist. Made for everyday life. A South African brand.",
+        "disclaimer": "<p>This product is designed for everyday compression and is not intended for diagnosed medical conditions requiring therapeutic compression. If you have a medical condition or persistent swelling, please consult an Orthotist or healthcare professional. Our Orthotist is available for guidance at <a href=\"https://www.cajeebotes.com\">www.cajeebotes.com</a></p>",
         "show_payment_icons": true,
         "wordmark": "Vital"
       }

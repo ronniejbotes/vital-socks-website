@@ -5,16 +5,64 @@
 {%- endcomment -%}
 {{ 'section-stories.css' | asset_url | stylesheet_tag }}
 
-<section class="stories" aria-labelledby="StoriesHeading-{{ section.id }}">
-  <div class="container stories__head">
-    {%- if section.settings.eyebrow != blank -%}
-      <p class="eyebrow">{{ section.settings.eyebrow | escape }}</p>
-    {%- endif -%}
-    <h2 class="h2 stories__title" id="StoriesHeading-{{ section.id }}" data-reveal>{{ section.settings.heading | escape }}</h2>
-    {%- if section.settings.text != blank -%}
-      <p class="lede">{{ section.settings.text | escape }}</p>
-    {%- endif -%}
-  </div>
+{%- liquid
+  assign head_media = false
+  if section.settings.head_image != blank or section.settings.head_bundled != 'none'
+    assign head_media = true
+  endif
+  assign head_copy = false
+  if section.settings.eyebrow != blank or section.settings.heading != blank or section.settings.text != blank
+    assign head_copy = true
+  endif
+-%}
+<section
+  class="stories"
+  {% if section.settings.heading != blank %}
+    aria-labelledby="StoriesHeading-{{ section.id }}"
+  {% endif %}
+>
+  {%- comment -%} With no eyebrow, heading, intro or photo, the intro band is left out and the panels start straight away. {%- endcomment -%}
+  {%- if head_copy or head_media -%}
+    <div class="container stories__head{% if head_media %} stories__head--media{% endif %}">
+      {%- if head_copy -%}
+        <div class="stories__intro">
+          {%- if section.settings.eyebrow != blank -%}
+            <p class="eyebrow">{{ section.settings.eyebrow | escape }}</p>
+          {%- endif -%}
+          {%- if section.settings.heading != blank -%}
+            <h2 class="h2 stories__title" id="StoriesHeading-{{ section.id }}" data-reveal>{{ section.settings.heading | escape }}</h2>
+          {%- endif -%}
+          {%- if section.settings.text != blank -%}
+            <p class="lede">{{ section.settings.text | escape }}</p>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+      {%- if head_media -%}
+        <div class="stories__head-media" data-reveal>
+          {%- if section.settings.head_image != blank -%}
+            {%- assign head_alt = section.settings.head_image.alt | default: section.settings.head_alt -%}
+            {{
+              section.settings.head_image
+              | image_url: width: 1600
+              | image_tag: widths: '600, 900, 1200, 1600', sizes: '(min-width: 900px) 55vw, 100vw', loading: 'lazy', alt: head_alt
+            }}
+          {%- else -%}
+            {%- assign head_md = 'stories-' | append: section.settings.head_bundled | append: '-md.webp' -%}
+            {%- assign head_lg = 'stories-' | append: section.settings.head_bundled | append: '.webp' -%}
+            <img
+              src="{{ head_lg | asset_url }}"
+              srcset="{{ head_md | asset_url }} 900w, {{ head_lg | asset_url }} 1600w"
+              sizes="(min-width: 900px) 55vw, 100vw"
+              width="1600"
+              height="1073"
+              loading="lazy"
+              alt="{{ section.settings.head_alt | escape }}"
+            >
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+    </div>
+  {%- endif -%}
 
   {%- for block in section.blocks -%}
     {%- liquid
@@ -92,12 +140,37 @@
   "class": "section-stories",
   "settings": [
     { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Where they earn their keep" },
-    { "type": "text", "id": "heading", "label": "Heading", "default": "Made for the way you move" },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "info": "Leave the eyebrow, heading and intro blank, with no intro photo, to start straight on the story panels.",
+      "default": "Everyday compression for everyday legs."
+    },
     {
       "type": "textarea",
       "id": "text",
       "label": "Intro",
-      "default": "Long shifts, long flights and loud outfits. Each print was drawn with someone in mind."
+      "default": "Designed for tired, heavy or fatigued legs, including during long days standing, sitting or travelling."
+    },
+    { "type": "image_picker", "id": "head_image", "label": "Intro photo", "info": "Shown beside the intro. Landscape works best." },
+    {
+      "type": "select",
+      "id": "head_bundled",
+      "label": "Bundled intro photo (used when no photo is uploaded)",
+      "options": [
+        { "value": "duo", "label": "Nurse and runner, back to back" },
+        { "value": "team", "label": "Nurse, flight attendant and office worker" },
+        { "value": "none", "label": "None" }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "text",
+      "id": "head_alt",
+      "label": "Intro photo description",
+      "info": "Alt text for the bundled photo, and for an uploaded photo that has none.",
+      "default": "A nurse in Espresso and a runner in Black knee-high compression socks, standing back to back and smiling with arms folded"
     }
   ],
   "blocks": [

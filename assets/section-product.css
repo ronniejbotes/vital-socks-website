@@ -7,6 +7,7 @@
 }
 .product__grid {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: clamp(28px, 5vw, 72px);
 }
 @media (min-width: 990px) {
@@ -79,6 +80,7 @@
   scrollbar-width: none;
 }
 .product__thumb {
+  position: relative; /* keeps the visually-hidden label inside the scroll strip */
   flex: 0 0 auto;
   width: 76px;
   aspect-ratio: 4 / 5;

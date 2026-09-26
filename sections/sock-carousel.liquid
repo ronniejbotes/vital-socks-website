@@ -3,7 +3,8 @@
   Adapted from the "TOONHUB" carousel brief: full-viewport stage whose
   background cross-fades per design, a giant ghost word behind the products,
   a centre product flanked by blurred side and back items, circular arrows
-  bottom-left and a large call to action bottom-right. All motion runs on the
+  and design ticks centred under the socks, and a large call to action
+  bottom-right. All motion runs on the
   same 650ms cubic-bezier(0.4, 0, 0.2, 1) curve.
 
   Each block is one design. Link a product to pull its price, URL and
@@ -120,7 +121,7 @@
               assign role = 'back-left'
             endif
             assign item_name = block.settings.name | default: block.settings.product.title
-            assign alt = item_name | append: ' compression sock'
+            assign alt = item_name | append: ' knee-high compression sock'
           -%}
           <div
             class="sock-carousel__item is-{{ role }}"
@@ -183,31 +184,32 @@
           <p class="sock-carousel__desc" data-desc>{{ first_desc | escape }}</p>
           <p class="sock-carousel__meta" data-meta></p>
         </div>
-        <div class="sock-carousel__nav">
-          <button class="sock-carousel__arrow" type="button" data-prev>
-            {% render 'icon', name: 'arrow-left', size: 26, stroke: 2.25 %}
-            <span class="visually-hidden">{{ 'accessibility.previous_design' | t }}</span>
-          </button>
-          <button class="sock-carousel__arrow" type="button" data-next>
-            {% render 'icon', name: 'arrow-right', size: 26, stroke: 2.25 %}
-            <span class="visually-hidden">{{ 'accessibility.next_design' | t }}</span>
-          </button>
-          <div class="sock-carousel__ticks">
-            {%- for block in section.blocks -%}
-              {%- assign tick_name = block.settings.name | default: block.settings.product.title -%}
-              <button
-                class="sock-carousel__tick"
-                type="button"
-                data-go="{{ forloop.index0 }}"
-                {% if forloop.first %}
-                  aria-current="true"
-                {% endif %}
-              >
-                <span class="visually-hidden">{{ 'accessibility.go_to_design' | t: name: tick_name }}</span>
-              </button>
-            {%- endfor -%}
-          </div>
+      </div>
+
+      <div class="sock-carousel__nav">
+        <button class="sock-carousel__arrow" type="button" data-prev>
+          {% render 'icon', name: 'arrow-left', size: 24, stroke: 2.25 %}
+          <span class="visually-hidden">{{ 'accessibility.previous_design' | t }}</span>
+        </button>
+        <div class="sock-carousel__ticks">
+          {%- for block in section.blocks -%}
+            {%- assign tick_name = block.settings.name | default: block.settings.product.title -%}
+            <button
+              class="sock-carousel__tick"
+              type="button"
+              data-go="{{ forloop.index0 }}"
+              {% if forloop.first %}
+                aria-current="true"
+              {% endif %}
+            >
+              <span class="visually-hidden">{{ 'accessibility.go_to_design' | t: name: tick_name }}</span>
+            </button>
+          {%- endfor -%}
         </div>
+        <button class="sock-carousel__arrow" type="button" data-next>
+          {% render 'icon', name: 'arrow-right', size: 24, stroke: 2.25 %}
+          <span class="visually-hidden">{{ 'accessibility.next_design' | t }}</span>
+        </button>
       </div>
 
       <a class="sock-carousel__cta" href="{{ first_url }}" data-cta>
@@ -235,7 +237,7 @@
       "id": "heading",
       "label": "Heading",
       "info": "The page's main heading for search engines. Keep the words people search for.",
-      "default": "Compression socks, graded by an orthotist"
+      "default": "Compression socks, designed by an Orthotist"
     },
     {
       "type": "select",
@@ -275,7 +277,7 @@
           "type": "text",
           "id": "grade",
           "label": "Compression grade",
-          "info": "Shown if the product has no custom.compression_level metafield, e.g. 15–20 mmHg."
+          "info": "Shown if the product has no custom.compression_level metafield, e.g. 18–21 mmHg."
         },
         {
           "type": "image_picker",

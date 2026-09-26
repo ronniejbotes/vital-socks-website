@@ -34,6 +34,7 @@
     </div>
 
     {%- if collection.products.size > 0 -%}
+      <h2 class="visually-hidden">{{ 'sections.collection.grid_heading' | t: title: collection.title }}</h2>
       <ul class="product-grid" role="list" style="--cols: {{ section.settings.columns }};" data-stagger>
         {%- for product in collection.products -%}
           <li>{% render 'product-card', product: product, index: forloop.index0, eager: forloop.first %}</li>

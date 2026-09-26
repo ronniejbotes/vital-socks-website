@@ -1,0 +1,57 @@
+{%- comment -%}
+  Prints a short plain-text notice from a setting and links the policy names
+  it mentions, each at its first mention: "Terms of service", "Privacy policy",
+  "Shipping policy" (or just "Shipping") and "Refund policy" (or just
+  "Refund"). A name is linked only when that policy exists under Settings >
+  Policies; otherwise it stays plain text.
+  privacy_link: true adds a link to the privacy policy after the text when the
+  text doesn't already name it.
+  Usage: {% render 'policy-links', text: section.settings.privacy_text, privacy_link: true %}
+{%- endcomment -%}
+{%- liquid
+  assign out = text | escape
+
+  if shop.terms_of_service.body != blank and out contains 'Terms of service'
+    assign a = '<a href="' | append: shop.terms_of_service.url | append: '">Terms of service</a>'
+    assign out = out | replace_first: 'Terms of service', a
+  endif
+
+  assign names_privacy = false
+  if out contains 'Privacy policy'
+    assign names_privacy = true
+  endif
+  if shop.privacy_policy.body != blank and names_privacy
+    assign a = '<a href="' | append: shop.privacy_policy.url | append: '">Privacy policy</a>'
+    assign out = out | replace_first: 'Privacy policy', a
+  endif
+
+  if shop.shipping_policy.body != blank
+    assign word = 'Shipping'
+    if out contains 'Shipping policy'
+      assign word = 'Shipping policy'
+    endif
+    if out contains word
+      assign a = '<a href="' | append: shop.shipping_policy.url | append: '">' | append: word | append: '</a>'
+      assign out = out | replace_first: word, a
+    endif
+  endif
+
+  if shop.refund_policy.body != blank
+    assign word = 'Refund'
+    if out contains 'Refund policy'
+      assign word = 'Refund policy'
+    endif
+    if out contains word
+      assign a = '<a href="' | append: shop.refund_policy.url | append: '">' | append: word | append: '</a>'
+      assign out = out | replace_first: word, a
+    endif
+  endif
+
+  if privacy_link and names_privacy == false and shop.privacy_policy.body != blank
+    assign privacy_title = shop.privacy_policy.title | escape
+    assign a = ' <a href="' | append: shop.privacy_policy.url | append: '">' | append: privacy_title | append: '</a>'
+    assign out = out | append: a
+  endif
+
+  echo out
+-%}

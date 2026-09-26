@@ -3,61 +3,133 @@
     "faq": {
       "type": "faq",
       "blocks": {
-        "q0": {
+        "c01": {
           "type": "question",
           "settings": {
-            "question": "What does graduated compression mean?",
-            "answer": "<p>The sock is firmest at the ankle and gets gradually lighter up the leg. That gradient helps move blood and fluid back up towards the heart instead of letting it pool in the lower legs.</p>"
+            "question": "What are compression socks?",
+            "answer": "<p>Compression socks provide gentle, graduated support to the lower legs. They are designed for everyday activities, travel, work and periods of prolonged sitting or standing.</p>"
           }
         },
-        "q1": {
+        "c02": {
           "type": "question",
           "settings": {
-            "question": "Which compression level do I need?",
-            "answer": "<p>Every product page states its compression range in mmHg. Lighter ranges suit everyday wear, travel and long shifts. If you have a circulation condition, diabetes or a history of blood clots, speak to a healthcare professional before wearing compression.</p>"
+            "question": "How does compression work?",
+            "answer": "<p>Compression socks gently squeeze the lower leg, with the pressure gradually reducing towards the top of the sock. This supports the natural movement of blood back towards the heart and can help your legs feel more supported and less tired.</p>"
+          }
+        },
+        "c03": {
+          "type": "question",
+          "settings": {
+            "question": "Are these compression socks suitable for everyday wear?",
+            "answer": "<p>Yes. They are designed for everyday use and can be worn while working, commuting, travelling or spending long periods on your feet.</p>"
+          }
+        },
+        "c04": {
+          "type": "question",
+          "settings": {
+            "question": "Are compression socks suitable for flying?",
+            "answer": "<p>Yes. They can be worn during flights and other long journeys where you may be sitting for extended periods.</p>"
+          }
+        },
+        "c05": {
+          "type": "question",
+          "settings": {
+            "question": "What level of compression do these socks provide?",
+            "answer": "<p>Our socks provide [compression] of compression, offering a comfortable level of support for everyday wear.</p>"
+          }
+        },
+        "c06": {
+          "type": "question",
+          "settings": {
+            "question": "How should I wash my compression socks?",
+            "answer": "<p>Hand wash every 2–3 days in cold water using a mild soap. Gently remove excess water and leave them to air dry in the shade. Avoid bleach, harsh detergents, tumble drying and excessive heat.</p>"
+          }
+        },
+        "c07": {
+          "type": "question",
+          "settings": {
+            "question": "How should compression socks feel?",
+            "answer": "<p>They should feel snug and supportive without causing pain, numbness, tingling or significant discomfort. The sock should sit smoothly against your leg without excessive bunching or rolling.</p>"
+          }
+        },
+        "c08": {
+          "type": "question",
+          "settings": {
+            "question": "Can I wear these if I have a medical condition?",
+            "answer": "<p>These socks are designed for everyday compression and are not intended to treat diagnosed medical conditions requiring therapeutic compression. If you have a medical condition or persistent swelling, consult an Orthotist or healthcare professional before choosing compression wear. Our Orthotist is available at <a href=\"https://www.cajeebotes.com\">www.cajeebotes.com</a></p>"
+          }
+        },
+        "c09": {
+          "type": "question",
+          "settings": {
+            "question": "What are the socks made from?",
+            "answer": "<p>Our socks are made from a blend of combed cotton, polyamide and elastane. Combed cotton provides a soft, comfortable feel against the skin, while polyamide adds durability and helps the socks retain their shape. Elastane provides the stretch needed for a comfortable, supportive fit. Together, these materials create a soft, durable sock designed for everyday wear, no matter the season.</p>"
+          }
+        },
+        "c10": {
+          "type": "question",
+          "settings": {
+            "question": "How is the compression level measured?",
+            "answer": "<p>The compression level is determined during manufacturing using specialised knitting technology and controlled production processes. The socks are knitted to provide consistent, graduated compression throughout the garment, with the compression level specified by our Orthotist.</p>"
           }
         },
         "q2": {
           "type": "question",
           "settings": {
             "question": "How do I find my size?",
-            "answer": "<p>Measure your ankle at its narrowest point and your calf at its widest, ideally in the morning. The fit finder turns those two numbers into a size. Shoe size alone isn't enough, because compression depends on the leg.</p>"
-          }
-        },
-        "q3": {
-          "type": "question",
-          "settings": {
-            "question": "Who shouldn't wear compression socks?",
-            "answer": "<p>People with peripheral arterial disease, fragile or broken skin on the legs, or reduced feeling in the feet should not wear compression without medical advice. If in doubt, ask your doctor or an orthotist first.</p>"
-          }
-        },
-        "q4": {
-          "type": "question",
-          "settings": {
-            "question": "How do I wash them?",
-            "answer": "<p>Wash cool, skip the fabric softener and let them dry away from direct heat. Heat and softener wear out the elastic, and the elastic is what holds the compression.</p>"
+            "answer": "<p>Vital Socks are sized by ankle circumference rather than shoe size alone. Measure around the narrowest part of your ankle, ideally in the morning, and enter it in the <a href=\"/pages/size-guide\">size guide</a>. Add your calf measurement and the fit finder will tell you if it falls outside the usual range for that size.</p>"
           }
         },
         "q5": {
           "type": "question",
           "settings": {
+            "question": "How long are Vital Socks?",
+            "answer": "<p>Knee-high. Vital Socks end just under the knee.</p>"
+          }
+        },
+        "q6": {
+          "type": "question",
+          "settings": {
+            "question": "Which sizes do you make?",
+            "answer": "<p>S, M and L, chosen by ankle circumference. The full chart, with calf ranges, is in the <a href=\"/pages/size-guide\">size guide</a>.</p>"
+          }
+        },
+        "q7": {
+          "type": "question",
+          "settings": {
+            "question": "Which designs are available?",
+            "answer": "<p>Five: Cherry Pop, Espresso, Checker, Daisy and Black.</p>"
+          }
+        },
+        "q8": {
+          "type": "question",
+          "settings": {
             "question": "Do you deliver across South Africa?",
-            "answer": "<p>Yes. Delivery options and costs are shown at checkout.</p>"
+            "answer": "<p>Yes. Delivery options and costs are shown at checkout. Our <a href=\"/policies/shipping-policy\">Shipping policy</a> has the details.</p>"
           }
         }
       },
       "block_order": [
-        "q0",
-        "q1",
+        "c01",
+        "c02",
+        "c03",
+        "c04",
+        "c05",
+        "c06",
+        "c07",
+        "c08",
+        "c09",
+        "c10",
         "q2",
-        "q3",
-        "q4",
-        "q5"
+        "q5",
+        "q6",
+        "q7",
+        "q8"
       ],
       "settings": {
         "eyebrow": "Good questions",
         "heading": "Compression, answered",
-        "text": "<p>Can't find your question? <a href=\"/pages/contact\">Ask us</a>.</p>",
+        "text": "<p>Can't find your question? <a href=\"/pages/contact\">Ask us</a>. For clinical questions, our Orthotist is available at <a href=\"https://www.cajeebotes.com\">www.cajeebotes.com</a>.</p>",
         "open_first": true,
         "structured_data": true
       }
@@ -65,7 +137,7 @@
     "main": {
       "type": "main-page",
       "settings": {
-        "narrow": true
+        "narrow": false
       }
     }
   },

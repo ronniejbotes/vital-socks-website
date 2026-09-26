@@ -1,0 +1,133 @@
+/* ==========================================================================
+   Product features: icon rows inside the "Features" panel on product pages.
+   Icons use the logo's three blues on a frost sock with a navy outline.
+   ========================================================================== */
+
+.product-features {
+  display: grid;
+  gap: 26px;
+  margin: 6px 0 4px;
+  padding: 0;
+  list-style: none;
+}
+.product-feature {
+  display: grid;
+  grid-template-columns: 56px minmax(0, 1fr);
+  column-gap: 18px;
+  row-gap: 6px;
+  align-items: center;
+}
+.product-feature__title {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  line-height: 1.35;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+.product-feature__text {
+  grid-column: 2;
+  margin: 0;
+  color: var(--ink-72);
+  font-size: 0.975rem;
+  line-height: 1.6;
+}
+.product-feature__text p {
+  margin: 0;
+}
+
+/* Icon parts (see snippets/feature-icon.liquid) */
+.feature-icon {
+  grid-row: span 2;
+  align-self: start;
+  width: 56px;
+  height: 56px;
+  overflow: visible;
+}
+.feature-icon .fi-sock {
+  fill: var(--frost);
+  stroke: var(--ink);
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+.feature-icon .fi-cuff {
+  fill: var(--ink);
+}
+.feature-icon .fi-band,
+.feature-icon .fi-rib,
+.feature-icon .fi-ray,
+.feature-icon .fi-snow,
+.feature-icon .fi-mark,
+.feature-icon .fi-check {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.feature-icon .fi-band {
+  stroke-width: 3;
+}
+.feature-icon .fi-band--ice {
+  stroke: var(--ice);
+  stroke-width: 2.4;
+}
+.feature-icon .fi-band--sky {
+  stroke: var(--sky);
+  stroke-width: 3.2;
+}
+.feature-icon .fi-band--royal {
+  stroke: var(--royal);
+  stroke-width: 4;
+}
+.feature-icon .fi-tape {
+  fill: none;
+  stroke: var(--sky);
+  stroke-width: 2.6;
+  stroke-dasharray: 3.2 2.6;
+}
+.feature-icon .fi-rib {
+  stroke: var(--ice);
+  stroke-width: 1.8;
+}
+.feature-icon .fi-sun {
+  fill: var(--sky);
+}
+.feature-icon .fi-ray {
+  stroke: var(--sky);
+  stroke-width: 1.8;
+}
+.feature-icon .fi-snow {
+  stroke: var(--royal);
+  stroke-width: 2.2;
+}
+.feature-icon .fi-badge {
+  fill: #fff;
+  stroke: var(--royal);
+  stroke-width: 2.4;
+}
+.feature-icon .fi-badge--solid {
+  fill: var(--royal);
+  stroke: none;
+}
+.feature-icon .fi-mark {
+  stroke: var(--royal);
+  stroke-width: 2.4;
+}
+.feature-icon .fi-check {
+  stroke: #fff;
+  stroke-width: 2.6;
+}
+.feature-icon .fi-plane {
+  fill: var(--royal);
+}
+
+/* Numbered steps in rich-text panels (the Wear guide). Rich-text settings
+   strip classes, so the list is styled from its panel. */
+.product__details .faq__answer ol {
+  margin: 0 0 14px;
+  padding-left: 1.3em;
+}
+.product__details .faq__answer ol li + li {
+  margin-top: 6px;
+}

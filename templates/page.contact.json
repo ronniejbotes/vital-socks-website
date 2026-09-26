@@ -10,7 +10,7 @@
       "type": "contact-form",
       "settings": {
         "heading": "Ask us anything",
-        "text": "<p>Sizing question or help with an order? Send us a message.</p>"
+        "text": "<p>Sizing question or help with an order? Send us a message.</p><p>For clinical questions, our Orthotist is available at <a href=\"https://www.cajeebotes.com\">www.cajeebotes.com</a>.</p>"
       }
     }
   },

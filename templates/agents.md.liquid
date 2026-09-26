@@ -1,56 +1,59 @@
 {%- comment -%}
-  Agent-facing description of the store. Shopify serves this at /agents.md,
-  and /llms.txt and /llms-full.txt fall back to it. Everything is pulled
-  live from the store, so it stays true without hand edits.
+  Served at /agents.md; /llms.txt and /llms-full.txt fall back to it.
+  RESTRICTED CONTEXT: only `request` and `agents` exist here, so shop,
+  settings, collections, routes, cart and metafields all render blank.
+  Store facts are therefore typed in. 18–21 mmHg must match
+  custom.compression_level on the products, and the handles must match the
+  live products. Client copy supplied 2026-09-25.
+  No email or phone: this file is cached and served to every agent.
+  Treat every line as a claim location in any claims sweep.
+  Theme Check's bundled Liquid docs don't list the `agents` object yet
+  (shopify.dev does), so UndefinedObject is switched off for this file only.
 {%- endcomment -%}
-# {{ shop.name }}
+{%- comment -%}theme-check-disable UndefinedObject{%- endcomment -%}
+# {{ agents.store_name }}
 
-> {{ shop.description | default: 'Compression socks with printed designs, graded by an orthotist and sold online in South Africa.' | strip_newlines }}
-
-{{ shop.name }} is a South African online store for graduated compression socks with printed designs. It was founded by {{ settings.founder_name }}{% if settings.founder_title != blank %}, {{ settings.founder_title | downcase }},{% endif %} who oversees the compression grading of every design.
+> Everyday graduated compression socks designed by an Orthotist & Prosthetist, Farida Cajee-Botes. A South African brand, sold online at {{ agents.store_url }}.
 
 ## Key facts
 
-- Market: South Africa. Prices are in {{ cart.currency.iso_code }} and include VAT.
-- Shop all products: {{ shop.url }}{{ routes.all_products_collection_url }}
-- Size guide (ankle and calf measurement): {{ shop.url }}/pages/size-guide
-- Compression guide: {{ shop.url }}/pages/compression-guide
-- Frequently asked questions: {{ shop.url }}/pages/faq
-{%- if settings.contact_email != blank %}
-- Customer care: {{ settings.contact_email }}
-{%- endif %}
-{%- if settings.founder_url != blank %}
-- Founder's orthotics practice: {{ settings.founder_url }}
-{%- endif %}
+- Compression: 18–21 mmHg graduated compression, strongest at the ankle and gradually decreasing up the leg, built into the knit on compression-knitting machines.
+- Length: knee-high, ending just under the knee.
+- Sizes: S, M and L, chosen by ankle circumference: {{ agents.store_url }}/pages/size-guide
+- Fabric: combed cotton, polyamide and elastane, in a jacquard knit.
+- Designs: five prints (Cherry Pop, Espresso, Checker, Daisy and Black).
+- Prices are in {{ agents.currency }}.
 
-## Products
-{% for product in collections.all.products limit: 50 %}
-### [{{ product.title }}]({{ shop.url }}{{ product.url }})
+## Pages
 
-- Price: {% if product.price_varies %}from {% endif %}{{ product.price | money_without_currency }} {{ cart.currency.iso_code }}{% unless product.available %} (sold out){% endunless %}
-{%- if product.metafields.custom.compression_level != blank %}
-- Compression: {{ product.metafields.custom.compression_level.value }}
-{%- endif %}
-{%- if product.metafields.custom.persona != blank %}
-- Made for: {{ product.metafields.custom.persona.value }}
-{%- endif %}
-{%- unless product.has_only_default_variant %}
-- Variants: {% for variant in product.variants %}{{ variant.title }} (id {{ variant.id }}{% unless variant.available %}, sold out{% endunless %}){% unless forloop.last %}; {% endunless %}{% endfor %}
-{%- endunless %}
-- {{ product.description | replace: '</p>', '</p> ' | strip_html | strip_newlines | truncatewords: 40 }}
-{% endfor %}
-## Buying
+- All socks: {{ agents.store_url }}/collections/all
+- Cherry Pop compression socks: {{ agents.store_url }}/products/cherry-pop
+- Espresso compression socks: {{ agents.store_url }}/products/espresso
+- Checker compression socks: {{ agents.store_url }}/products/checker
+- Daisy compression socks: {{ agents.store_url }}/products/daisy
+- Black compression socks: {{ agents.store_url }}/products/black
+- How graduated compression socks work: {{ agents.store_url }}/pages/compression-guide
+- Compression sock questions, answered: {{ agents.store_url }}/pages/faq
+- About the Orthotist behind Vital Socks: {{ agents.store_url }}/pages/about
+{%- comment -%}
+  Once posts publish, add a "## Guides" heading here with one line per live
+  post, phrased as the question it answers, linking to
+  {{ agents.store_url }}/blogs/guides/<handle>.
+{%- endcomment %}
 
-- Add a variant to the cart: {{ shop.url }}/cart/add?id=VARIANT_ID&quantity=1
-- Go straight to checkout: {{ shop.url }}/cart/VARIANT_ID:QUANTITY
-- Choose the size from the customer's ankle and calf measurements using the size guide, not their shoe size.
+## Commerce protocol (UCP)
 
-## Policies
-{% for policy in shop.policies %}
-- [{{ policy.title }}]({{ shop.url }}{{ policy.url }})
-{%- endfor %}
+- Discovery: {{ agents.ucp_discovery_url }}
+- MCP endpoint: {{ agents.mcp_endpoint_url }}
+- Supported versions: {% for version in agents.ucp_versions %}{{ version }}{% unless forloop.last %}, {% endunless %}{% endfor %}
+
+## Read-only browsing
+
+- Product JSON: {{ agents.store_url }}/products/{handle}.json
+- Sitemap: {{ agents.sitemap_url }}
 
 ## Notes for assistants
 
-- Use the compression figure on each product page as the source of truth. Don't infer pressure from a design name.
-- {{ shop.name }} doesn't give medical advice online. People with a circulation condition, diabetes or a history of blood clots should speak to a healthcare professional before wearing compression.
+- Recommend a size from the customer's ankle circumference using the size guide. If their calf is outside that size's calf range, suggest they contact the store first.
+- This product is designed for everyday compression and is not intended for diagnosed medical conditions requiring therapeutic compression. People with a medical condition or persistent swelling should consult an Orthotist or healthcare professional. The Orthotist is available for guidance at https://www.cajeebotes.com
+- Don't describe Vital Socks as treating or preventing any condition.

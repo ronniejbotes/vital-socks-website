@@ -1,0 +1,29 @@
+{%- comment -%}
+  Prints rich text with [compression] replaced by the compression level of the
+  product chosen in Theme settings > Compression. When that level is blank,
+  every paragraph holding the token is left out, so a page never reads
+  "Our socks provide  of compression". Callers capture the output and skip
+  their wrapper when nothing is left.
+  Usage: {% render 'compression-text', text: section.settings.text %}
+{%- endcomment -%}
+{%- liquid
+  assign compression = settings.compression_product.metafields.custom.compression_level.value | default: '' | escape
+  if compression != blank
+    echo text | replace: '[compression]', compression
+  elsif text contains '[compression]'
+    assign tail = text | strip | slice: -4, 4
+    assign parts = text | split: '</p>'
+    for part in parts
+      assign trimmed = part | strip
+      if trimmed == blank or part contains '[compression]'
+        continue
+      endif
+      echo part
+      if forloop.last == false or tail == '</p>'
+        echo '</p>'
+      endif
+    endfor
+  else
+    echo text
+  endif
+-%}

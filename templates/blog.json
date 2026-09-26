@@ -2,7 +2,11 @@
   "sections": {
     "main": {
       "type": "main-blog",
-      "settings": {}
+      "settings": {
+        "eyebrow": "Guides",
+        "intro": "Plain answers about compression socks: how they work, how to size them and how to wear them every day.",
+        "empty_text": "The first guides are on the way."
+      }
     }
   },
   "order": [

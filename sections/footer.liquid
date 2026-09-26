@@ -77,6 +77,9 @@
     </div>
 
     <div class="footer__legal">
+      {%- if section.settings.disclaimer != blank -%}
+        <div class="footer__disclaimer">{{ section.settings.disclaimer }}</div>
+      {%- endif -%}
       <p>
         &copy; {{ 'now' | date: '%Y' }}
         {{ settings.legal_name | default: shop.name }}
@@ -85,6 +88,17 @@
       </p>
       {%- if settings.address != blank -%}
         <p>{{ settings.address | newline_to_br | replace: '<br />', ', ' | strip_newlines }}</p>
+      {%- endif -%}
+      {%- if settings.contact_email != blank or settings.contact_phone != blank -%}
+        <p>
+          {%- if settings.contact_email != blank -%}
+            <a href="mailto:{{ settings.contact_email | strip }}">{{ settings.contact_email | escape }}</a>
+          {%- endif -%}
+          {%- if settings.contact_email != blank and settings.contact_phone != blank %} &middot; {% endif -%}
+          {%- if settings.contact_phone != blank -%}
+            <a href="tel:{{ settings.contact_phone | remove: ' ' }}">{{ settings.contact_phone | escape }}</a>
+          {%- endif -%}
+        </p>
       {%- endif -%}
       <p>
         {%- for policy in shop.policies -%}
@@ -115,7 +129,14 @@
       "type": "textarea",
       "id": "tagline",
       "label": "Tagline",
-      "default": "Compression socks with the grading done properly. A South African brand, founded by an orthotist."
+      "default": "Compression, with more thought behind it. Designed by an Orthotist. Made for everyday life. A South African brand."
+    },
+    {
+      "type": "richtext",
+      "id": "disclaimer",
+      "label": "Disclaimer",
+      "info": "Shown on every page.",
+      "default": "<p>This product is designed for everyday compression and is not intended for diagnosed medical conditions requiring therapeutic compression. If you have a medical condition or persistent swelling, please consult an Orthotist or healthcare professional. Our Orthotist is available for guidance at <a href=\"https://www.cajeebotes.com\">www.cajeebotes.com</a></p>"
     },
     { "type": "checkbox", "id": "show_payment_icons", "label": "Show payment icons", "default": true },
     { "type": "text", "id": "wordmark", "label": "Large outlined word", "default": "Vital" }

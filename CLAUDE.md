@@ -6,7 +6,7 @@ A Shopify Online Store 2.0 theme for Vital Socks, a South African compression-so
 
 - **The repo root is the theme.** Only these folders ship to Shopify: `assets`, `config`, `layout`, `locales`, `sections`, `snippets` and `templates`. No build step, and no `src/` or `dist/` in the theme folders, because the GitHub integration must see a plain theme.
 - **This repo is public.** SEO plans, competitor analysis, client figures and unverified claims belong in the private SEO programme repo, not here.
-- **Numbers, prices, credentials, mmHg values, testimonials and competitor claims need a person's approval before they ship.** Never invent them. Compression values come only from the product metafield `custom.compression_level`. Sizes come only from the fit-finder blocks, which stay flagged "Sample sizes" until the real chart is in.
+- **Numbers, prices, credentials, mmHg values, testimonials and competitor claims need a person's approval before they ship.** Never invent them. Compression values come only from the product metafield `custom.compression_level` (18–21 mmHg for the launch range). Copy that states the value uses the `[compression]` token, which Theme settings > Compression resolves. `templates/agents.md.liquid` is the one literal copy, because Shopify doesn't give that template access to metafields. Sizes come only from the fit-finder blocks, which hold the manufacturer's S/M/L chart in whole centimetres.
 - **Never write quotes attributed to Farida** unless she has actually said them.
 - **Brand colours are the three logo blues plus navy ink:** royal `#0060C2`, sky `#229EE3`, ice `#9AC7E9`, navy `#02182D`. Sky and ice backgrounds need navy text, because white on sky fails contrast.
 

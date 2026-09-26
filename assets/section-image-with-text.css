@@ -1,0 +1,125 @@
+/* ==========================================================================
+   Image with text
+   A photo beside composed copy. Pills pick up the logo's three blues in turn
+   (royal, sky, ice), the same stripes the eyebrow rule uses.
+   ========================================================================== */
+
+.image-text__grid {
+  display: grid;
+  gap: clamp(32px, 5vw, 80px);
+  align-items: center;
+}
+
+.image-text__media img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.image-text__copy {
+  max-width: 36rem;
+}
+.image-text__heading {
+  margin-bottom: 22px;
+  text-wrap: balance;
+}
+.image-text__text p {
+  margin: 0 0 14px;
+}
+.image-text__text p:last-child {
+  margin-bottom: 0;
+}
+
+.image-text__pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 30px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.image-text__pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 18px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--pill);
+  background: rgba(255, 255, 255, 0.72);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+.image-text__dot {
+  flex: none;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--royal);
+}
+.image-text__pill:nth-child(3n + 2) .image-text__dot {
+  background: var(--sky);
+}
+.image-text__pill:nth-child(3n) .image-text__dot {
+  background: var(--ice);
+  box-shadow: inset 0 0 0 1px rgba(var(--ink-rgb), 0.18);
+}
+
+.image-text__tagline {
+  margin: 32px 0 0;
+  padding-top: 26px;
+  border-top: 1px solid var(--line);
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 2.6vw, 2.3rem);
+  line-height: 1.02;
+  letter-spacing: 0.005em;
+  text-transform: uppercase;
+  text-wrap: balance;
+  color: var(--royal);
+}
+
+.image-text__actions {
+  margin-top: 32px;
+}
+
+/* Navy background */
+.image-text.tone-ink .image-text__pill {
+  border-color: rgba(255, 255, 255, 0.28);
+  background: rgba(255, 255, 255, 0.06);
+}
+.image-text.tone-ink .image-text__tagline {
+  border-top-color: rgba(255, 255, 255, 0.16);
+  color: var(--ice);
+}
+
+.image-text--no-media .image-text__copy {
+  margin-inline: auto;
+  text-align: center;
+}
+.image-text--no-media .image-text__pills {
+  justify-content: center;
+}
+
+@media (min-width: 900px) {
+  .image-text__grid {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+  }
+  .image-text--image-right .image-text__grid {
+    grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
+  }
+  .image-text--image-right .image-text__media {
+    order: 2;
+  }
+  .image-text--no-media .image-text__grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .image-text__media img {
+    aspect-ratio: 4 / 5;
+  }
+}

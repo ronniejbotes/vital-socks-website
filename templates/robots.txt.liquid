@@ -13,8 +13,11 @@
   Google-Extended and others) are allowed through the '*' group. Don't give
   them their own group to "allow" them: a named group replaces the '*' rules
   for that bot, which would unblock cart and checkout pages for it.
+
+  /agents.md, /llms.txt and /llms-full.txt (templates/agents.md.liquid)
+  aren't disallowed, so they need no Allow line.
 {%- endcomment -%}
-# Vital Socks - graded compression socks, South Africa
+# Vital Socks - graduated compression socks, South Africa
 {% for group in robots.default_groups %}
   {{- group.user_agent -}}
 

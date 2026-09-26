@@ -21,6 +21,10 @@
         <h2 class="h2 section-head__title" id="FeaturedHeading-{{ section.id }}" data-reveal>
           {{- section.settings.heading | escape -}}
         </h2>
+        {%- capture head_text -%}{% render 'compression-text', text: section.settings.text %}{%- endcapture -%}
+        {%- if head_text != blank -%}
+          <div class="section-head__text rte">{{ head_text }}</div>
+        {%- endif -%}
       </div>
       {%- if section.settings.link_label != blank -%}
         <a class="link-arrow" href="{{ link }}">
@@ -50,7 +54,7 @@
           <li>
             <div class="card" style="--card-bg: {{ tints[i] }};">
               <div class="card__media">
-                <img src="{{ sm | asset_url }}" alt="{{ title | escape }} compression sock" width="290" height="720" loading="lazy">
+                <img src="{{ sm | asset_url }}" alt="{{ title | escape }} knee-high compression sock" width="290" height="720" loading="lazy">
               </div>
               <div class="card__info">
                 {%- if persona != blank -%}
@@ -73,6 +77,7 @@
   "settings": [
     { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "The launch prints" },
     { "type": "text", "id": "heading", "label": "Heading", "default": "Pick your pair" },
+    { "type": "richtext", "id": "text", "label": "Text", "info": "Shown under the heading. [compression] shows the compression level from Theme settings > Compression." },
     { "type": "collection", "id": "collection", "label": "Collection" },
     { "type": "range", "id": "limit", "label": "Products shown", "min": 2, "max": 12, "step": 1, "default": 5 },
     { "type": "range", "id": "columns", "label": "Columns on desktop", "min": 2, "max": 5, "step": 1, "default": 5 },

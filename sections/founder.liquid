@@ -1,18 +1,36 @@
 {%- comment -%}
-  The orthotist behind the brand — the credibility the competition lacks.
-  Name and title come from Theme settings > Business details. Only add a quote
-  here if Farida has actually said it.
+  The Orthotist behind the brand. Name and title come from Theme settings >
+  Business details. Only add a quote here if Farida has actually said it.
+  With no portrait chosen, the bundled photo of Farida Cajee-Botes is shown;
+  untick "Use the bundled portrait" to show the placeholder text instead.
+  [compression] in the quote, text or points shows the compression level of
+  the product chosen in Theme settings > Compression. If that level is blank,
+  the quote, point or paragraph holding the token is hidden.
 {%- endcomment -%}
+{%- liquid
+  assign compression = settings.compression_product.metafields.custom.compression_level.value | default: '' | escape
+-%}
 <section class="founder section tone-ink" aria-labelledby="FounderHeading-{{ section.id }}">
   <div class="container founder__grid">
     <div class="founder__media" data-reveal>
       {%- if section.settings.image != blank -%}
+        {%- assign portrait_alt = section.settings.image.alt | default: section.settings.portrait_alt -%}
         {{
           section.settings.image
           | image_url: width: 1200
-          | image_tag: widths: '500, 800, 1200', sizes: '(min-width: 900px) 40vw, 100vw', loading: 'lazy'
+          | image_tag: widths: '500, 800, 1200', sizes: '(min-width: 900px) 40vw, 100vw', loading: 'lazy', alt: portrait_alt
         }}
-      {%- else -%}
+      {%- elsif section.settings.bundled_portrait -%}
+        <img
+          src="{{ 'founder-farida-cajee-botes.webp' | asset_url }}"
+          srcset="{{ 'founder-farida-cajee-botes-md.webp' | asset_url }} 800w, {{ 'founder-farida-cajee-botes.webp' | asset_url }} 1200w"
+          sizes="(min-width: 900px) 40vw, 100vw"
+          width="1200"
+          height="1800"
+          loading="lazy"
+          alt="{{ section.settings.portrait_alt | escape }}"
+        >
+      {%- elsif section.settings.placeholder_text != blank -%}
         <div class="founder__placeholder">
           <p>{{ section.settings.placeholder_text | escape }}</p>
         </div>
@@ -23,23 +41,36 @@
         <p class="eyebrow">{{ section.settings.eyebrow | escape }}</p>
       {%- endif -%}
       <h2 class="h2" id="FounderHeading-{{ section.id }}">{{ section.settings.heading | escape }}</h2>
-      {%- if section.settings.quote != blank -%}
-        <blockquote class="founder__quote">{{ section.settings.quote | escape }}</blockquote>
+      {%- liquid
+        assign show_quote = true
+        if section.settings.quote == blank
+          assign show_quote = false
+        elsif compression == blank and section.settings.quote contains '[compression]'
+          assign show_quote = false
+        endif
+      -%}
+      {%- if show_quote -%}
+        <blockquote class="founder__quote">{{ section.settings.quote | escape | replace: '[compression]', compression }}</blockquote>
       {%- endif -%}
       <p class="founder__name">{{ settings.founder_name | escape }}</p>
       <p class="founder__title">{{ settings.founder_title | escape }}</p>
-      {%- if section.settings.text != blank -%}
-        <div class="lede">{{ section.settings.text }}</div>
+      {%- capture points -%}
+        {%- for block in section.blocks -%}
+          {%- if compression == blank and block.settings.text contains '[compression]' -%}
+            {%- continue -%}
+          {%- endif -%}
+          <li class="founder__point" {{ block.shopify_attributes }}>
+            {% render 'icon', name: 'check', size: 22 %}
+            <span>{{ block.settings.text | escape | replace: '[compression]', compression }}</span>
+          </li>
+        {%- endfor -%}
+      {%- endcapture -%}
+      {%- if points != blank -%}
+        <ul class="founder__points" role="list">{{ points }}</ul>
       {%- endif -%}
-      {%- if section.blocks.size > 0 -%}
-        <ul class="founder__points" role="list">
-          {%- for block in section.blocks -%}
-            <li class="founder__point" {{ block.shopify_attributes }}>
-              {% render 'icon', name: 'check', size: 22 %}
-              <span>{{ block.settings.text | escape }}</span>
-            </li>
-          {%- endfor -%}
-        </ul>
+      {%- capture founder_text -%}{% render 'compression-text', text: section.settings.text %}{%- endcapture -%}
+      {%- if founder_text != blank -%}
+        <div class="lede">{{ founder_text }}</div>
       {%- endif -%}
       {%- if settings.founder_url != blank and section.settings.link_label != blank -%}
         <a class="btn btn--light" href="{{ settings.founder_url }}" target="_blank" rel="noopener">
@@ -57,40 +88,83 @@
   "name": "Orthotist",
   "class": "section-founder",
   "settings": [
-    { "type": "image_picker", "id": "image", "label": "Portrait" },
-    { "type": "text", "id": "placeholder_text", "label": "Placeholder text (shown until a portrait is added)", "default": "Portrait of Farida coming soon" },
-    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Who grades your socks" },
-    { "type": "text", "id": "heading", "label": "Heading", "default": "An orthotist, not a guess" },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Portrait"
+    },
+    {
+      "type": "checkbox",
+      "id": "bundled_portrait",
+      "label": "Use the bundled portrait",
+      "info": "Shows the photo of Farida Cajee-Botes that comes with the theme when no portrait is chosen.",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "portrait_alt",
+      "label": "Portrait description",
+      "info": "Alt text for the bundled portrait, and for an uploaded portrait that has none.",
+      "default": "Farida Cajee-Botes, Orthotist & Prosthetist and designer of Vital Socks"
+    },
+    {
+      "type": "text",
+      "id": "placeholder_text",
+      "label": "Placeholder text",
+      "info": "Shown only when there is no portrait at all."
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Designed by an Orthotist"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Professional knowledge behind every pair."
+    },
     {
       "type": "textarea",
       "id": "quote",
       "label": "Quote",
-      "info": "Only use words the founder has actually said."
+      "info": "Only use words the founder has actually said. [compression] shows the compression level."
     },
     {
       "type": "richtext",
       "id": "text",
       "label": "Text",
-      "default": "<p>Vital Socks was started by an orthotist who measures and fits medical compression garments for her patients. She knows what the wrong pressure does to a leg, so she oversees the compression grading on every Vital design.</p>"
+      "info": "Shown under the points, just above the button. [compression] shows the compression level.",
+      "default": "<p>Our socks are intended for everyday compression. If you have a medical condition, persistent swelling, or think you may need therapeutic compression, <strong>speak to our Orthotist before purchasing.</strong></p>"
     },
-    { "type": "text", "id": "link_label", "label": "Practice link label", "default": "Visit Farida's practice" }
+    {
+      "type": "text",
+      "id": "link_label",
+      "label": "Practice link label",
+      "default": "Not sure what you need? Speak to our Orthotist"
+    }
   ],
   "blocks": [
     {
       "type": "point",
       "name": "Point",
-      "settings": [{ "type": "text", "id": "text", "label": "Text", "default": "Compression range stated on every product" }]
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "info": "[compression] shows the compression level.",
+          "default": "Thoughtful fit, function and comfort"
+        }
+      ]
     }
   ],
   "max_blocks": 5,
   "presets": [
     {
       "name": "Orthotist",
-      "blocks": [
-        { "type": "point", "settings": { "text": "Compression grading overseen by an orthotist" } },
-        { "type": "point", "settings": { "text": "Compression range stated on every product" } },
-        { "type": "point", "settings": { "text": "Sized by your ankle and calf, not your shoe" } }
-      ]
+      "blocks": []
     }
   ]
 }

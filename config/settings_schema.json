@@ -60,7 +60,7 @@
     "settings": [
       {
         "type": "paragraph",
-        "content": "Shown in the footer and in search-engine structured data. South African online stores must show these details (ECTA, section 43)."
+        "content": "Shown in the footer's legal strip on every page. The name, VAT number, address, email and phone also go into search-engine structured data. South African online stores must show these details (ECTA, section 43)."
       },
       { "type": "text", "id": "legal_name", "label": "Registered business name" },
       { "type": "text", "id": "registration_number", "label": "Company registration number" },
@@ -70,12 +70,35 @@
       { "type": "text", "id": "contact_phone", "label": "Customer care phone" },
       { "type": "header", "content": "Founder" },
       { "type": "text", "id": "founder_name", "label": "Name", "default": "Farida Cajee-Botes" },
-      { "type": "text", "id": "founder_title", "label": "Professional title", "default": "Orthotist and Prosthetist" },
+      { "type": "text", "id": "founder_title", "label": "Professional title", "default": "Orthotist & Prosthetist" },
       {
         "type": "url",
         "id": "founder_url",
         "label": "Practice website",
         "info": "Linked from the founder section and listed in structured data."
+      },
+      {
+        "type": "url",
+        "id": "founder_profile_url",
+        "label": "Founder profile page",
+        "info": "The page about the founder, for example on the practice website. Used in search-engine structured data."
+      },
+      {
+        "type": "textarea",
+        "id": "founder_same_as",
+        "label": "Other founder profiles",
+        "info": "One verified profile URL per line. Used in search-engine structured data."
+      }
+    ]
+  },
+  {
+    "name": "Compression",
+    "settings": [
+      {
+        "type": "product",
+        "id": "compression_product",
+        "label": "Compression reference product",
+        "info": "Wherever copy contains [compression], it shows this product's custom.compression_level metafield (e.g. 18–21 mmHg). If the metafield is blank, the paragraph, point, feature or question holding [compression] is hidden."
       }
     ]
   },
@@ -107,7 +130,14 @@
         "type": "text",
         "id": "cart_reassurance",
         "label": "Reassurance line",
-        "default": "Prices include VAT. Delivery is calculated at checkout."
+        "default": "Delivery is calculated at checkout."
+      },
+      {
+        "type": "textarea",
+        "id": "cart_terms_notice",
+        "label": "Notice above the checkout button",
+        "info": "Shown in the cart drawer and on the cart page. \"Terms of service\", \"Shipping\" and \"Refund\" link to those policies when they exist.",
+        "default": "By checking out, you agree to our Terms of service, including the health and suitability and liability sections, and our Shipping and Refund policies."
       }
     ]
   },

@@ -31,7 +31,7 @@
       {%- endif -%}
     {%- endform -%}
     {%- if section.settings.small_print != blank -%}
-      <p class="newsletter__small">{{ section.settings.small_print | escape }}</p>
+      <p class="newsletter__small">{% render 'policy-links', text: section.settings.small_print, privacy_link: true %}</p>
     {%- endif -%}
   </div>
 </section>
@@ -52,8 +52,9 @@
     {
       "type": "text",
       "id": "small_print",
-      "label": "Small print",
-      "default": "We use your email only to send you Vital Socks news. Unsubscribe any time."
+      "label": "Privacy notice",
+      "info": "Shown under the form, followed by a link to the privacy policy when it exists.",
+      "default": "We'll only use your email to send you Vital Socks news. Unsubscribe any time."
     }
   ],
   "presets": [{ "name": "Newsletter" }]

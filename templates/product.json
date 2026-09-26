@@ -7,14 +7,7 @@
           "type": "trust",
           "settings": {
             "icon": "stethoscope",
-            "text": "Compression grading overseen by an orthotist"
-          }
-        },
-        "t2": {
-          "type": "trust",
-          "settings": {
-            "icon": "ruler",
-            "text": "Sized by ankle and calf, not shoe size"
+            "text": "Designed by an Orthotist"
           }
         },
         "t3": {
@@ -30,18 +23,58 @@
             "icon": "lock",
             "text": "Secure checkout"
           }
+        },
+        "f1": {
+          "type": "feature",
+          "settings": {
+            "icon": "graduated",
+            "title": "Graduated compression",
+            "text": "<p>[compression] of support, firmest at the ankle and easing off gradually towards the knee.</p>"
+          }
+        },
+        "f2": {
+          "type": "feature",
+          "settings": {
+            "icon": "long-days",
+            "title": "Made for long days",
+            "text": "<p>Designed for tired, heavy or fatigued legs, whether you're standing through a shift, sitting at a desk or travelling.</p>"
+          }
+        },
+        "f3": {
+          "type": "feature",
+          "settings": {
+            "icon": "ankle",
+            "title": "Sized by your ankle",
+            "text": "<p>Chosen by ankle circumference rather than shoe size alone, for a fit that suits your leg.</p>"
+          }
+        },
+        "f4": {
+          "type": "feature",
+          "settings": {
+            "icon": "fabric",
+            "title": "Soft, all-season blend",
+            "text": "<p>Combed cotton, polyamide and elastane: soft on the skin, with comfortable stretch, in winter or summer.</p>"
+          }
         }
       },
       "block_order": [
         "t1",
-        "t2",
         "t3",
-        "t4"
+        "t4",
+        "f1",
+        "f2",
+        "f3",
+        "f4"
       ],
       "settings": {
         "size_guide_page": "size-guide",
+        "compression_guide_page": "compression-guide",
         "show_excerpt": true,
-        "show_dynamic_checkout": true
+        "show_dynamic_checkout": true,
+        "compression_text": "<p>Graduated: strongest at the ankle and gradually decreasing up the leg, built into the knit on compression-knitting machines. Knee-high, ending just under the knee. Sized by ankle circumference.</p><p><strong>Please note:</strong> This product is designed for everyday compression and is not intended for diagnosed medical conditions requiring therapeutic compression. If you have a medical condition or persistent swelling, please consult an Orthotist or healthcare professional. Our Orthotist is available for guidance at <a href=\"https://www.cajeebotes.com\">www.cajeebotes.com</a></p>",
+        "fabric_text": "<p><strong>Comfort in every thread.</strong> Made with a carefully selected blend of combed cotton, polyamide and elastane for a soft feel, comfortable stretch and lasting wear.</p>",
+        "care_text": "<p>Hand wash every 2–3 days in cold water using a mild soap. Gently remove excess water and leave them to air dry in the shade. Avoid bleach, harsh detergents, tumble drying and excessive heat.</p>",
+        "wear_text": "<p><strong>Putting them on</strong></p><ol><li>Put them on in the morning, before you start your day.</li><li>Turn the sock inside out down to the heel, slip your foot in and line up the heel.</li><li>Ease the sock up your leg a little at a time rather than pulling from the cuff.</li><li>Smooth out any wrinkles. The cuff sits just under the knee, so don't fold or roll it down.</li></ol><p><strong>How they should feel</strong></p><p>They should feel snug and supportive without causing pain, numbness, tingling or significant discomfort. The sock should sit smoothly against your leg without excessive bunching or rolling.</p><p><strong>When to wear them</strong></p><p>Every day: while working, commuting, travelling or spending long periods on your feet, and on flights and other long journeys where you may be sitting for extended periods.</p>"
       }
     },
     "related": {
@@ -57,42 +90,34 @@
         "q0": {
           "type": "question",
           "settings": {
-            "question": "What does graduated compression mean?",
-            "answer": "<p>The sock is firmest at the ankle and gets gradually lighter up the leg. That gradient helps move blood and fluid back up towards the heart instead of letting it pool in the lower legs.</p>"
+            "question": "How long are Vital Socks?",
+            "answer": "<p>Knee-high. Vital Socks end just under the knee.</p>"
           }
         },
         "q1": {
           "type": "question",
           "settings": {
-            "question": "Which compression level do I need?",
-            "answer": "<p>Every product page states its compression range in mmHg. Lighter ranges suit everyday wear, travel and long shifts. If you have a circulation condition, diabetes or a history of blood clots, speak to a healthcare professional before wearing compression.</p>"
+            "question": "What are Vital Socks made of?",
+            "answer": "<p>Our socks are made from a blend of combed cotton, polyamide and elastane. Combed cotton provides a soft, comfortable feel against the skin, while polyamide adds durability and helps the socks retain their shape. Elastane provides the stretch needed for a comfortable, supportive fit. Together, these materials create a soft, durable sock designed for everyday wear, no matter the season.</p>"
           }
         },
         "q2": {
           "type": "question",
           "settings": {
-            "question": "How do I find my size?",
-            "answer": "<p>Measure your ankle at its narrowest point and your calf at its widest, ideally in the morning. The fit finder turns those two numbers into a size. Shoe size alone isn't enough, because compression depends on the leg.</p>"
-          }
-        },
-        "q3": {
-          "type": "question",
-          "settings": {
-            "question": "Who shouldn't wear compression socks?",
-            "answer": "<p>People with peripheral arterial disease, fragile or broken skin on the legs, or reduced feeling in the feet should not wear compression without medical advice. If in doubt, ask your doctor or an orthotist first.</p>"
+            "question": "What if my ankle and calf point to different sizes?",
+            "answer": "<p>Your ankle measurement sets the size. If your calf is outside that size's calf range, send us both measurements before you order and we'll advise you.</p>"
           }
         }
       },
       "block_order": [
         "q0",
         "q1",
-        "q2",
-        "q3"
+        "q2"
       ],
       "settings": {
-        "eyebrow": "Before you buy",
-        "heading": "Compression, answered",
-        "text": "",
+        "eyebrow": "Good questions",
+        "heading": "Before you buy",
+        "text": "<p>More answers on the <a href=\"/pages/faq\">FAQ page</a>.</p>",
         "open_first": false,
         "structured_data": false
       }

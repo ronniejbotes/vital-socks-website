@@ -2,8 +2,10 @@
   Interactive fit finder + an indexable HTML size table.
   Each "Size" block is one row of the size chart. Sizing drives the pressure
   the sock applies, so these numbers must come from the manufacturer's spec.
-  While "Sample sizes" is ticked, a notice is shown to every visitor so
-  placeholder numbers can't go live by accident.
+  Ranges are whole centimetres: 19–22 covers 19 up to just under 23. The
+  ankle sets the size; the calf only checks the fit, because the calf ranges
+  overlap. Tick "Sample sizes" to show a notice if placeholder rows are ever
+  used again.
 {%- endcomment -%}
 {{ 'section-fit-finder.css' | asset_url | stylesheet_tag }}
 
@@ -38,9 +40,9 @@
           <ellipse class="fit__ring fit__ring--c" cx="99" cy="176" rx="47" ry="10" />
           <ellipse class="fit__ring fit__ring--b" cx="118" cy="318" rx="26" ry="7" />
           <text x="160" y="170" class="fit__tag">C</text>
-          <text x="160" y="186" class="fit__tag-sub">calf, widest</text>
+          <text x="160" y="186" class="fit__tag-sub">{{ 'sections.fit_finder.svg_calf' | t }}</text>
           <text x="160" y="312" class="fit__tag">B</text>
-          <text x="160" y="328" class="fit__tag-sub">ankle, narrowest</text>
+          <text x="160" y="328" class="fit__tag-sub">{{ 'sections.fit_finder.svg_ankle' | t }}</text>
         </svg>
         <ol class="fit__steps" role="list">
           {%- for step in section.blocks -%}
@@ -74,7 +76,7 @@
           </a>
         </div>
         <template data-fit-strings>
-          {"prompt": {{ 'sections.fit_finder.prompt' | t | json }}, "noMatch": {{ 'sections.fit_finder.no_match' | t | json }}}
+          {"prompt": {{ 'sections.fit_finder.prompt' | t | json }}, "noMatch": {{ 'sections.fit_finder.no_match' | t | json }}, "match": {{ 'sections.fit_finder.match' | t | json }}, "calfOutside": {{ 'sections.fit_finder.calf_outside' | t | json }}}
         </template>
 
         <div class="fit__table-wrap" tabindex="0" role="region" aria-label="{{ section.settings.table_caption | escape }}">
@@ -82,10 +84,9 @@
             <caption class="visually-hidden">{{ section.settings.table_caption | escape }}</caption>
             <thead>
               <tr>
-                <th scope="col">Size</th>
-                <th scope="col">Ankle (B)</th>
-                <th scope="col">Calf (C)</th>
-                <th scope="col">Shoe</th>
+                <th scope="col">{{ 'sections.fit_finder.col_size' | t }}</th>
+                <th scope="col">{{ 'sections.fit_finder.col_ankle' | t }}</th>
+                <th scope="col">{{ 'sections.fit_finder.col_calf' | t }}</th>
               </tr>
             </thead>
             <tbody>
@@ -102,7 +103,6 @@
                     <th scope="row">{{ block.settings.label | escape }}</th>
                     <td>{{ block.settings.ankle_min }}&ndash;{{ block.settings.ankle_max }} cm</td>
                     <td>{{ block.settings.calf_min }}&ndash;{{ block.settings.calf_max }} cm</td>
-                    <td>{{ block.settings.shoe | escape }}</td>
                   </tr>
                 {%- endif -%}
               {%- endfor -%}
@@ -131,21 +131,21 @@
       "default": "paper"
     },
     { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Fit finder" },
-    { "type": "text", "id": "heading", "label": "Heading", "default": "Two measurements. One size." },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Designed around your leg." },
     {
       "type": "textarea",
       "id": "text",
       "label": "Text",
-      "default": "Compression only works at the right size, and your shoe size can't tell us that. Measure your ankle and calf and we'll do the rest."
+      "default": "Our socks are sized using ankle circumference, rather than relying only on shoe size, helping you choose a fit suited to your leg."
     },
     { "type": "text", "id": "table_caption", "label": "Size table description", "default": "Vital Socks size chart" },
-    { "type": "page", "id": "contact_page", "label": "Page for fit questions", "info": "Linked when measurements don't match a size. Defaults to /pages/contact." },
+    { "type": "page", "id": "contact_page", "label": "Page for fit questions", "info": "Linked when the ankle doesn't match a size, or the calf is outside that size's range. Defaults to /pages/contact." },
     {
       "type": "checkbox",
       "id": "sample_data",
       "label": "Sample sizes",
-      "info": "Untick only once the size rows hold the real Vital Socks size chart.",
-      "default": true
+      "info": "Tick only while the size rows hold placeholder numbers.",
+      "default": false
     },
     {
       "type": "text",
@@ -160,11 +160,10 @@
       "name": "Size",
       "settings": [
         { "type": "text", "id": "label", "label": "Size", "default": "M" },
-        { "type": "number", "id": "ankle_min", "label": "Ankle from (cm)", "default": 21 },
-        { "type": "number", "id": "ankle_max", "label": "Ankle to (cm)", "default": 24 },
-        { "type": "number", "id": "calf_min", "label": "Calf from (cm)", "default": 30 },
-        { "type": "number", "id": "calf_max", "label": "Calf to (cm)", "default": 38 },
-        { "type": "text", "id": "shoe", "label": "Shoe size guide", "default": "UK 6–8" }
+        { "type": "number", "id": "ankle_min", "label": "Ankle from (cm)", "default": 23 },
+        { "type": "number", "id": "ankle_max", "label": "Ankle to (cm)", "default": 26 },
+        { "type": "number", "id": "calf_min", "label": "Calf from (cm)", "default": 34 },
+        { "type": "number", "id": "calf_max", "label": "Calf to (cm)", "default": 44 }
       ]
     },
     {
@@ -172,7 +171,7 @@
       "name": "Measuring tip",
       "settings": [
         { "type": "text", "id": "title", "label": "Title", "default": "Measure in the morning" },
-        { "type": "text", "id": "text", "label": "Text", "default": "Legs are at their slimmest before the day's swelling sets in." }
+        { "type": "text", "id": "text", "label": "Text", "default": "Measure first thing in the morning, with the tape snug, not tight." }
       ]
     }
   ],
@@ -181,9 +180,10 @@
     {
       "name": "Fit finder",
       "blocks": [
-        { "type": "tip", "settings": { "title": "Measure in the morning", "text": "Legs are at their slimmest before the day's swelling sets in." } },
-        { "type": "size", "settings": { "label": "S", "ankle_min": 18, "ankle_max": 21, "calf_min": 25, "calf_max": 33, "shoe": "UK 3–5" } },
-        { "type": "size", "settings": { "label": "M", "ankle_min": 21, "ankle_max": 24, "calf_min": 30, "calf_max": 38, "shoe": "UK 6–8" } }
+        { "type": "tip", "settings": { "title": "Measure in the morning", "text": "Measure first thing in the morning, with the tape snug, not tight." } },
+        { "type": "size", "settings": { "label": "S", "ankle_min": 19, "ankle_max": 22, "calf_min": 30, "calf_max": 38 } },
+        { "type": "size", "settings": { "label": "M", "ankle_min": 23, "ankle_max": 26, "calf_min": 34, "calf_max": 44 } },
+        { "type": "size", "settings": { "label": "L", "ankle_min": 27, "ankle_max": 29, "calf_min": 38, "calf_max": 48 } }
       ]
     }
   ]

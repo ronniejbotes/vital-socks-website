@@ -1,19 +1,61 @@
 {%- comment -%}
-  Article page. Author details feed E-E-A-T: set the author's name in the
-  article and, for clinical topics, publish under the founder.
+  Article page, built for health (YMYL) posts:
+  breadcrumb, H1, byline, cover, body, key takeaways, references,
+  disclaimer, author box, more answers, back link.
+
+  Per-post extras are article metafields, all optional:
+  - custom.last_updated (date): set it only when the post is actually
+    revised. Shown as "Last updated", never as "reviewed".
+  - custom.takeaways (list of single-line text).
+  - custom.references (list of links): shown here and output as citation
+    in the BlogPosting JSON-LD (snippets/structured-data.liquid).
+  The byline and author box link to the founder only when she is the
+  article's author. Article JSON-LD lives in snippets/structured-data.liquid.
 {%- endcomment -%}
+{%- liquid
+  assign by_founder = false
+  if settings.founder_name != blank and article.author contains settings.founder_name
+    assign by_founder = true
+  endif
+  assign about_url = section.settings.about_page.url | default: pages.about.url
+
+  assign published_on = article.published_at | date: '%Y-%m-%d'
+  assign updated_on = ''
+  if article.metafields.custom.last_updated != blank
+    assign updated_on = article.metafields.custom.last_updated.value | date: '%Y-%m-%d'
+    assign updated_label = article.metafields.custom.last_updated.value | date: '%-d %B %Y'
+    if updated_on == published_on
+      assign updated_on = ''
+    endif
+  endif
+
+  assign takeaways = article.metafields.custom.takeaways.value
+  assign refs = article.metafields.custom.references.value
+-%}
 <article class="article">
   <header class="article__header container container--narrow">
-    <nav class="breadcrumbs" aria-label="{{ 'general.breadcrumbs.label' | t }}" style="display: flex; justify-content: center;">
+    <nav class="breadcrumbs" aria-label="{{ 'general.breadcrumbs.label' | t }}">
       <ol role="list">
         <li><a href="{{ routes.root_url }}">{{ 'general.breadcrumbs.home' | t }}</a></li>
         <li><a href="{{ blog.url }}">{{ blog.title | escape }}</a></li>
+        <li aria-current="page">{{ article.title | escape }}</li>
       </ol>
     </nav>
     <h1 class="h1">{{ article.title | escape }}</h1>
     <p class="article-card__meta">
-      {{ 'sections.blog.by' | t: author: article.author }} &middot;
-      <time datetime="{{ article.published_at | date: '%Y-%m-%d' }}">{{ article.published_at | date: '%-d %B %Y' }}</time>
+      {%- if by_founder and about_url != blank -%}
+        <a href="{{ about_url }}" rel="author">{{ 'sections.blog.by' | t: author: article.author }}</a>
+      {%- else -%}
+        {{ 'sections.blog.by' | t: author: article.author }}
+      {%- endif %}
+      &middot;
+      <time datetime="{{ published_on }}">{{ article.published_at | date: '%-d %B %Y' }}</time>
+      {%- if updated_on != blank %}
+        &middot;
+        <time datetime="{{ updated_on }}">
+          {{- 'sections.blog.updated' | t: date: updated_label -}}
+        </time>
+      {%- endif %}
     </p>
   </header>
   <div class="container container--narrow">
@@ -23,28 +65,167 @@
       </div>
     {%- endif -%}
     <div class="rte">{{ article.content }}</div>
-    {%- if section.settings.show_author_box and settings.founder_name != blank and article.author contains settings.founder_name -%}
-      <aside class="article__author">
-        {% render 'icon', name: 'stethoscope', size: 32 %}
-        <div>
+
+    {%- if takeaways != blank -%}
+      <aside class="article__takeaways" aria-labelledby="Takeaways-{{ section.id }}">
+        <h2 class="h3" id="Takeaways-{{ section.id }}">{{ 'sections.blog.takeaways' | t }}</h2>
+        <ul role="list">
+          {%- for takeaway in takeaways -%}
+            <li>
+              {% render 'icon', name: 'check', size: 20 %}
+              <span>{{ takeaway | escape }}</span>
+            </li>
+          {%- endfor -%}
+        </ul>
+      </aside>
+    {%- endif -%}
+
+    {%- if refs != blank -%}
+      <section class="article__references" aria-labelledby="References-{{ section.id }}">
+        <h2 class="h3" id="References-{{ section.id }}">{{ 'sections.blog.references' | t }}</h2>
+        <ol>
+          {%- for ref in refs -%}
+            <li>
+              <a href="{{ ref.url }}" target="_blank" rel="noopener">
+                {{- ref.text | default: ref.url | escape -}}
+                <span class="visually-hidden"> ({{ 'accessibility.new_window' | t }})</span>
+              </a>
+            </li>
+          {%- endfor -%}
+        </ol>
+      </section>
+    {%- endif -%}
+
+    {%- if section.settings.disclaimer != blank -%}
+      <div class="article__disclaimer rte">{{ section.settings.disclaimer }}</div>
+    {%- endif -%}
+
+    {%- if section.settings.show_author_box and by_founder -%}
+      <aside class="article__author" aria-label="{{ settings.founder_name | escape }}">
+        {%- comment -%}
+          The name is printed beside the portrait, so the image is decorative
+          here (empty alt) and a screen reader doesn't hear the name twice.
+        {%- endcomment -%}
+        {%- if section.settings.author_image != blank -%}
+          <div class="article__author-media">
+            {{
+              section.settings.author_image
+              | image_url: width: 240
+              | image_tag: widths: '120, 240', sizes: '80px', loading: 'lazy', alt: ''
+            }}
+          </div>
+        {%- elsif section.settings.bundled_portrait -%}
+          <div class="article__author-media article__author-media--bundled">
+            <img
+              src="{{ 'founder-farida-cajee-botes-md.webp' | asset_url }}"
+              width="800"
+              height="1200"
+              loading="lazy"
+              decoding="async"
+              alt=""
+            >
+          </div>
+        {%- else -%}
+          {% render 'icon', name: 'stethoscope', size: 32 %}
+        {%- endif -%}
+        <div class="article__author-body">
           <strong>{{ settings.founder_name | escape }}</strong><br>
           <span>{{ settings.founder_title | escape }}</span>
+          {%- if about_url != blank or settings.founder_url != blank -%}
+            <p class="article__author-links">
+              {%- if about_url != blank -%}
+                <a class="link-arrow" href="{{ about_url }}">
+                  {{- 'sections.blog.about_author' | t: name: settings.founder_name -}}
+                  {% render 'icon', name: 'arrow-right', size: 16 %}
+                </a>
+              {%- endif -%}
+              {%- if settings.founder_url != blank -%}
+                <a class="link-arrow" href="{{ settings.founder_url }}" target="_blank" rel="noopener">
+                  {{- 'sections.blog.practice' | t -}}
+                  <span class="visually-hidden"> ({{ 'accessibility.new_window' | t }})</span>
+                  {% render 'icon', name: 'arrow-right', size: 16 %}
+                </a>
+              {%- endif -%}
+            </p>
+          {%- endif -%}
         </div>
       </aside>
     {%- endif -%}
-    <p style="margin-top: 48px;"><a class="link-arrow" href="{{ blog.url }}">{{ 'sections.blog.back' | t: blog: blog.title }}</a></p>
+
+    {%- comment -%}
+      More answers: the next three posts in the blog, wrapping round to the
+      start, so every post gets links from the others.
+    {%- endcomment -%}
+    {%- liquid
+      assign total = blog.articles.size
+      assign current_index = -1
+      for a in blog.articles
+        if a.id == article.id
+          assign current_index = forloop.index0
+          break
+        endif
+      endfor
+      if current_index == -1
+        assign shown = total | at_most: 3
+      else
+        assign shown = total | minus: 1 | at_most: 3
+      endif
+    -%}
+    {%- if shown > 0 -%}
+      <nav class="article__more" aria-labelledby="MoreAnswers-{{ section.id }}">
+        <h2 class="h3" id="MoreAnswers-{{ section.id }}">{{ 'sections.blog.more' | t }}</h2>
+        <ul role="list">
+          {%- for n in (1..shown) -%}
+            {%- assign i = current_index | plus: n | modulo: total -%}
+            {%- for related in blog.articles offset: i limit: 1 -%}
+              <li>
+                <a href="{{ related.url }}">
+                  <span>{{ related.title | escape }}</span>
+                  {% render 'icon', name: 'arrow-right', size: 18 %}
+                </a>
+              </li>
+            {%- endfor -%}
+          {%- endfor -%}
+        </ul>
+      </nav>
+    {%- endif -%}
+
+    <p class="article__back"><a class="link-arrow" href="{{ blog.url }}">{{ 'sections.blog.back' | t: blog: blog.title }}</a></p>
   </div>
 </article>
-
-<script type="application/ld+json">
-  {{ article | structured_data }}
-</script>
 
 {% schema %}
 {
   "name": "Article",
   "settings": [
-    { "type": "checkbox", "id": "show_author_box", "label": "Show the founder box on her articles", "default": true }
+    {
+      "type": "richtext",
+      "id": "disclaimer",
+      "label": "Disclaimer",
+      "info": "Shown under every post, after the references.",
+      "default": "<p>This product is designed for everyday compression and is not intended for diagnosed medical conditions requiring therapeutic compression. If you have a medical condition or persistent swelling, please consult an Orthotist or healthcare professional. Our Orthotist is available for guidance at <a href=\"https://www.cajeebotes.com\">www.cajeebotes.com</a></p>"
+    },
+    { "type": "header", "content": "Founder box" },
+    { "type": "checkbox", "id": "show_author_box", "label": "Show the founder box on her articles", "default": true },
+    {
+      "type": "image_picker",
+      "id": "author_image",
+      "label": "Founder portrait",
+      "info": "Optional. Replaces the bundled portrait in the founder box."
+    },
+    {
+      "type": "checkbox",
+      "id": "bundled_portrait",
+      "label": "Use the bundled portrait when none is chosen",
+      "info": "Untick to show an icon instead.",
+      "default": true
+    },
+    {
+      "type": "page",
+      "id": "about_page",
+      "label": "Founder's page",
+      "info": "Where her name links. If blank, the page with the handle \"about\" is used."
+    }
   ]
 }
 {% endschema %}

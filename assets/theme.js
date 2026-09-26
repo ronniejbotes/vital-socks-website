@@ -363,28 +363,36 @@
       text = {};
     }
 
+    // Locale strings from data-fit-strings; "[size]" is swapped for the size label.
+    const say = (key, size = '') => String(text[key] || '').replace(/\[size\]/g, () => size);
+
     const run = () => {
       const a = parseFloat(ankle?.value);
       const c = parseFloat(calf?.value);
       rows.forEach((r) => r.tr.classList.remove('is-match'));
       result?.classList.remove('is-match');
       if (contactEl) contactEl.hidden = true;
-      if (Number.isNaN(a) || Number.isNaN(c)) {
+      // The ankle decides the size; the calf is an optional check.
+      if (Number.isNaN(a)) {
         sizeEl.textContent = '—';
-        noteEl.textContent = text.prompt || '';
+        noteEl.textContent = say('prompt');
         return;
       }
-      const fit = rows.find((r) => a >= r.aMin && a <= r.aMax && c >= r.cMin && c <= r.cMax);
-      if (fit) {
-        sizeEl.textContent = fit.size;
-        noteEl.textContent = `Ankle ${a} cm and calf ${c} cm sit inside size ${fit.size}.`;
-        fit.tr.classList.add('is-match');
-        result?.classList.add('is-match');
-      } else {
+      // The chart is in whole centimetres: 19–22 covers 19 up to just under 23.
+      const inRange = (v, min, max) => v >= min && v < max + 1;
+      const fit = rows.find((r) => inRange(a, r.aMin, r.aMax));
+      if (!fit) {
         sizeEl.textContent = '?';
-        noteEl.textContent = text.noMatch || '';
+        noteEl.textContent = say('noMatch');
         if (contactEl) contactEl.hidden = false;
+        return;
       }
+      sizeEl.textContent = fit.size;
+      fit.tr.classList.add('is-match');
+      result?.classList.add('is-match');
+      const calfOutside = !Number.isNaN(c) && !inRange(c, fit.cMin, fit.cMax);
+      noteEl.textContent = say(calfOutside ? 'calfOutside' : 'match', fit.size);
+      if (calfOutside && contactEl) contactEl.hidden = false;
     };
     [ankle, calf].forEach((input) => input?.addEventListener('input', run));
     $('[data-fit-form]', root)?.addEventListener('submit', (e) => e.preventDefault());
@@ -396,6 +404,36 @@
   document.addEventListener('change', (event) => {
     const select = event.target.closest('[data-sort-select]');
     if (select) select.form.submit();
+  });
+
+  /* ---------------------------------------------------------------------
+     Cart page: the drawer's -/+ stepper. Each change submits the cart form
+     (Shopify's own update), so totals come back from the server. A short
+     wait lets several clicks land as one update.
+     --------------------------------------------------------------------- */
+  let cartPageTimer;
+  const submitCartPage = (form, line) => {
+    clearTimeout(cartPageTimer);
+    line?.setAttribute('aria-busy', 'true');
+    cartPageTimer = setTimeout(() => {
+      const update = $('[data-cart-update]', form);
+      if (form.requestSubmit && update) form.requestSubmit(update);
+      else if (update) update.click();
+      else form.submit();
+    }, 400);
+  };
+  document.addEventListener('click', (event) => {
+    const step = event.target.closest('[data-cart-step]');
+    const form = step?.closest('[data-cart-page-form]');
+    const input = step && $('[data-cart-qty]', step.closest('.qty'));
+    if (!form || !input) return;
+    input.value = Math.max(0, Number(input.value || 0) + Number(step.dataset.cartStep));
+    submitCartPage(form, step.closest('.cart-line'));
+  });
+  document.addEventListener('change', (event) => {
+    const input = event.target.closest('[data-cart-qty]');
+    const form = input?.closest('[data-cart-page-form]');
+    if (form) submitCartPage(form, input.closest('.cart-line'));
   });
 
   /* ---------------------------------------------------------------------

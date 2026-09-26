@@ -8,7 +8,7 @@
       <a class="btn" href="{{ routes.all_products_collection_url }}">{{ 'sections.cart.empty_cta' | t }}</a>
     </div>
   {%- else -%}
-    <form class="cart-page__grid" action="{{ routes.cart_url }}" method="post" id="CartPageForm">
+    <form class="cart-page__grid" action="{{ routes.cart_url }}" method="post" id="CartPageForm" data-cart-page-form>
       <ul role="list">
         {%- for item in cart.items -%}
           <li class="cart-line">
@@ -20,9 +20,31 @@
               {%- unless item.product.has_only_default_variant -%}
                 <p class="cart-line__variant">{{ item.variant.title | escape }}</p>
               {%- endunless -%}
-              <div class="field" style="max-width: 120px;">
-                <label for="Qty-{{ item.key }}">{{ 'products.product.quantity' | t }}</label>
-                <input id="Qty-{{ item.key }}" type="number" name="updates[]" value="{{ item.quantity }}" min="0">
+              {%- comment -%} The same stepper as the cart drawer. Each change submits the form; "Update cart" covers visitors without JavaScript. {%- endcomment -%}
+              <div class="qty">
+                <button
+                  type="button"
+                  data-cart-step="-1"
+                  aria-label="{{ 'accessibility.quantity_decrease' | t: product: item.product.title | escape }}"
+                >
+                  {% render 'icon', name: 'minus', size: 16 %}
+                </button>
+                <input
+                  id="Qty-{{ item.key }}"
+                  type="number"
+                  name="updates[]"
+                  value="{{ item.quantity }}"
+                  min="0"
+                  aria-label="{{ 'products.product.quantity' | t }}"
+                  data-cart-qty
+                >
+                <button
+                  type="button"
+                  data-cart-step="1"
+                  aria-label="{{ 'accessibility.quantity_increase' | t: product: item.product.title | escape }}"
+                >
+                  {% render 'icon', name: 'plus', size: 16 %}
+                </button>
               </div>
             </div>
             <div class="cart-line__price">
@@ -46,8 +68,11 @@
             <textarea id="CartNote" name="note">{{ cart.note }}</textarea>
           </div>
         {%- endif -%}
+        {%- if settings.cart_terms_notice != blank -%}
+          <p class="legal-note">{% render 'policy-links', text: settings.cart_terms_notice %}</p>
+        {%- endif -%}
         <button class="btn btn--block" type="submit" name="checkout">{% render 'icon', name: 'lock', size: 18 %} {{ 'sections.cart.checkout' | t }}</button>
-        <p style="margin-top: 12px;"><button class="btn btn--ghost btn--block" type="submit" name="update">{{ 'sections.cart.update' | t }}</button></p>
+        <p class="cart-page__update"><button class="btn btn--ghost btn--block" type="submit" name="update" data-cart-update>{{ 'sections.cart.update' | t }}</button></p>
       </div>
     </form>
   {%- endif -%}

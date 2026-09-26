@@ -1,0 +1,93 @@
+{%- comment -%}
+  Latest posts from a blog, as article cards (the same markup as the blog
+  page, with H3 titles under this section's H2). It links the blog into the
+  rest of the site so the posts aren't orphaned.
+  Renders nothing until a blog is chosen and it has at least one post, so it
+  can sit in a template before the first post is published.
+{%- endcomment -%}
+{%- assign featured_blog = section.settings.blog -%}
+{%- if featured_blog != blank and featured_blog.articles_count > 0 -%}
+  <section
+    class="featured-articles section tone-{{ section.settings.tone }}"
+    aria-labelledby="ArticlesHeading-{{ section.id }}"
+  >
+    <div class="container">
+      <div class="section-head">
+        <div>
+          {%- if section.settings.eyebrow != blank -%}
+            <p class="eyebrow">{{ section.settings.eyebrow | escape }}</p>
+          {%- endif -%}
+          <h2 class="h2 section-head__title" id="ArticlesHeading-{{ section.id }}" data-reveal>
+            {{- section.settings.heading | escape -}}
+          </h2>
+        </div>
+        {%- if section.settings.link_label != blank -%}
+          <a class="link-arrow" href="{{ featured_blog.url }}">
+            {{- section.settings.link_label | escape -}}
+            {% render 'icon', name: 'arrow-right', size: 18 %}
+          </a>
+        {%- endif -%}
+      </div>
+
+      <ul class="article-grid" role="list" data-stagger>
+        {%- for post in featured_blog.articles limit: section.settings.limit -%}
+          <li>
+            <a class="article-card" href="{{ post.url }}">
+              <div class="article-card__media">
+                {%- if post.image -%}
+                  {{
+                    post.image
+                    | image_url: width: 900
+                    | image_tag:
+                      loading: 'lazy',
+                      widths: '450, 900',
+                      sizes: '(min-width: 1100px) 33vw, (min-width: 750px) 50vw, 100vw'
+                  }}
+                {%- endif -%}
+              </div>
+              <p class="article-card__meta">
+                <time datetime="{{ post.published_at | date: '%Y-%m-%d' }}">
+                  {{- post.published_at | date: '%-d %B %Y' -}}
+                </time>
+              </p>
+              <h3 class="article-card__title">{{ post.title | escape }}</h3>
+              {%- if post.excerpt != blank -%}
+                <p class="article-card__meta">{{ post.excerpt | strip_html | truncatewords: 24 }}</p>
+              {%- endif -%}
+            </a>
+          </li>
+        {%- endfor -%}
+      </ul>
+    </div>
+  </section>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Featured articles",
+  "class": "section-featured-articles",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Shows the latest posts from the blog. The section stays hidden until the blog has a post."
+    },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Guides" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Compression, explained" },
+    { "type": "blog", "id": "blog", "label": "Blog" },
+    { "type": "range", "id": "limit", "label": "Posts shown", "min": 2, "max": 6, "step": 1, "default": 3 },
+    { "type": "text", "id": "link_label", "label": "Link label", "default": "All guides" },
+    {
+      "type": "select",
+      "id": "tone",
+      "label": "Background",
+      "options": [
+        { "value": "paper", "label": "White" },
+        { "value": "frost", "label": "Frost" },
+        { "value": "ice", "label": "Ice blue" }
+      ],
+      "default": "paper"
+    }
+  ],
+  "presets": [{ "name": "Featured articles" }]
+}
+{% endschema %}

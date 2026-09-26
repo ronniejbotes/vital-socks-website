@@ -2,6 +2,8 @@
   Title, description, robots, Open Graph and Twitter tags.
   Titles and descriptions come from each resource's "Search engine listing"
   fields in the Shopify admin, falling back to its title and content.
+  The " – {shop name}" suffix is added only when the whole title still fits
+  in 60 characters, and never twice.
 {%- endcomment -%}
 {%- liquid
   assign og_title = page_title | default: shop.name
@@ -15,18 +17,29 @@
   endif
 
   assign noindex = false
-  if request.page_type == 'search' or request.page_type == 'cart' or request.page_type == 'password' or request.page_type == 'gift_card' or request.page_type == 'captcha'
-    assign noindex = true
-  endif
+  case request.page_type
+    when 'search', 'cart', 'password', 'gift_card', 'captcha', '404'
+      assign noindex = true
+  endcase
   if current_tags
     assign noindex = true
   endif
+
+  assign title_len = page_title | size
+  assign title_max = shop.name | size | plus: 3
+  assign title_max = 60 | minus: title_max
+
+  assign founder_article = false
+  if request.page_type == 'article' and settings.founder_name != blank and article.author contains settings.founder_name
+    assign founder_article = true
+  endif
+  assign founder_profile = settings.founder_profile_url | default: settings.founder_url
 -%}
 <title>
   {{- page_title -}}
   {%- if current_tags %}{% assign meta_tags = current_tags | join: ', ' %} &ndash; {{ 'general.meta.tags' | t: tags: meta_tags }}{% endif -%}
   {%- if current_page != 1 %} &ndash; {{ 'general.meta.page' | t: page: current_page }}{% endif -%}
-  {%- unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless -%}
+  {%- unless page_title contains shop.name or title_len > title_max %} &ndash; {{ shop.name }}{% endunless -%}
 </title>
 {%- if page_description != blank %}
   <meta name="description" content="{{ page_description | escape }}">
@@ -34,7 +47,7 @@
 {%- if noindex %}
   <meta name="robots" content="noindex, follow">
 {%- else %}
-  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
 {%- endif %}
 
 <meta property="og:site_name" content="{{ shop.name | escape }}">
@@ -58,8 +71,21 @@
   <meta property="og:price:amount" content="{{ product.price | divided_by: 100.0 }}">
   <meta property="og:price:currency" content="{{ cart.currency.iso_code }}">
 {%- endif %}
-{%- if request.page_type == 'article' and article.published_at %}
-  <meta property="article:published_time" content="{{ article.published_at | date: '%Y-%m-%dT%H:%M:%S%z' }}">
+{%- if request.page_type == 'article' %}
+  {%- if article.published_at %}
+    <meta property="article:published_time" content="{{ article.published_at | date: '%Y-%m-%dT%H:%M:%S%z' }}">
+  {%- endif %}
+  {%- comment -%}
+    Modified time comes only from the date metafield custom.last_updated,
+    set by hand when a post is actually revised. article.updated_at is not
+    used because it changes on every save.
+  {%- endcomment -%}
+  {%- if article.metafields.custom.last_updated != blank %}
+    <meta property="article:modified_time" content="{{ article.metafields.custom.last_updated.value | date: '%Y-%m-%d' }}">
+  {%- endif %}
+  {%- if founder_article and founder_profile != blank %}
+    <meta property="article:author" content="{{ founder_profile | escape }}">
+  {%- endif %}
 {%- endif %}
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="{{ og_title | escape }}">

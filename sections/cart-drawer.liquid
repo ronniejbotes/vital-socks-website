@@ -97,6 +97,9 @@
           {%- if settings.cart_reassurance != blank -%}
             <p class="cart-reassure">{{ settings.cart_reassurance | escape }}</p>
           {%- endif -%}
+          {%- if settings.cart_terms_notice != blank -%}
+            <p class="legal-note">{% render 'policy-links', text: settings.cart_terms_notice %}</p>
+          {%- endif -%}
           <form action="{{ routes.cart_url }}" method="post">
             <button class="btn btn--block" type="submit" name="checkout">
               {% render 'icon', name: 'lock', size: 18 %}

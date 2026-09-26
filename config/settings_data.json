@@ -10,11 +10,14 @@
       "color_paper": "#FFFFFF",
       "logo_width": 164,
       "founder_name": "Farida Cajee-Botes",
-      "founder_title": "Orthotist and Prosthetist",
+      "founder_title": "Orthotist & Prosthetist",
       "founder_url": "https://www.cajeebotes.com",
+      "founder_profile_url": "https://www.cajeebotes.com/about",
+      "founder_same_as": "",
+      "compression_product": "black",
       "cart_type": "drawer",
       "cart_note": false,
-      "cart_reassurance": "Prices include VAT. Delivery is calculated at checkout.",
+      "cart_reassurance": "Delivery is calculated at checkout.",
       "enable_animations": true,
       "enable_smooth_scroll": true
     }

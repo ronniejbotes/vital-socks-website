@@ -1,7 +1,14 @@
 {%- comment -%}
   FAQ accordion (native <details>) plus FAQPage structured data built from the
   same blocks, so the visible answers and the markup can never drift apart.
+  [compression] in a question or answer shows the compression level of the
+  product chosen in Theme settings > Compression. If that level is blank, a
+  question holding the token is left out of both the page and the markup.
 {%- endcomment -%}
+{%- liquid
+  assign compression_raw = settings.compression_product.metafields.custom.compression_level.value | default: ''
+  assign compression = compression_raw | escape
+-%}
 <section class="faq section" aria-labelledby="FaqHeading-{{ section.id }}">
   <div class="container faq__grid">
     <div class="faq__intro">
@@ -14,34 +21,56 @@
       {%- endif -%}
     </div>
     <div class="faq__list">
+      {%- assign shown = 0 -%}
       {%- for block in section.blocks -%}
-        <details class="faq__item" {{ block.shopify_attributes }}{% if forloop.first and section.settings.open_first %} open{% endif %}>
+        {%- liquid
+          assign has_token = false
+          if block.settings.question contains '[compression]' or block.settings.answer contains '[compression]'
+            assign has_token = true
+          endif
+          if has_token and compression == blank
+            continue
+          endif
+        -%}
+        <details class="faq__item" {{ block.shopify_attributes }}{% if shown == 0 and section.settings.open_first %} open{% endif %}>
           <summary>
-            <span>{{ block.settings.question | escape }}</span>
+            <span>{{ block.settings.question | escape | replace: '[compression]', compression }}</span>
             {% render 'icon', name: 'plus', size: 22 %}
           </summary>
-          <div class="faq__answer rte">{{ block.settings.answer }}</div>
+          <div class="faq__answer rte">{{ block.settings.answer | replace: '[compression]', compression }}</div>
         </details>
+        {%- assign shown = shown | plus: 1 -%}
       {%- endfor -%}
     </div>
   </div>
 </section>
 
-{%- if section.settings.structured_data and section.blocks.size > 0 -%}
+{%- if section.settings.structured_data and shown > 0 -%}
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "FAQPage",
       "mainEntity": [
+        {%- assign sep = '' -%}
         {%- for block in section.blocks -%}
-          {
+          {%- liquid
+            assign has_token = false
+            if block.settings.question contains '[compression]' or block.settings.answer contains '[compression]'
+              assign has_token = true
+            endif
+            if has_token and compression == blank
+              continue
+            endif
+          -%}
+          {{ sep }}{
             "@type": "Question",
-            "name": {{ block.settings.question | json }},
+            "name": {{ block.settings.question | replace: '[compression]', compression_raw | json }},
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": {{ block.settings.answer | strip_html | strip | json }}
+              "text": {{ block.settings.answer | replace: '[compression]', compression_raw | strip_html | strip | json }}
             }
-          }{% unless forloop.last %},{% endunless %}
+          }
+          {%- assign sep = ',' -%}
         {%- endfor -%}
       ]
     }
@@ -75,7 +104,13 @@
       "type": "question",
       "name": "Question",
       "settings": [
-        { "type": "text", "id": "question", "label": "Question", "default": "What does graduated compression mean?" },
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question",
+          "info": "[compression] shows the compression level from Theme settings > Compression.",
+          "default": "What does graduated compression mean?"
+        },
         { "type": "richtext", "id": "answer", "label": "Answer", "default": "<p>The sock is firmest at the ankle and gradually lighter up the leg.</p>" }
       ]
     }

@@ -9,7 +9,29 @@
   padding-block: var(--section-y) clamp(40px, 6vw, 72px);
 }
 .stories__title {
-  max-width: 12ch;
+  max-width: 14ch;
+}
+.stories__head--media {
+  display: grid;
+  gap: clamp(28px, 4vw, 64px);
+  align-items: center;
+}
+.stories__head-media:only-child {
+  grid-column: 1 / -1;
+}
+.stories__head-media img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+@media (min-width: 900px) {
+  .stories__head--media {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  }
 }
 
 .story {
@@ -40,7 +62,9 @@
   position: absolute;
   inset: 0;
   z-index: -1;
-  background: linear-gradient(0deg, rgba(var(--ink-rgb), 0.86) 0%, rgba(var(--ink-rgb), 0.45) 42%, rgba(var(--ink-rgb), 0) 70%);
+  /* On phones the copy can reach about 45% of the panel's height, so the
+     scrim holds dark that far up. */
+  background: linear-gradient(0deg, rgba(var(--ink-rgb), 0.88) 0%, rgba(var(--ink-rgb), 0.76) 40%, rgba(var(--ink-rgb), 0.5) 54%, rgba(var(--ink-rgb), 0) 74%);
 }
 .story__inner {
   position: relative;
@@ -67,11 +91,13 @@
     align-items: center;
     min-height: 100svh;
   }
+  /* Hold the scrim past the copy's inner edge (about 45% of the width) so
+     white body text stays at 4.5:1 or better over bright photos. */
   .story--left .story__scrim {
-    background: linear-gradient(90deg, rgba(var(--ink-rgb), 0.84) 0%, rgba(var(--ink-rgb), 0.5) 32%, rgba(var(--ink-rgb), 0) 58%);
+    background: linear-gradient(90deg, rgba(var(--ink-rgb), 0.86) 0%, rgba(var(--ink-rgb), 0.74) 42%, rgba(var(--ink-rgb), 0.35) 58%, rgba(var(--ink-rgb), 0) 74%);
   }
   .story--right .story__scrim {
-    background: linear-gradient(270deg, rgba(var(--ink-rgb), 0.84) 0%, rgba(var(--ink-rgb), 0.5) 32%, rgba(var(--ink-rgb), 0) 58%);
+    background: linear-gradient(270deg, rgba(var(--ink-rgb), 0.86) 0%, rgba(var(--ink-rgb), 0.74) 42%, rgba(var(--ink-rgb), 0.35) 58%, rgba(var(--ink-rgb), 0) 74%);
   }
   .story--right .story__inner {
     justify-content: flex-end;

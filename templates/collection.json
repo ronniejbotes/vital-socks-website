@@ -4,8 +4,15 @@
       "type": "main-collection",
       "settings": {
         "per_page": 24,
-        "columns": 4,
+        "columns": 5,
         "show_sort": true
+      }
+    },
+    "articles": {
+      "type": "featured-articles",
+      "settings": {
+        "blog": "guides",
+        "tone": "frost"
       }
     },
     "marquee": {
@@ -20,7 +27,7 @@
         "m1": {
           "type": "text",
           "settings": {
-            "text": "Overseen by an orthotist"
+            "text": "Designed by an orthotist"
           }
         },
         "m2": {
@@ -32,7 +39,7 @@
         "m3": {
           "type": "text",
           "settings": {
-            "text": "Sized by your calf, not your shoe"
+            "text": "Sized by your ankle, not your shoe"
           }
         }
       },
@@ -50,6 +57,7 @@
     },
     "compare": {
       "type": "compare",
+      "disabled": true,
       "blocks": {
         "r1": {
           "type": "row",
@@ -72,7 +80,7 @@
         "r3": {
           "type": "row",
           "settings": {
-            "feature": "Grading overseen by an orthotist",
+            "feature": "Designed by an Orthotist",
             "us": "yes",
             "col_2": "no",
             "col_3": "Rarely"
@@ -81,7 +89,7 @@
         "r4": {
           "type": "row",
           "settings": {
-            "feature": "Sized by ankle and calf measurement",
+            "feature": "Sized by ankle circumference",
             "us": "yes",
             "col_2": "no",
             "col_3": "Sometimes"
@@ -106,8 +114,8 @@
       ],
       "settings": {
         "eyebrow": "Side by side",
-        "heading": "Not all compression is graded",
-        "text": "Plenty of socks feel tight. Fewer tell you how tight, where, and who checked.",
+        "heading": "Not all compression is graduated",
+        "text": "Compression is more than making a sock tight.",
         "column_2": "Fashion socks",
         "column_3": "Generic compression",
         "note": "Comparison with typical products in each category, not specific brands."
@@ -116,6 +124,7 @@
   },
   "order": [
     "main",
+    "articles",
     "marquee",
     "compare"
   ]
