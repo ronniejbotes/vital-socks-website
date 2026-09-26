@@ -1,5 +1,5 @@
 /**
- * Local preview for the Vital Socks theme — `npm run preview`.
+ * Local preview for the Vital Socks theme (`npm run preview`).
  *
  * Renders the real theme files (layout, JSON templates, sections, snippets,
  * locales, settings) with LiquidJS plus small shims for Shopify-only tags and
@@ -156,7 +156,7 @@ const collections = arrayWithHandles([
   makeCollection(
     'all',
     'All socks',
-    "<p>Compression doesn't have to look clinical. Five knee-high designs, Cherry Pop, Espresso, Checker, Daisy and Black, all in graduated compression, sized S, M and L by ankle circumference.</p>"
+    "<p>Five knee-high designs: Cherry Pop, Espresso, Checker, Daisy and Black. Every pair has graduated compression and is sized S, M or L by ankle circumference.</p>"
   ),
   makeCollection('launch-prints', 'The launch prints'),
 ]);
@@ -491,7 +491,7 @@ engine.registerTag(
   }
 );
 
-/* {% layout none %} — ignored */
+/* {% layout none %} is ignored */
 engine.registerTag(
   'layout',
   class extends Tag {

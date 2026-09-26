@@ -134,7 +134,7 @@
           "settings": {
             "zone": "Ankle",
             "level": "Firmest",
-            "title": "Ankle — firmest",
+            "title": "Firmest at the ankle",
             "text": ""
           }
         },
@@ -143,7 +143,7 @@
           "settings": {
             "zone": "Calf",
             "level": "Easing",
-            "title": "Calf — easing",
+            "title": "Easing through the calf",
             "text": ""
           }
         },
@@ -152,7 +152,7 @@
           "settings": {
             "zone": "Below knee",
             "level": "Lightest",
-            "title": "Below knee — lightest",
+            "title": "Lightest just under the knee",
             "text": ""
           }
         }
@@ -190,7 +190,7 @@
         "text": {
           "type": "text",
           "settings": {
-            "text": "<p>Made with a carefully selected blend of <strong>combed cotton, polyamide and elastane</strong> for a soft feel, comfortable stretch and lasting wear.</p><p>It's a blend chosen to stay comfortable all year round, whether it's winter or summer.</p>"
+            "text": "<p>Made from a blend of <strong>combed cotton, polyamide and elastane</strong> for a soft feel, comfortable stretch and lasting wear.</p><p>It's a blend chosen to stay comfortable all year round, in winter and summer.</p>"
           }
         },
         "fibres": {
@@ -242,9 +242,9 @@
             "bundled": "travel-checker",
             "alt": "A traveller in an airport lounge wearing Checker compression socks with white sneakers",
             "align": "right",
-            "eyebrow": "The long-haul",
+            "eyebrow": "The traveller",
             "heading": "Long-haul legs",
-            "text": "Long flights and long drives mean hours in one seat. Pull on Checker before you board.",
+            "text": "Flights and road trips mean hours in the same seat. Pull on Checker before you leave.",
             "link_label": "Shop Checker",
             "product": "checker"
           }
@@ -257,7 +257,7 @@
             "align": "left",
             "eyebrow": "The trend",
             "heading": "Loud on purpose",
-            "text": "Colourful and expressive, on purpose. Cherry Pop is the proof.",
+            "text": "Red cherries on cream, with a red cuff to match. Wear them where people can see them.",
             "link_label": "Shop Cherry Pop",
             "product": "cherry-pop"
           }
@@ -281,7 +281,7 @@
       "settings": {
         "eyebrow": "Compression made for everyone",
         "heading": "Your legs. Your style. Your compression.",
-        "text": "<p>Compression doesn't have to look clinical.</p><p>Whether you prefer something classic, subtle, colourful or expressive, our collection brings <strong>[compression] graduated compression</strong> into styles you'll actually want to wear.</p><p><strong>Because supportive socks should fit into your life—not stand out from it.</strong></p>",
+        "text": "<p>Compression doesn't have to look clinical.</p><p>Go classic and subtle, or colourful and expressive. Either way, our collection brings <strong>[compression] graduated compression</strong> into styles you'll actually want to wear.</p><p><strong>Because supportive socks should fit into your life, not stand out from it.</strong></p>",
         "collection": "launch-prints",
         "limit": 5,
         "columns": 5,

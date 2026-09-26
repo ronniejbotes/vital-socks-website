@@ -69,7 +69,7 @@
         </form>
         <div class="fit__result" aria-live="polite" data-fit-result>
           <p class="fit__result-label">{{ 'sections.fit_finder.result' | t }}</p>
-          <p class="fit__result-size" data-fit-size>&mdash;</p>
+          <p class="fit__result-size" data-fit-size></p>
           <p class="fit__result-note" data-fit-note>{{ 'sections.fit_finder.prompt' | t }}</p>
           <a class="fit__result-link" href="{{ section.settings.contact_page.url | default: '/pages/contact' }}" data-fit-contact hidden>
             {{- 'sections.fit_finder.contact' | t -}}
@@ -136,7 +136,7 @@
       "type": "textarea",
       "id": "text",
       "label": "Text",
-      "default": "Our socks are sized using ankle circumference, rather than relying only on shoe size, helping you choose a fit suited to your leg."
+      "default": "We size by ankle circumference rather than relying only on shoe size, so you can choose a fit that suits your leg."
     },
     { "type": "text", "id": "table_caption", "label": "Size table description", "default": "Vital Socks size chart" },
     { "type": "page", "id": "contact_page", "label": "Page for fit questions", "info": "Linked when the ankle doesn't match a size, or the calf is outside that size's range. Defaults to /pages/contact." },
@@ -171,7 +171,7 @@
       "name": "Measuring tip",
       "settings": [
         { "type": "text", "id": "title", "label": "Title", "default": "Measure in the morning" },
-        { "type": "text", "id": "text", "label": "Text", "default": "Measure first thing in the morning, with the tape snug, not tight." }
+        { "type": "text", "id": "text", "label": "Text", "default": "First thing, before you've been up and about." }
       ]
     }
   ],
@@ -180,7 +180,7 @@
     {
       "name": "Fit finder",
       "blocks": [
-        { "type": "tip", "settings": { "title": "Measure in the morning", "text": "Measure first thing in the morning, with the tape snug, not tight." } },
+        { "type": "tip", "settings": { "title": "Measure in the morning", "text": "First thing, before you've been up and about. Keep the tape snug, not tight." } },
         { "type": "size", "settings": { "label": "S", "ankle_min": 19, "ankle_max": 22, "calf_min": 30, "calf_max": 38 } },
         { "type": "size", "settings": { "label": "M", "ankle_min": 23, "ankle_max": 26, "calf_min": 34, "calf_max": 44 } },
         { "type": "size", "settings": { "label": "L", "ankle_min": 27, "ankle_max": 29, "calf_min": 38, "calf_max": 48 } }

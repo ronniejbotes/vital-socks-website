@@ -1,5 +1,5 @@
 /**
- * <sock-carousel> — homepage design carousel.
+ * <sock-carousel>: homepage design carousel.
  *
  * Behaviour (from the original carousel brief):
  * - navigate('next' | 'prev') is ignored while a move is running; the lock

@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Vital Socks — base styles
+   Vital Socks: base styles
    Colour tokens (--ink, --royal, --sky, --ice, --frost, --paper) are printed
    from Theme settings in layout/theme.liquid. Everything below derives from
    them, so a colour change in the theme editor flows through the whole site.

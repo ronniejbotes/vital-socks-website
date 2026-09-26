@@ -129,7 +129,7 @@
       "by": "By {{ author }}",
       "back": "Back to {{ blog }}",
       "updated": "Last updated {{ date }}",
-      "takeaways": "Key takeaways",
+      "takeaways": "In short",
       "references": "References",
       "more": "More answers",
       "about_author": "About {{ name }}",

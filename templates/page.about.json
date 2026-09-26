@@ -42,7 +42,7 @@
         "bundled_portrait": true,
         "portrait_alt": "Farida Cajee-Botes, Orthotist & Prosthetist and designer of Vital Socks",
         "placeholder_text": "",
-        "eyebrow": "Designed by an Orthotist",
+        "eyebrow": "Our Orthotist",
         "heading": "Professional knowledge behind every pair.",
         "quote": "Compression is more than making a sock tight. As an Orthotist & Prosthetist, I wanted to create an everyday compression sock with thoughtful fit, function and comfort.",
         "text": "<p>Our socks are intended for everyday compression. If you have a medical condition, persistent swelling, or think you may need therapeutic compression, <strong>speak to our Orthotist before purchasing.</strong></p>",
@@ -63,7 +63,7 @@
         "knit-text": {
           "type": "text",
           "settings": {
-            "text": "<p>Our socks are made using <strong>advanced compression-knitting machines</strong> that control the construction of the sock to create graduated compression. The result is <strong>[compression] compression</strong>, designed to be strongest at the ankle and gradually decrease up the leg.</p><p>The compression is built into the sock—not simply added through tightness.</p>"
+            "text": "<p>Each pair is knitted on <strong>advanced compression-knitting machines</strong> that control the construction of the sock to create graduated compression. The result is <strong>[compression] compression</strong>, designed to be strongest at the ankle and gradually decrease up the leg.</p><p>The compression is built into the sock, not simply added through tightness.</p>"
           }
         },
         "fit-heading": {
@@ -77,7 +77,7 @@
         "fit-text": {
           "type": "text",
           "settings": {
-            "text": "<p>Our socks are sized using ankle circumference, rather than relying only on shoe size, helping you choose a fit suited to your leg.</p><p><a href=\"/pages/size-guide\">Find your size</a></p>"
+            "text": "<p>We size by ankle circumference rather than relying only on shoe size, so you can choose a fit that suits your leg.</p><p><a href=\"/pages/size-guide\">Find your size</a></p>"
           }
         },
         "legs-heading": {
@@ -105,7 +105,7 @@
         "fabric-text": {
           "type": "text",
           "settings": {
-            "text": "<p>Made with a carefully selected blend of <strong>combed cotton, polyamide and elastane</strong> for a soft feel, comfortable stretch and lasting wear.</p><p>It's a blend chosen to stay comfortable all year round, whether it's winter or summer.</p>"
+            "text": "<p>Made from a blend of <strong>combed cotton, polyamide and elastane</strong> for a soft feel, comfortable stretch and lasting wear.</p><p>It's a blend chosen to stay comfortable all year round, in winter and summer.</p>"
           }
         }
       },
@@ -147,7 +147,7 @@
             "alt": "A runner stretching on a Cape Town sea wall at dawn in black compression socks",
             "align": "left",
             "eyebrow": "The everyday",
-            "heading": "Quiet, and quick",
+            "heading": "Quiet and quick",
             "text": "The plain black pair: under trousers at work, over the calves on a dawn run.",
             "link_label": "Shop Black",
             "product": "black"

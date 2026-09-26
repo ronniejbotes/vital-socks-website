@@ -1,5 +1,5 @@
 /**
- * Vital Socks — scroll choreography (GSAP + ScrollTrigger, optional Lenis).
+ * Vital Socks: scroll choreography (GSAP + ScrollTrigger, optional Lenis).
  *
  * Rules this file keeps:
  * - Content is never hidden by CSS. Every from-state is set here, so with

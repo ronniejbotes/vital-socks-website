@@ -18,35 +18,35 @@ const DESIGNS = [
     title: 'Cherry Pop',
     persona: 'The trend',
     description:
-      '<p>Red cherries on warm cream, with a red cuff, heel and toe.</p><p>Knee-high graduated compression: firmest at the ankle, lighter towards the knee.</p>',
+      '<p>Red cherries on warm cream, with a red cuff, heel and toe.</p>',
   },
   {
     handle: 'espresso',
     title: 'Espresso',
     persona: 'The shift worker',
     description:
-      '<p>Cream cups and beans on mocha, with a dark chocolate cuff, heel and toe. Made for nurses, hospitality and anyone on a double shift.</p><p>Knee-high graduated compression: firmest at the ankle, lighter towards the knee.</p>',
+      '<p>Cream cups and beans on mocha, with a dark chocolate cuff, heel and toe. Made for nurses, hospitality and anyone on a double shift.</p>',
   },
   {
     handle: 'checker',
     title: 'Checker',
     persona: 'The young one',
     description:
-      '<p>Black and cream checkerboard with a cream heel and toe.</p><p>Knee-high graduated compression: firmest at the ankle, lighter towards the knee.</p>',
+      '<p>Black and cream checkerboard with a cream heel and toe.</p>',
   },
   {
     handle: 'daisy',
     title: 'Daisy',
     persona: 'The easy day',
     description:
-      '<p>White daisies on soft lavender, with a deep purple cuff, heel and toe.</p><p>Knee-high graduated compression: firmest at the ankle, lighter towards the knee.</p>',
+      '<p>White daisies on soft lavender, with a deep purple cuff, heel and toe.</p>',
   },
   {
     handle: 'black',
     title: 'Black',
     persona: 'The everyday',
     description:
-      '<p>Plain black with the white logo cuff. Under work trousers or over running calves.</p><p>Knee-high graduated compression: firmest at the ankle, lighter towards the knee.</p>',
+      '<p>Plain black with the white logo cuff. Under work trousers or over running calves.</p>',
   },
 ];
 

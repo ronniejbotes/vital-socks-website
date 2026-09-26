@@ -123,6 +123,7 @@
   font-size: clamp(3.5rem, 7vw, 5.5rem);
   line-height: 1;
   min-width: 1.6ch;
+  min-height: 1em; /* keeps the row height while the size is still empty */
 }
 .fit__result-note {
   margin: 0;

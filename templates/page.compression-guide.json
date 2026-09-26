@@ -15,7 +15,7 @@
             "zone": "Ankle",
             "level": "Firmest",
             "title": "Firmest at the ankle",
-            "text": "Strongest at the ankle, where the compression starts."
+            "text": "This is where the compression starts."
           }
         },
         "step-2": {
@@ -24,7 +24,7 @@
             "zone": "Calf",
             "level": "Easing",
             "title": "Easing through the calf",
-            "text": "Easing gradually through the calf."
+            "text": "The pressure drops off gradually as the sock rises."
           }
         },
         "step-3": {
@@ -32,8 +32,8 @@
           "settings": {
             "zone": "Below the knee",
             "level": "Lightest",
-            "title": "Lightest below the knee",
-            "text": "Lightest just under the knee, where the sock ends."
+            "title": "Lightest just under the knee",
+            "text": "The sock ends here."
           }
         }
       },
@@ -44,7 +44,7 @@
       ],
       "settings": {
         "eyebrow": "The short version",
-        "heading": "Strongest at the ankle",
+        "heading": "How the pressure changes up the leg",
         "text": "<p>Graduated compression is strongest at the ankle and gradually decreases up the leg.</p>",
         "link_label": "Find your size",
         "link": "/pages/size-guide"

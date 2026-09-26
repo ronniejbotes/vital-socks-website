@@ -7,7 +7,7 @@
           "type": "tip",
           "settings": {
             "title": "Measure in the morning",
-            "text": "Measure first thing in the morning, with the tape snug, not tight."
+            "text": "First thing, before you've been up and about."
           }
         },
         "tip-2": {
@@ -75,7 +75,7 @@
         "tone": "frost",
         "eyebrow": "Fit finder",
         "heading": "Designed around your leg.",
-        "text": "Our socks are sized using ankle circumference, rather than relying only on shoe size, helping you choose a fit suited to your leg.",
+        "text": "We size by ankle circumference rather than relying only on shoe size, so you can choose a fit that suits your leg.",
         "sample_data": false,
         "sample_notice": "Sample sizing shown. The final Vital Socks size chart is on its way."
       }

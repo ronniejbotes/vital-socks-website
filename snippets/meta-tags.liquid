@@ -2,7 +2,7 @@
   Title, description, robots, Open Graph and Twitter tags.
   Titles and descriptions come from each resource's "Search engine listing"
   fields in the Shopify admin, falling back to its title and content.
-  The " – {shop name}" suffix is added only when the whole title still fits
+  The " | {shop name}" suffix is added only when the whole title still fits
   in 60 characters, and never twice.
 {%- endcomment -%}
 {%- liquid
@@ -37,9 +37,9 @@
 -%}
 <title>
   {{- page_title -}}
-  {%- if current_tags %}{% assign meta_tags = current_tags | join: ', ' %} &ndash; {{ 'general.meta.tags' | t: tags: meta_tags }}{% endif -%}
-  {%- if current_page != 1 %} &ndash; {{ 'general.meta.page' | t: page: current_page }}{% endif -%}
-  {%- unless page_title contains shop.name or title_len > title_max %} &ndash; {{ shop.name }}{% endunless -%}
+  {%- if current_tags %}{% assign meta_tags = current_tags | join: ', ' %} | {{ 'general.meta.tags' | t: tags: meta_tags }}{% endif -%}
+  {%- if current_page != 1 %} | {{ 'general.meta.page' | t: page: current_page }}{% endif -%}
+  {%- unless page_title contains shop.name or title_len > title_max %} | {{ shop.name }}{% endunless -%}
 </title>
 {%- if page_description != blank %}
   <meta name="description" content="{{ page_description | escape }}">

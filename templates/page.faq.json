@@ -63,14 +63,14 @@
           "type": "question",
           "settings": {
             "question": "What are the socks made from?",
-            "answer": "<p>Our socks are made from a blend of combed cotton, polyamide and elastane. Combed cotton provides a soft, comfortable feel against the skin, while polyamide adds durability and helps the socks retain their shape. Elastane provides the stretch needed for a comfortable, supportive fit. Together, these materials create a soft, durable sock designed for everyday wear, no matter the season.</p>"
+            "answer": "<p>Our socks are made from a blend of combed cotton, polyamide and elastane. Combed cotton provides a soft, comfortable feel against the skin, while polyamide adds durability and helps the socks retain their shape. Elastane gives the stretch needed for a comfortable, supportive fit. So you get a soft, durable sock for everyday wear, whatever the season.</p>"
           }
         },
         "c10": {
           "type": "question",
           "settings": {
             "question": "How is the compression level measured?",
-            "answer": "<p>The compression level is determined during manufacturing using specialised knitting technology and controlled production processes. The socks are knitted to provide consistent, graduated compression throughout the garment, with the compression level specified by our Orthotist.</p>"
+            "answer": "<p>The compression level is determined during manufacturing, using specialised knitting technology and controlled production. Our Orthotist specified the level, and each sock is knitted to give consistent, graduated compression along its whole length.</p>"
           }
         },
         "q2": {
@@ -128,7 +128,7 @@
       ],
       "settings": {
         "eyebrow": "Good questions",
-        "heading": "Compression, answered",
+        "heading": "What people ask us",
         "text": "<p>Can't find your question? <a href=\"/pages/contact\">Ask us</a>. For clinical questions, our Orthotist is available at <a href=\"https://www.cajeebotes.com\">www.cajeebotes.com</a>.</p>",
         "open_first": true,
         "structured_data": true

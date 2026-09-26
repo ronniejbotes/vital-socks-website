@@ -1,5 +1,5 @@
 /**
- * Vital Socks — core interactions (no dependencies).
+ * Vital Socks: core interactions (no dependencies).
  * Header state, menu + cart drawers, AJAX cart (Section Rendering API),
  * product form, gallery, fit finder, sorting and product recommendations.
  * Scroll animation lives separately in motion.js.
@@ -374,7 +374,7 @@
       if (contactEl) contactEl.hidden = true;
       // The ankle decides the size; the calf is an optional check.
       if (Number.isNaN(a)) {
-        sizeEl.textContent = '—';
+        sizeEl.textContent = '';
         noteEl.textContent = say('prompt');
         return;
       }

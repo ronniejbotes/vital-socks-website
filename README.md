@@ -1,4 +1,4 @@
-# Vital Socks — Shopify theme
+# Vital Socks: Shopify theme
 
 A custom Shopify Online Store 2.0 theme for Vital Socks, a South African brand of graduated compression socks designed by an Orthotist & Prosthetist.
 
@@ -43,7 +43,7 @@ Every photo of the socks being worn shows them at their true length: knee-high, 
 | Namespace and key | Type | Used for |
 |---|---|---|
 | `custom.last_updated` | Date | "Last updated" in the byline, `article:modified_time` and the structured data's `dateModified`. Set it only when the post's content really changes. |
-| `custom.takeaways` | List of single line text | The "Key takeaways" box under the post |
+| `custom.takeaways` | List of single line text | The takeaways box ("In short") under the post |
 | `custom.references` | List of links | The "References" list under the post, also output as `citation` in the structured data |
 
 A post whose author name matches the founder's name in Business details gets her byline link, author box and `Person` markup. Every other post is credited to the store.
@@ -100,7 +100,7 @@ A post whose author name matches the founder's name in Business details gets her
 
 ```bash
 npm install
-npm run preview   # http://localhost:8787 — renders the real theme files with mock products
+npm run preview   # http://localhost:8787, renders the real theme files with mock products
 npm run check     # Shopify Theme Check
 npm run package   # builds dist/vital-socks-theme.zip for upload
 ```
