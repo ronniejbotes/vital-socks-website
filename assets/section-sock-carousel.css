@@ -82,7 +82,11 @@
   font-size: clamp(90px, 28vw, 380px);
   font-weight: 900;
   line-height: 1;
-  letter-spacing: -0.02em;
+  /* Space between the letters is 10% of the letter height. The matching
+     left padding offsets the space letter-spacing adds after the last
+     letter, so the word stays centred. */
+  letter-spacing: 0.08em;
+  padding-left: 0.08em;
   text-transform: uppercase;
   white-space: nowrap;
   color: var(--slide-ghost);
